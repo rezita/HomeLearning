@@ -1,9 +1,11 @@
+<<<<<<< HEAD
 # Gradle files
 .gradle/
 build/
 
 # Local configuration file (sdk path, etc)
 local.properties
+gradle.properties
 
 # Log/OS Files
 *.log
@@ -28,6 +30,3 @@ render.experimental.xml
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
-
-# Android Profiling
-*.hprof

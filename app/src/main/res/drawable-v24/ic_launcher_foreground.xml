@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- house -->
+    <path
+        android:pathData="M30,40L30,100, M30,40L80,40 M80,40L80,100 M30,40L55,20 M80,40L55,20 Z"
+        android:strokeWidth="5"
+        android:strokeColor="@color/whitish" />
+    <!-- book -->
+    <!--
+    <path
+        android:fillColor="#00FFFFFF"
+        android:pathData="M 20 55 C 30 40, 50 40, 60 55"
+        android:strokeWidth="2"
+        android:strokeColor="@color/whitish" />
+        -->
+</vector>

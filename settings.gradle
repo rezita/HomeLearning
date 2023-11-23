@@ -1,0 +1,25 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+def usernameProvider = providers.gradleProperty("user")
+def passwordProvider = providers.gradleProperty("acckey")
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.github.com/rezita/PartiallyEditableText")
+            credentials {
+                username = usernameProvider.getOrNull()
+                password = passwordProvider.getOrNull()
+            }
+        }
+    }
+}
+rootProject.name = "Home Learning"
+include ':app'
