@@ -1,0 +1,73 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+//using reading google sheetID and google ScriptID
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
+def bundleId = 'com.github.rezita.homelearning'
+android {
+    signingConfigs {
+        release {
+            storePassword providers.gradleProperty("storePassword").getOrNull()
+            keyPassword providers.gradleProperty("keyPassword").getOrNull()
+            keyAlias providers.gradleProperty("keyAlias").getOrNull()
+            storeFile file(providers.gradleProperty("storeFile").getOrNull())
+        }
+    }
+    namespace bundleId
+    compileSdk 34
+
+    defaultConfig {
+        applicationId bundleId
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "sheetID", localProperties['testSheetID']
+            buildConfigField "String", "scriptID", localProperties['scriptID']
+            resValue("string", "sheetID", localProperties['testSheetID'])
+            resValue("string", "scriptID", localProperties['scriptID'])
+        }
+        release {
+            buildConfigField "String", "sheetID", localProperties['sheetID']
+            buildConfigField "String", "scriptID", localProperties['scriptID']
+            resValue("string", "sheetID", localProperties['sheetID'])
+            resValue("string", "scriptID", localProperties['scriptID'])
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'io.arrow-kt:arrow-core:1.1.5'
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation 'io.github.rezita:partiallyeditabletext:0.0.3'
+}
