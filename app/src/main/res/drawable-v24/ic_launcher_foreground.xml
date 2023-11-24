@@ -1,21 +1,60 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- house -->
+
+   <!-- house blue: #2B42BC-->
     <path
-        android:pathData="M30,40L30,100, M30,40L80,40 M80,40L80,100 M30,40L55,20 M80,40L55,20 Z"
-        android:strokeWidth="5"
+        android:fillColor="@color/whitish"
+        android:pathData="M35,75 L35,42 L73,42 L73,75 Z"
+        android:strokeWidth="6"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
         android:strokeColor="@color/whitish" />
-    <!-- book -->
-    <!--
+    <!--roof -->
     <path
-        android:fillColor="#00FFFFFF"
-        android:pathData="M 20 55 C 30 40, 50 40, 60 55"
+        android:fillColor="@color/whitish"
+        android:pathData=" M29,45 L54,26 L79,45 Z"
+        android:strokeWidth="6"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round"
+        android:strokeColor="@color/whitish" />
+    <!-- chimney -->
+    <path
+        android:fillColor="@color/whitish"
+        android:pathData="M67,35.5 L67,30 L72,30 L72,39.5"
         android:strokeWidth="2"
-        android:strokeColor="@color/whitish" />
-        -->
+        android:strokeLineJoin="round"
+        android:strokeColor="@color/whitish"/>
+    <!-- book lines-->
+    <path
+        android:pathData="M38,45 l0,25 M54.5,45 l0,25 M71,45 l0,25 M38,70 l33,0"
+        android:strokeWidth="1"
+        android:strokeColor="#2B42BC" />
+    <!-- book curves-->
+    <path
+        android:pathData="M38 46 C 39.25 40.5, 52.75 40.5, 54.5 46
+                          M38 70.5 C 39.25 66, 52.75 66, 54.5 70.5
+                          M54.5 46 C 55.75 40.5, 69.5 40.5, 71.25 46
+                          M54.5 70.5 C 55.75 66, 69.5 66, 71.25 70.5"
+        android:strokeWidth="1"
+        android:strokeColor="#2B42BC" />
+    <!-- book pages-->
+    <path
+        android:pathData="M41.5 49 C 43 46, 48 46, 50.5 49
+                          M41.5 56 C 43 53, 48 53, 50.5 56
+                          M41.5 63 C 43 60, 48 60, 50.5 63
+                          M58.5 49 C 61.5 46, 67.5 47, 68 49
+                          M58.5 56 C 61.5 53, 67.5 54, 68 56
+                          M58.5 63 C 61.5 60, 67.5 61, 68 63"
+        android:strokeWidth="1"
+        android:strokeColor="#2B42BC" />
+    <!-- book border-->
+    <path
+        android:pathData="M38,48 l-2,0 l0,24 l37,0 l0,-24 l-2,0"
+        android:strokeWidth="1"
+        android:strokeColor="#2B42BC" />
+
 </vector>
