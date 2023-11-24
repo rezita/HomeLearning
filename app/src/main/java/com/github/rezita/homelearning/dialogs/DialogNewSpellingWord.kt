@@ -32,6 +32,7 @@ class DialogNewSpellingWord(
     private val _maxWordLength = 30
     private val _maxCommentLength = 25
     private val _wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s]{1,35}")
+    private val _commentPattern = Regex("\\w{1,35}")
 
     constructor(
         wordsProvider: WordsProvider,
@@ -149,7 +150,7 @@ class DialogNewSpellingWord(
 
         val wordLayout = binding.uploadDialogWordTextLayout
         val wordText = wordLayout.editText?.text.toString().trim()
-        if (!isValidText(wordText)) {
+        if (!isValidText(wordText, _wordPattern)) {
             result = false
             wordLayout.error = getString(R.string.upload_dialog_error_word_message)
             wordLayout.setErrorIconDrawable(0)
@@ -157,7 +158,7 @@ class DialogNewSpellingWord(
 
         val commentLayout = binding.uploadDialogCommentTextLayout
         val commentText = commentLayout.editText?.text.toString().trim()
-        if (commentText.isNotEmpty() && !isValidText(commentText)) {
+        if (commentText.isNotEmpty() && !isValidText(commentText, _commentPattern)) {
             result = false
             commentLayout.error = getString(R.string.upload_dialog_error_comment_message)
             commentLayout.setErrorIconDrawable(0)
@@ -172,8 +173,8 @@ class DialogNewSpellingWord(
         return result
     }
 
-    private fun isValidText(text: String): Boolean {
-        return _wordPattern.matches(text)
+    private fun isValidText(text: String, pattern: Regex): Boolean {
+        return pattern.matches(text)
     }
 
     private fun setPrBarVisibility(isVisible: Boolean) {
