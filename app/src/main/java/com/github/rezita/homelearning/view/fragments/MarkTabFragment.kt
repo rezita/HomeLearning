@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.databinding.FragmentErikTabBinding
 import com.github.rezita.homelearning.databinding.FragmentMarkTabBinding
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.view.ReadingActivity
 
 private const val ARG_NAME = "Name"
@@ -35,13 +36,15 @@ class MarkTabFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMarkTabBinding.inflate(inflater, container, false)
-        binding.btnStartReading.setOnClickListener { startReading() }
+        binding.btnStartReading.setOnClickListener { startReading(SheetAction.READ_READING_WORDS) }
+        binding.btnReadingCEW.setOnClickListener { startReading(SheetAction.READ_READING_CEW) }
         return binding.root
 
     }
 
-    private fun startReading() {
+    private fun startReading(readingAction: SheetAction) {
         val intent = Intent(activity, ReadingActivity::class.java)
+        intent.putExtra("action", readingAction.value)
         startActivity(intent)
     }
 

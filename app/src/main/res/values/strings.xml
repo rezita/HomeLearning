@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Home Learning</string>
+    <!-- main activity buttons-->
     <string name="start_spelling">Start spelling</string>
     <string name="upload_words">Upload words</string>
     <string name="restore_spelling">Restore Spelling</string>
-    <string name="start_reading">Start Reading</string>
+    <string name="start_reading">Reading Words</string>
+    <string name="reading_cew">Reading CEW</string>
     <string name="start_irregularVerbs">Start Irregular Verbs</string>
 
     <!-- Action Bar Titles-->

@@ -11,6 +11,7 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.adapters.ReadingAdapter
 import com.github.rezita.homelearning.databinding.ActivityReadingBinding
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
@@ -21,11 +22,15 @@ class ReadingActivity : AppCompatActivity() {
     private var wordsProvider: WordsProvider? = null
     private var recyclerView: RecyclerView? = null
     private var wordsAdapter: ReadingAdapter? = null
+    private var sheetAction: SheetAction = SheetAction.READ_READING_WORDS
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wordsProvider = WordsProvider(applicationContext)
+
+        val action: String = intent.getStringExtra("action") ?: SheetAction.READ_READING_WORDS.value
+        sheetAction = SheetAction.forValue(action)!!
         binding = ActivityReadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -53,7 +58,7 @@ class ReadingActivity : AppCompatActivity() {
     }
 
     private fun loadReadingWords(){
-        wordsProvider?.loadReadingWords { response -> onWordsReceived(response) }
+        wordsProvider?.loadReadingWords(sheetAction) {onWordsReceived(it) }
     }
 
     private fun onWordsReceived(response: String){
@@ -71,7 +76,9 @@ class ReadingActivity : AppCompatActivity() {
     private fun updateViewAfterLoading(){
         if (readingWords.size == 0) {
             //error when loading
+            binding.readingProgressbar.root.visibility = View.GONE
             Toast.makeText(this, getString(R.string.loading_fail_text), Toast.LENGTH_SHORT).show()
+
         } else {
             binding.readingProgressbar.root.visibility = View.GONE
             //update recycler view

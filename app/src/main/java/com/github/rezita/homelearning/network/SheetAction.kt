@@ -8,5 +8,10 @@ enum class SheetAction(val value: String) {
     READ_READING_WORDS("getReadingWords"),
     READ_IRREGULAR_VERBS("getIrregularVerbs"),
     RESTORE_SPELLING_FROM_LOG("restoreSpellingFromLogs"),
-    UPDATE_IRREGULAR_VERBS( "updateIrregularVerbs")
+    UPDATE_IRREGULAR_VERBS( "updateIrregularVerbs"),
+    READ_READING_CEW("getReadingCEW");
+
+    companion object {
+        fun forValue(value: String) = values().find{ it.value == value }
+    }
 }
