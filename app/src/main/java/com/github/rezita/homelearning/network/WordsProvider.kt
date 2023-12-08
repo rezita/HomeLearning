@@ -26,8 +26,8 @@ class WordsProvider(val context: Context) {
         loadData(backUpCall, SheetAction.READ_SPELLING_CATEGORIES)
     }
 
-    fun loadReadingWords(backUpCall: (String) -> Unit) {
-        loadData(backUpCall, SheetAction.READ_READING_WORDS)
+    fun loadReadingWords(sheetAction: SheetAction, backUpCall: (String) -> Unit) {
+        loadData(backUpCall, sheetAction)
     }
 
     fun loadIrregularVerbs(backUpCall: (String) -> Unit) {
