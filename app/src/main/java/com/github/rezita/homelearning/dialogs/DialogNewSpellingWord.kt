@@ -31,7 +31,7 @@ class DialogNewSpellingWord(
 
     private val _maxWordLength = 30
     private val _maxCommentLength = 25
-    private val _wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s]{1,35}")
+    private val _wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s']{1,35}")
     private val _commentPattern = Regex("\\w{1,35}")
 
     constructor(
