@@ -7,6 +7,7 @@
     <string name="start_reading">Reading Words</string>
     <string name="reading_cew">Reading CEW</string>
     <string name="start_irregularVerbs">Start Irregular Verbs</string>
+    <string name="start_homophones">Start Homophones</string>
 
     <!-- Action Bar Titles-->
     <string name="activity_irregular_verbs">Irregular Verbs</string>
@@ -78,13 +79,13 @@
     <string name="upload_dialog_error_comment_message">Please provide a valid comment!</string>
     <string name="upload_dialog_error_category_message">Please select a category!</string>
 
-    <!-- Irregular Verbs words -->
+    <!-- Fill In Sentences Activity -->
     <string name="irregular_verb_dialog_title">Unable to check</string>
     <string name="irregular_verb_not_all_filled_message">Please answer all the questions!</string>
     <string name="irregular_verb_result">Result: %1$d/%2$d (%3$d\%%) </string>
     <string name="irregular_verb_instruction">Fill the empty spaces!</string>
     <string name="irregular_checking_text">Checking the answers&#8230;</string>
-    <string name="irregular_message_after_update">Irregular verbs results are saved.</string>
+    <string name="sentences_message_after_update">Results are saved.</string>
 
     <!-- Irregular Verbs words / Spelling / Reading words -->
     <string name="loading_fail_text">Loading words failed.</string>

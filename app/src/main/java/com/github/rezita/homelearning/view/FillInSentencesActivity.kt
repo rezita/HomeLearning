@@ -12,30 +12,37 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.databinding.ActivityIrregularVerbsBinding
-import com.github.rezita.homelearning.model.IrregularVerb
+import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
-import com.github.rezita.homelearning.adapters.IrregularVerbAdapter
+import com.github.rezita.homelearning.adapters.SentenceAdapter
+import com.github.rezita.homelearning.databinding.ActivityFillInSentencesBinding
+import com.github.rezita.homelearning.network.SheetAction
 
-class IrregularVerbsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityIrregularVerbsBinding
-    private val irregularVerbs = ArrayList<IrregularVerb>()
+class FillInSentencesActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityFillInSentencesBinding
+    private val fillInSentences = ArrayList<FillInSentence>()
     private var wordsProvider: WordsProvider? = null
 
     private var recyclerView: RecyclerView? = null
-    private var verbsAdapter: IrregularVerbAdapter? = null
+    private var sentencesAdapter: SentenceAdapter? = null
+
+    private var sheetAction: SheetAction = SheetAction.READ_IRREGULAR_VERBS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wordsProvider = WordsProvider(applicationContext)
-        binding = ActivityIrregularVerbsBinding.inflate(layoutInflater)
+
+        val action: String = intent.getStringExtra("action") ?: SheetAction.READ_IRREGULAR_VERBS.value
+        sheetAction = SheetAction.forValue(action)!!
+
+        binding = ActivityFillInSentencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         prepareView()
-        loadIrregularVerbs()
+        loadSentences()
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -64,41 +71,41 @@ class IrregularVerbsActivity : AppCompatActivity() {
 
     private fun isCheckable() :Boolean {
         val resultText = binding.irregularInfoLayout.scoreText
-        val progressBar = binding.irregularProgressbar.root
+        val progressBar = binding.sentencesProgressbar.root
         return (resultText.visibility == View.GONE && progressBar.visibility == View.GONE)
     }
 
     private fun setRecyclerView(){
-        verbsAdapter =
-            IrregularVerbAdapter(
+        sentencesAdapter =
+            SentenceAdapter(
                 this,
-                irregularVerbs
+                fillInSentences
             )
-        recyclerView = binding.irregularVerbsContainer
-        recyclerView!!.adapter = verbsAdapter
+        recyclerView = binding.sentencesContainer
+        recyclerView!!.adapter = sentencesAdapter
     }
 
-    private fun loadIrregularVerbs(){
+    private fun loadSentences(){
         setPrBarVisibility(true)
-        wordsProvider?.loadIrregularVerbs {verbs -> onVerbsReceived(verbs)  }
+        wordsProvider?.loadFillInSentences(sheetAction) { onVerbsReceived(it)  }
     }
 
     private fun onVerbsReceived(response: String){
         setPrBarVisibility(false)
         parseItems(response).fold(
             { e -> Log.e("error", e.message) },
-            { verbs -> irregularVerbs.addAll(verbs)}
+            { fillInSentences.addAll(it)}
         )
         updateViewAfterLoading()
     }
 
-    private fun parseItems(jsonResponses: String): Either<RemoteError, ArrayList<IrregularVerb>> {
-        return JSONSerializer().parseIrregularVerbs(jsonResponses)
+    private fun parseItems(jsonResponses: String): Either<RemoteError, ArrayList<FillInSentence>> {
+        return JSONSerializer().parseSentences(jsonResponses)
     }
 
     private fun prepareView(){
         setPrBarVisibility(false)
-        binding.irregularVerbsContainer.visibility = View.GONE
+        binding.sentencesContainer.visibility = View.GONE
         setInfoTextProperties(getString(R.string.loading_data_text))
         binding.irregularInfoLayout.scoreText.visibility = View.GONE
 
@@ -106,15 +113,15 @@ class IrregularVerbsActivity : AppCompatActivity() {
 
     private fun updateViewAfterLoading(){
         setPrBarVisibility(false)
-        if (irregularVerbs.size == 0) {
+        if (fillInSentences.size == 0) {
             //error when loading
             setInfoTextProperties( getString(R.string.loading_fail_text))
-            binding.irregularVerbsContainer.visibility = View.GONE
+            binding.sentencesContainer.visibility = View.GONE
             //Toast.makeText(this, getString(R.string.loading_fail_text), Toast.LENGTH_SHORT).show()
         } else {
             setRecyclerView()
             setInfoTextProperties( getString(R.string.irregular_verb_instruction))
-            binding.irregularVerbsContainer.visibility = View.VISIBLE
+            binding.sentencesContainer.visibility = View.VISIBLE
         }
     }
 
@@ -131,20 +138,24 @@ class IrregularVerbsActivity : AppCompatActivity() {
         setPrBarVisibility(true)
         setInfoTextProperties( getString(R.string.irregular_checking_text))
         updateAnswers()
-        saveIrregularVerbsResults()
+        saveFillInSentenceResults()
     }
 
     private fun updateAnswers(){
-        //get answers and update irregular verbs
-        for (index in 0 until irregularVerbs.size){
-            val answer = verbsAdapter!!.getAnswer(index)
-            irregularVerbs[index].answer = answer
-            verbsAdapter!!.notifyItemChanged(index)
+        //get answers and update sentences
+        for (index in 0 until fillInSentences.size){
+            val answer = sentencesAdapter!!.getAnswer(index)
+            fillInSentences[index].answer = answer
+            sentencesAdapter!!.notifyItemChanged(index)
         }
     }
 
-    private fun saveIrregularVerbsResults() {
-        wordsProvider?.updateIrregularVerbs({response -> onWordsUpdated(response)}, irregularVerbs)
+    private fun saveFillInSentenceResults() {
+        val action = when(sheetAction){
+            SheetAction.READ_IRREGULAR_VERBS -> SheetAction.UPDATE_IRREGULAR_VERBS
+            else -> SheetAction.UPDATE_HOMOPHONES
+        }
+        wordsProvider?.updateFillInSentences({ onWordsUpdated(it)}, fillInSentences, action)
     }
 
     private fun onWordsUpdated(response: String) {
@@ -153,11 +164,11 @@ class IrregularVerbsActivity : AppCompatActivity() {
         updateScores()
         invalidateOptionsMenu()
         Log.i("response", response)
-        Toast.makeText(this, R.string.irregular_message_after_update, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, R.string.sentences_message_after_update, Toast.LENGTH_SHORT).show()
     }
 
     private fun isAllAnswered(): Boolean {
-        return verbsAdapter!!.isAllAnswered()
+        return sentencesAdapter!!.isAllAnswered()
     }
 
     private fun showNotAllAnsweredDialog(){
@@ -173,8 +184,8 @@ class IrregularVerbsActivity : AppCompatActivity() {
     private fun updateScores(){
         val resultText = binding.irregularInfoLayout.scoreText
 
-        val answeredQuestions = irregularVerbs.filter { word -> word.isChanged() }.size
-        val correctAnswers = irregularVerbs.filter { word -> word.status == WordStatus.CORRECT }.size
+        val answeredQuestions = fillInSentences.filter { word -> word.isChanged() }.size
+        val correctAnswers = fillInSentences.filter { word -> word.status == WordStatus.CORRECT }.size
         val resultRatio = correctAnswers *100 / answeredQuestions
         val scoreString = getString(R.string.irregular_verb_result, correctAnswers, answeredQuestions, resultRatio)
         //binding.scoreTex.text = "Result: ${correctAnswers} / ${answeredQuestions} ( ${result}%)"
@@ -188,8 +199,8 @@ class IrregularVerbsActivity : AppCompatActivity() {
 
     private fun setPrBarVisibility(isVisible : Boolean){
         when(isVisible){
-            true -> binding.irregularProgressbar.root.visibility = View.VISIBLE
-            false -> binding.irregularProgressbar.root.visibility = View.GONE
+            true -> binding.sentencesProgressbar.root.visibility = View.VISIBLE
+            false -> binding.sentencesProgressbar.root.visibility = View.GONE
         }
         invalidateOptionsMenu()
     }

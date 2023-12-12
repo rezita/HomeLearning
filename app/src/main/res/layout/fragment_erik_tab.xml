@@ -25,10 +25,17 @@
 
         <Button
             android:id="@+id/btn_startIrregular"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/start_irregularVerbs" />
+
+        <Button
+            android:id="@+id/btn_startHomophones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/start_homophones" />
 
         <Button
             android:id="@+id/btn_addSpellingWords"

@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.github.rezita.homelearning.databinding.FragmentErikTabBinding
-import com.github.rezita.homelearning.view.IrregularVerbsActivity
+import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.view.FillInSentencesActivity
 import com.github.rezita.homelearning.view.SpellingActivity
 import com.github.rezita.homelearning.view.UploadSpellingWordsActivity
 
@@ -34,7 +35,8 @@ class ErikTabFragment : Fragment() {
     ): View? {
         binding = FragmentErikTabBinding.inflate(inflater, container, false)
         binding.btnStartSpelling.setOnClickListener { startErikSpelling() }
-        binding.btnStartIrregular.setOnClickListener { startIrregularVerbs() }
+        binding.btnStartIrregular.setOnClickListener { startFillInSentences(SheetAction.READ_IRREGULAR_VERBS) }
+        binding.btnStartHomophones.setOnClickListener { startFillInSentences(SheetAction.READ_HOMOPHONES) }
         binding.btnAddSpellingWords.setOnClickListener { addNewWords() }
         return binding.root
     }
@@ -49,8 +51,9 @@ class ErikTabFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startIrregularVerbs() {
-        val intent = Intent(activity, IrregularVerbsActivity::class.java)
+    private fun startFillInSentences(sheetAction: SheetAction) {
+        val intent = Intent(activity, FillInSentencesActivity::class.java)
+        intent.putExtra("action", sheetAction.value)
         startActivity(intent)
     }
 

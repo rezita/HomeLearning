@@ -41,7 +41,7 @@
                 android:value=".view.MainActivity" />
         </activity>
         <activity
-            android:name=".view.IrregularVerbsActivity"
+            android:name=".view.FillInSentencesActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="false">
             <meta-data

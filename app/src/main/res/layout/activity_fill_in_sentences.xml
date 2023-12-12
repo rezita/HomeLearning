@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.IrregularVerbsActivity">
+    tools:context=".view.FillInSentencesActivity">
 
     <include
         android:id="@+id/irregular_info_layout"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/irregular_progressbar"
+        android:id="@+id/sentences_progressbar"
         layout="@layout/progressbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@+id/irregular_info_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/irregularVerbs_Container"
+        android:id="@+id/sentences_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="LinearLayoutManager"
