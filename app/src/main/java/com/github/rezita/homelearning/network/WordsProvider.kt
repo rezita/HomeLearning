@@ -6,7 +6,7 @@ import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.github.rezita.homelearning.model.IrregularVerb
+import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.R
 import org.json.JSONArray
@@ -30,8 +30,8 @@ class WordsProvider(val context: Context) {
         loadData(backUpCall, sheetAction)
     }
 
-    fun loadIrregularVerbs(backUpCall: (String) -> Unit) {
-        loadData(backUpCall, SheetAction.READ_IRREGULAR_VERBS)
+    fun loadFillInSentences(sheetAction: SheetAction, backUpCall: (String) -> Unit) {
+        loadData(backUpCall, sheetAction)
     }
 
     fun updateSpellingWords(backupCall: (String) -> Unit, wordsToUpdate: List<SpellingWord>){
@@ -39,10 +39,10 @@ class WordsProvider(val context: Context) {
         updateData(backupCall, SheetAction.UPDATE_SPELLING_WORDS, _mediumTimeout,  wordsParam)
     }
 
-    fun updateIrregularVerbs(backupCall: (String) -> Unit, verbsToUpdate: List<IrregularVerb>){
-        val verbsParam = verbListToMapOfJSON(verbsToUpdate)
+    fun updateFillInSentences(backupCall: (String) -> Unit, sentencesToUpdate: List<FillInSentence>, sheetAction: SheetAction){
+        val sentenceParam = sentenceListToMapOfJSON(sentencesToUpdate)
         //Log.i("json", wordsParam.toString())
-        updateData(backupCall, SheetAction.UPDATE_IRREGULAR_VERBS, _mediumTimeout,  verbsParam)
+        updateData(backupCall, sheetAction, _mediumTimeout,  sentenceParam)
     }
 
     fun saveNewSpellingWords(backupCall: (String) -> Unit, wordsToSave: List<SpellingWord>) {
@@ -118,7 +118,7 @@ class WordsProvider(val context: Context) {
         return mapOf("words" to JSONArray(words.map { w-> w.convertToJSON() }).toString())
     }
 
-    private fun verbListToMapOfJSON(words: List<IrregularVerb>) : Map<String, String>{
-        return mapOf("verbs" to JSONArray(words.map { w-> w.convertToJSON() }).toString())
+    private fun sentenceListToMapOfJSON(words: List<FillInSentence>) : Map<String, String>{
+        return mapOf("sentences" to JSONArray(words.map { w-> w.convertToJSON() }).toString())
     }
 }

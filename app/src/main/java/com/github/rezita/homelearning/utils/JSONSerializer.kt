@@ -3,7 +3,7 @@ package com.github.rezita.homelearning.utils
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.github.rezita.homelearning.model.IrregularVerb
+import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.model.SpellingWord
 import org.json.JSONObject
@@ -78,32 +78,32 @@ class JSONSerializer {
         return words
     }
 
-    fun parseIrregularVerbs(jsonString: String): Either<RemoteError, ArrayList<IrregularVerb>>  {
+    fun parseSentences(jsonString: String): Either<RemoteError, ArrayList<FillInSentence>>  {
         val jsonObject = JSONObject(jsonString)
         return if (jsonObject.has("error")) {
             RemoteError(jsonObject.getString("error")).left()
         } else {
-            readIrregularVerbs(jsonObject).right()
+            readSentences(jsonObject).right()
         }
     }
 
-    private fun readIrregularVerbs(jsonObject: JSONObject): ArrayList<IrregularVerb> {
+    private fun readSentences(jsonObject: JSONObject): ArrayList<FillInSentence> {
         val solutionSeparator = "/"
-        val verbs = ArrayList<IrregularVerb>()
+        val sentences = ArrayList<FillInSentence>()
         val jsonArray = jsonObject.getJSONArray("items")
 
         for (i in 0 until jsonArray.length()) {
             val jsonObj = jsonArray.getJSONObject(i)
-            val verb = jsonObj.getString("verb")
+            val suggestion = jsonObj.getString("suggestion")
             val sentence = jsonObj.getString("sentence")
             val solution = jsonObj.getString("solution")
 
             val solutions = solution.split(solutionSeparator).map{ it.trim()} as ArrayList<String>
 
-            val irregularVerb = IrregularVerb(sentence, verb, solutions)
-            verbs.add(irregularVerb)
+            val fillInSentence = FillInSentence(sentence, suggestion, solutions)
+            sentences.add(fillInSentence)
         }
-        return verbs
+        return sentences
     }
 
 }

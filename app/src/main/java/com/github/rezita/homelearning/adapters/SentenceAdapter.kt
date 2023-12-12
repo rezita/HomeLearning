@@ -9,29 +9,29 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.model.IrregularVerb
+import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.partiallyeditabletext.PartiallyEditableText
 
-class IrregularVerbAdapter(
+class SentenceAdapter(
     val context: Context,
-    private val verbList: List<IrregularVerb>
-) : RecyclerView.Adapter<IrregularVerbAdapter.ListItemHolder>() {
+    private val sentenceList: List<FillInSentence>
+) : RecyclerView.Adapter<SentenceAdapter.ListItemHolder>() {
 
-    private var answers: Array<String> = Array(verbList.size){""}
+    private var answers: Array<String> = Array(sentenceList.size){""}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IrregularVerbAdapter.ListItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SentenceAdapter.ListItemHolder {
         val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_irregular_verb, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.item_fill_in_sentence, parent, false)
         return ListItemHolder(itemView)
     }
 
     override fun getItemCount(): Int {
-        return verbList.size
+        return sentenceList.size
     }
 
-    override fun onBindViewHolder(holder: IrregularVerbAdapter.ListItemHolder, position: Int) {
-        holder.itemBind(verbList[position], position)
+    override fun onBindViewHolder(holder: SentenceAdapter.ListItemHolder, position: Int) {
+        holder.itemBind(sentenceList[position], position)
     }
 
     fun isAllAnswered(): Boolean {
@@ -57,8 +57,8 @@ class IrregularVerbAdapter(
             sentenceText.isFocusableInTouchMode = true
         }
 
-        fun itemBind(irregularVerb: IrregularVerb, index: Int) {
-            val status = irregularVerb.status
+        fun itemBind(fillInSentence: FillInSentence, index: Int) {
+            val status = fillInSentence.status
             val indexSting = "${index + 1}.) "
 
             setListeners(index)
@@ -67,14 +67,14 @@ class IrregularVerbAdapter(
                 WordStatus.UNCHECKED -> {
                     resultText.visibility = View.GONE
                     sentenceText.visibility = View.VISIBLE
-                    val baseText = indexSting + irregularVerb.getSentenceWithSpaceAndVerb()
-                    val startIndex = irregularVerb.getSeparatorIndex() + indexSting.length
+                    val baseText = indexSting + fillInSentence.getSentenceWithSpaceAndSuggestion()
+                    val startIndex = fillInSentence.getSeparatorIndex() + indexSting.length
                     sentenceText.setBaseText(baseText, startIndex)
                 }
                 else -> {
                     resultText.visibility = View.VISIBLE
                     sentenceText.visibility = View.GONE
-                    resultText.text = irregularVerb.getAsResult().insert(0, indexSting)
+                    resultText.text = fillInSentence.getAsResult().insert(0, indexSting)
                 }
             }
         }

@@ -7,8 +7,8 @@ import android.text.style.*
 import org.json.JSONException
 import org.json.JSONObject
 
-class IrregularVerb(private val sentence: String, private val verb: String, private val solutions: ArrayList<String>) {
-    private val _jsonVerb = "verb"
+class FillInSentence(private val sentence: String, private val suggestion: String, private val solutions: ArrayList<String>) {
+    private val _jsonSuggestion = "suggestion"
     private val _jsonSentence = "sentence"
     private val _jsonResult = "result"
 
@@ -30,9 +30,9 @@ class IrregularVerb(private val sentence: String, private val verb: String, priv
 
         }
 
-    constructor(sentence: String, verb: String, solutions: ArrayList<String>, tense: String) : this(
+    constructor(sentence: String, suggestion: String, solutions: ArrayList<String>, tense: String) : this(
         sentence,
-        verb,
+        suggestion,
         solutions
     ) {
         this.tense = tense
@@ -51,13 +51,13 @@ class IrregularVerb(private val sentence: String, private val verb: String, priv
         return if (index > 0) index else 0
     }
 
-    private fun getSentenceWithVerb(): String {
-        return "$sentence (${this.verb})"
+    private fun getSentenceWithSuggestion(): String {
+        return "$sentence (${this.suggestion})"
     }
 
-    fun getSentenceWithSpaceAndVerb(): String {
+    fun getSentenceWithSpaceAndSuggestion(): String {
         val sentenceWithSpace = sentence.replace(_separator, _spaces)
-        return "$sentenceWithSpace (${this.verb})"
+        return "$sentenceWithSpace (${this.suggestion})"
     }
 
     private fun getSolutionsAsString(): String {
@@ -66,7 +66,7 @@ class IrregularVerb(private val sentence: String, private val verb: String, priv
 
     fun getAsResult():SpannableStringBuilder{
         val separatorIndex = getSeparatorIndex()
-        val result = SpannableStringBuilder(getSentenceWithVerb().replace(_separator, ""))
+        val result = SpannableStringBuilder(getSentenceWithSuggestion().replace(_separator, ""))
         val solutions = getSolutionsAsString()
         when (status) {
             WordStatus.UNCHECKED -> {
@@ -119,7 +119,7 @@ class IrregularVerb(private val sentence: String, private val verb: String, priv
     @Throws(JSONException::class)
     fun convertToJSON() : JSONObject {
         val jsonObj = JSONObject()
-        jsonObj.put(_jsonVerb, verb)
+        jsonObj.put(_jsonSuggestion, suggestion)
         jsonObj.put(_jsonSentence, sentence)
         jsonObj.put(_jsonResult, status.value)
         return jsonObj
