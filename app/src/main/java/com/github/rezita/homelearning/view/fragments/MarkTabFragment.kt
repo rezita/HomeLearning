@@ -11,6 +11,8 @@ import com.github.rezita.homelearning.databinding.FragmentErikTabBinding
 import com.github.rezita.homelearning.databinding.FragmentMarkTabBinding
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.view.ReadingActivity
+import com.github.rezita.homelearning.view.SpellingActivity
+import com.github.rezita.homelearning.view.UploadSpellingWordsActivity
 
 private const val ARG_NAME = "Name"
 private const val ARG_POSITION = "Position"
@@ -38,6 +40,8 @@ class MarkTabFragment : Fragment() {
         _binding = FragmentMarkTabBinding.inflate(inflater, container, false)
         binding.btnStartReading.setOnClickListener { startReading(SheetAction.READ_READING_WORDS) }
         binding.btnReadingCEW.setOnClickListener { startReading(SheetAction.READ_READING_CEW) }
+        binding.btnStartMarkSpelling.setOnClickListener{startMarkSpelling()}
+        binding.btnAddMarkSpellingWords.setOnClickListener { addNewWords() }
         return binding.root
 
     }
@@ -45,6 +49,18 @@ class MarkTabFragment : Fragment() {
     private fun startReading(readingAction: SheetAction) {
         val intent = Intent(activity, ReadingActivity::class.java)
         intent.putExtra("action", readingAction.value)
+        startActivity(intent)
+    }
+
+    private fun startMarkSpelling() {
+        val intent = Intent(activity, SpellingActivity::class.java)
+        intent.putExtra("action", SheetAction.READ_MARK_SPELLING_WORDS.value)
+        startActivity(intent)
+    }
+
+    private fun addNewWords() {
+        val intent = Intent(activity, UploadSpellingWordsActivity::class.java)
+        intent.putExtra("action", SheetAction.SAVE_MARK_WORDS.value)
         startActivity(intent)
     }
 

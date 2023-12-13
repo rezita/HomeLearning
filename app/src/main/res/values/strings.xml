@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Home Learning</string>
     <!-- main activity buttons-->
-    <string name="start_spelling">Start spelling</string>
-    <string name="upload_words">Upload words</string>
+    <string name="start_erik_spelling">Erik spelling</string>
+    <string name="upload_erik_words">Upload Erik words</string>
     <string name="restore_spelling">Restore Spelling</string>
     <string name="start_reading">Reading Words</string>
     <string name="reading_cew">Reading CEW</string>
-    <string name="start_irregularVerbs">Start Irregular Verbs</string>
-    <string name="start_homophones">Start Homophones</string>
+    <string name="start_irregularVerbs">Irregular Verbs</string>
+    <string name="start_homophones">Homophones</string>
+    <string name="start_mark_spelling">Mark spelling</string>
+    <string name="upload_mark_words">Upload Mark words</string>
 
     <!-- Action Bar Titles-->
     <string name="activity_irregular_verbs">Irregular Verbs</string>

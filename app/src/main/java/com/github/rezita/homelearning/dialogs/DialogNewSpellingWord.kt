@@ -14,12 +14,14 @@ import arrow.core.Either
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.databinding.AddSpellingWordBinding
 import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
 
 class DialogNewSpellingWord(
     private val wordsProvider: WordsProvider,
+    val sheetAction: SheetAction,
     val wordSaver: (SpellingWord) -> Unit
 ) : DialogFragment() {
     private lateinit var binding: AddSpellingWordBinding
@@ -36,18 +38,20 @@ class DialogNewSpellingWord(
 
     constructor(
         wordsProvider: WordsProvider,
+        sheetAction: SheetAction,
         wordSaver: (SpellingWord) -> Unit,
         categories: ArrayList<String>
-    ) : this(wordsProvider, wordSaver) {
+    ) : this(wordsProvider, sheetAction, wordSaver) {
         this.categories = categories
     }
 
     constructor(
         wordsProvider: WordsProvider,
+        sheetAction: SheetAction,
         wordSaver: (SpellingWord) -> Unit,
         word: SpellingWord,
         categories: ArrayList<String>
-    ) : this(wordsProvider, wordSaver) {
+    ) : this(wordsProvider, sheetAction, wordSaver) {
         this.word = word
         this.categories = categories
     }
@@ -102,7 +106,8 @@ class DialogNewSpellingWord(
 
     private fun loadCategories() {
         setPrBarVisibility(true)
-        wordsProvider.loadSpellingCategories { response -> onCategoriesReceived(response) }
+
+        wordsProvider.loadSpellingCategories(sheetAction) { response -> onCategoriesReceived(response) }
     }
 
     private fun onCategoriesReceived(response: String) {

@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:enabled="true"
-            android:text="@string/start_spelling" />
+            android:text="@string/start_erik_spelling" />
 
         <Button
             android:id="@+id/btn_startIrregular"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:enabled="true"
-            android:text="@string/upload_words" />
+            android:text="@string/upload_erik_words" />
 
     </LinearLayout>
 </FrameLayout>
