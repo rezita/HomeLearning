@@ -18,12 +18,12 @@ class WordsProvider(val context: Context) {
     private val _mediumTimeout = 120000   //2 min
     private val _longTimeout = 300000  //5 min
 
-    fun loadSpellingWords(backUpCall: (String) -> Unit){
-        loadData(backUpCall, SheetAction.READ_SPELLING_WORDS)
+    fun loadSpellingWords(sheetAction: SheetAction, backUpCall: (String) -> Unit){
+        loadData(backUpCall, sheetAction)
     }
 
-    fun loadSpellingCategories(backUpCall: (String) -> Unit) {
-        loadData(backUpCall, SheetAction.READ_SPELLING_CATEGORIES)
+    fun loadSpellingCategories(sheetAction: SheetAction, backUpCall: (String) -> Unit) {
+        loadData(backUpCall, sheetAction)
     }
 
     fun loadReadingWords(sheetAction: SheetAction, backUpCall: (String) -> Unit) {
@@ -34,9 +34,9 @@ class WordsProvider(val context: Context) {
         loadData(backUpCall, sheetAction)
     }
 
-    fun updateSpellingWords(backupCall: (String) -> Unit, wordsToUpdate: List<SpellingWord>){
+    fun updateSpellingWords(backupCall: (String) -> Unit, wordsToUpdate: List<SpellingWord>, sheetAction: SheetAction){
         val wordsParam = wordListToMapOfJSON(wordsToUpdate)
-        updateData(backupCall, SheetAction.UPDATE_SPELLING_WORDS, _mediumTimeout,  wordsParam)
+        updateData(backupCall, sheetAction, _mediumTimeout,  wordsParam)
     }
 
     fun updateFillInSentences(backupCall: (String) -> Unit, sentencesToUpdate: List<FillInSentence>, sheetAction: SheetAction){

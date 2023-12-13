@@ -43,11 +43,13 @@ class ErikTabFragment : Fragment() {
 
     private fun startErikSpelling() {
         val intent = Intent(activity, SpellingActivity::class.java)
+        intent.putExtra("action", SheetAction.READ_ERIK_SPELLING_WORDS.value)
         startActivity(intent)
     }
 
     private fun addNewWords() {
         val intent = Intent(activity, UploadSpellingWordsActivity::class.java)
+        intent.putExtra("action", SheetAction.SAVE_ERIK_WORDS.value)
         startActivity(intent)
     }
 

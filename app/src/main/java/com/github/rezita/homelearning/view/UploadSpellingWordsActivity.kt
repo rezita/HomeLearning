@@ -17,6 +17,7 @@ import com.github.rezita.homelearning.adapters.UploadWordsAdapter
 import com.github.rezita.homelearning.databinding.ActivityUploadSpellingWordsBinding
 import com.github.rezita.homelearning.dialogs.DialogNewSpellingWord
 import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
@@ -33,9 +34,14 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
     private val _responseWordSeparator = ", "
     private val _responseWordMessageSeparator = ":"
 
+    private var sheetAction: SheetAction = SheetAction.SAVE_ERIK_WORDS
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val action: String = intent.getStringExtra("action") ?: SheetAction.SAVE_ERIK_WORDS.value
+        sheetAction = SheetAction.forValue(action)!!
 
         binding = ActivityUploadSpellingWordsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -90,7 +96,7 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
                     category
                 )
             },
-            words, categories
+            words, categories, getCategoryAction()
         )
         //divider line
         recyclerView!!.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
@@ -115,13 +121,13 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
     private fun loadCategoriesAndPrepareView() {
         updateLayout()
         setPrBarVisibility(true)
-        wordsProvider?.loadSpellingCategories { categories -> onCategoriesReceived(categories) }
+        wordsProvider?.loadSpellingCategories(getCategoryAction()) { categories -> onCategoriesReceived(categories) }
     }
 
     private fun saveNewWords() {
         setInfoTextProperties(getString(R.string.info_uploading))
         setPrBarVisibility(true)
-        wordsProvider?.saveNewSpellingWords({ response -> onWordsSaved(response) }, words)
+        wordsProvider?.saveNewSpellingWords({ response -> onWordsSaved(response) }, words, sheetAction)
     }
 
     private fun onWordsSaved(response: String) {
@@ -174,7 +180,7 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
         }
 
         val dialog = DialogNewSpellingWord(
-            wordsProvider!!,
+            wordsProvider!!, getCategoryAction(),
             { word -> addWordToWords(this, word) },
             categories
         )
@@ -222,5 +228,12 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
 
     private fun setInfoTextProperties(text: String) {
         binding.uploadWordsInfoLayout.infoText.text = text
+    }
+
+    private fun getCategoryAction(): SheetAction{
+        return when (sheetAction) {
+            SheetAction.SAVE_ERIK_WORDS -> SheetAction.READ_ERIK_SPELLING_CATEGORIES
+            else -> SheetAction.READ_MARK_SPELLING_CATEGORIES
+        }
     }
 }

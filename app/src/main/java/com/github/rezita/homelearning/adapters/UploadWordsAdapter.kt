@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.dialogs.DialogNewSpellingWord
 import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.view.UploadSpellingWordsActivity as UploadSpellingWordsActivity
 
@@ -19,7 +20,8 @@ class UploadWordsAdapter(val context: Context,
                          private val selectionDeleteInteraction: (Int) -> Unit,
                          private val selectionChangeInteraction: (Int, String, String, String) -> Unit,
                          private val wordList: List<SpellingWord>,
-                         private val categories: ArrayList<String>)
+                         private val categories: ArrayList<String>,
+                         private val sheetAction: SheetAction)
     : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val _typeHeader = 0
@@ -97,7 +99,7 @@ class UploadWordsAdapter(val context: Context,
 
         private fun editWord(spellingWord: SpellingWord){
             val activity = context as UploadSpellingWordsActivity
-            val dialog = DialogNewSpellingWord (WordsProvider(context), { word -> changeWord(word) }, spellingWord, categories)
+            val dialog = DialogNewSpellingWord (WordsProvider(context), sheetAction, { word -> changeWord(word) }, spellingWord, categories)
             dialog.show(activity.supportFragmentManager ,"DialogNewQuestion")
         }
 

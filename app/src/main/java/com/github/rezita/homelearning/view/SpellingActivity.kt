@@ -18,6 +18,7 @@ import com.github.rezita.homelearning.databinding.ActivitySpellingBinding
 import com.github.rezita.homelearning.dialogs.DialogNewSpellingWord
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
@@ -29,9 +30,15 @@ class SpellingActivity : AppCompatActivity() {
     private var wordsAdapter: SpellingWordAdapter? = null
     private var wordsProvider: WordsProvider? = null
 
+    private var sheetAction: SheetAction = SheetAction.READ_ERIK_SPELLING_WORDS
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         wordsProvider = WordsProvider(applicationContext)
+
+        val action: String = intent.getStringExtra("action") ?: SheetAction.READ_ERIK_SPELLING_WORDS.value
+        sheetAction = SheetAction.forValue(action)!!
+
         binding = ActivitySpellingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -77,7 +84,7 @@ class SpellingActivity : AppCompatActivity() {
         setPrBarVisibility(false)
         parseItems(response).fold(
             { e -> Log.e("error", e.message) },
-            { words -> spellingWords.addAll(words)}
+            { spellingWords.addAll(it)}
         )
         updateViewAfterLoading()
     }
@@ -89,12 +96,16 @@ class SpellingActivity : AppCompatActivity() {
     private fun loadSpellingWords() {
         //Log.i("thread", "thread: ${Thread.currentThread().name}, id: ${Thread.currentThread().id}")
         setPrBarVisibility(true)
-        wordsProvider?.loadSpellingWords { words -> onWordsReceived(words) }
+        wordsProvider?.loadSpellingWords(sheetAction) { onWordsReceived(it) }
     }
 
     private fun uploadSpellingWords() {
         updateViewWhileUpdateWords()
-        wordsProvider?.updateSpellingWords({response -> onWordsUpdated(response)}, getChangedWords())
+        val action = when(sheetAction){
+            SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.UPDATE_ERIK_SPELLING_WORDS
+            else -> SheetAction.UPDATE_MARK_SPELLING_WORDS
+        }
+        wordsProvider?.updateSpellingWords({onWordsUpdated(it)}, getChangedWords(), action)
     }
 
     private fun onWordsUpdated(response: String) {
@@ -115,13 +126,18 @@ class SpellingActivity : AppCompatActivity() {
     }
 
     private fun createNewSpellingWord(){
+        val action = when (sheetAction) {
+            SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.READ_ERIK_SPELLING_CATEGORIES
+            else -> SheetAction.READ_MARK_SPELLING_CATEGORIES
+        }
+
         if (wordsProvider == null) {
             wordsProvider = WordsProvider(applicationContext)
-            val dialog = DialogNewSpellingWord (wordsProvider!!) { word -> saveNewSpellingWord(word) }
+            val dialog = DialogNewSpellingWord (wordsProvider!!, action) { saveNewSpellingWord(it) }
             dialog.show(supportFragmentManager, "DialogNewQuestion")
 
         } else {
-            val dialog = DialogNewSpellingWord (wordsProvider!!) { word -> saveNewSpellingWord(word) }
+            val dialog = DialogNewSpellingWord (wordsProvider!!, action) { saveNewSpellingWord(it) }
             dialog.show(supportFragmentManager, "DialogNewQuestion")
 
         }
@@ -130,7 +146,11 @@ class SpellingActivity : AppCompatActivity() {
     private fun saveNewSpellingWord(word: SpellingWord){
         setPrBarVisibility(true)
         setInfoTextProperties(getString(R.string.saving_spelling_word_text), true)
-        wordsProvider?.saveNewSpellingWords({response -> onWordSaved(response)}, listOf(word))
+        val action = when(sheetAction){
+            SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.SAVE_ERIK_WORDS
+            else -> SheetAction.SAVE_MARK_WORDS
+        }
+        wordsProvider?.saveNewSpellingWords({onWordSaved(it)}, listOf(word), action)
     }
 
     private fun onWordSaved(response: String) {
