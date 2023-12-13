@@ -45,13 +45,13 @@ class WordsProvider(val context: Context) {
         updateData(backupCall, sheetAction, _mediumTimeout,  sentenceParam)
     }
 
-    fun saveNewSpellingWords(backupCall: (String) -> Unit, wordsToSave: List<SpellingWord>) {
+    fun saveNewSpellingWords(backupCall: (String) -> Unit, wordsToSave: List<SpellingWord>, sheetAction: SheetAction) {
         val wordsParam = wordListToMapOfJSON(wordsToSave)
-        updateData(backupCall, SheetAction.SAVE_WORDS, _mediumTimeout, wordsParam)
+        updateData(backupCall, sheetAction, _mediumTimeout, wordsParam)
     }
 
     fun restoreSpellingWordsFromLogs(backupCall: (String) -> Unit){
-        updateData(backupCall, SheetAction.RESTORE_SPELLING_FROM_LOG, _longTimeout)
+        updateData(backupCall, SheetAction.RESTORE_ERIK_SPELLING_FROM_LOG, _longTimeout)
     }
 
     private fun loadData(wordsReceiver: (String) -> Unit, action: SheetAction, retryTimeout: Int = _shortTimeout){
