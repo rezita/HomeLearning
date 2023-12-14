@@ -2,7 +2,7 @@
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/ecda5ad4-6261-4ae2-b7de-54383443c0ab" width="100">
 
 Home Learning is a simple app to practice spelling, irregular verbs and reading for children.
-In other words: Home Learning App is the 'front end' part of out our family learning project. (The 'back end' is written in google app script and the data is stred in spreadheets.)
+In other words: Home Learning App is the 'front end' part of out our family learning project. (The 'back end' is written in google app script and the data is stored in spreadsheets.)
 
 # Short Story
 When my older son was in year 2 in school, he had to learn around 6-10 words a week to spell (these were his spelling words of the week.) The lists followed the National Curriculum spelling list recommendations.
@@ -23,7 +23,7 @@ Then this app was born, which we now use not only for daily spelling, but also h
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/150d506a-db44-4d9b-9461-18d84944d217" width="200">
 
 ## Reading
-The appearance of the words follows the Monster Phonics' color code.
+The appearance of the words follows the Monster Phonics' colour code.
 
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/af12675b-cd71-41d5-8667-4c59965a9d7e" height="200">
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/298404f2-a30f-41dc-878b-6b53b41c67f8" height="200">
