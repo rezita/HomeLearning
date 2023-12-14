@@ -23,6 +23,8 @@ Then this app was born, which we now use not only for daily spelling, but also h
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/150d506a-db44-4d9b-9461-18d84944d217" width="200">
 
 ## Reading
+The appearance of the words follows the Monster Phonics' color code.
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/af12675b-cd71-41d5-8667-4c59965a9d7e" height="200">
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/298404f2-a30f-41dc-878b-6b53b41c67f8" height="200">
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/b7dfab03-bdd0-45e2-a89b-911451c984c3" height="200">
@@ -41,8 +43,48 @@ Then this app was born, which we now use not only for daily spelling, but also h
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/ec1f7ed5-ee0d-468e-a307-38f8b2b24282" width="200">
 
 # Getting Started
-Set the sheetId and ScriptId
-github ID - for partiallyEditableText (see LINK!!!!)
+For using the app, you need to set some variables. 
+## App scriptID and sheet ID
+In `local.properties` insert the following lines:
+```
+scriptID="YOUR_GOOGLE_SCRIPT_ID"
+testSheetID="YOUR_GOOGLE_SHEET_ID"
+sheetID="YOUR_GOOGLE_SHEET_ID"
+```
+As you can see, there are two sheetIDs you need to set. One for the debud and one for the release version of the app. (See `build.gradle` `buildTypes` section.)
+
+## github access key
+For using the partiallyeditabletext library, you need to set the github access token and username in the `gradle.properties` file:
+```
+user = "YOUR_USERNAME"
+acckey = "YOUR_GITHUB_TOKEN"
+```
+(For more information, see the partiableEdditableText description: https://github.com/rezita/PartiallyEditableText)
+
+Or you can edit the `settings.gradle` file directly:
+```
+dependencyResolutionManagement {
+    ...
+    repositories {
+        ...
+        maven {
+            url = uri("https://maven.pkg.github.com/rezita/PartiallyEditableText")
+            credentials {
+                username = YOUR_USERNAME
+                password = YOUR_PASSWORD
+            }
+        }
+    }
+```
+
+## For Signed Release
+If you would like to generate a signed apk, you also need to set some variable in the `gradle.properties` file:
+```
+storePassword=YOUR_PASSWORD
+keyPassword=YOUR_PASSWORD
+keyAlias=YOUR_KEY_ALIAS
+storeFile=YOUR_FILE_PATH
+```
 
 # TODO
 - restore from log: timeout after 6 mins -> using a variable to check the process (how many rows were processed)
