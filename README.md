@@ -2,7 +2,7 @@
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/ecda5ad4-6261-4ae2-b7de-54383443c0ab" width="100">
 
 Home Learning is a simple app to practice spelling, irregular verbs and reading for children.
-In other words: Home Learning App is the 'front end' part of out our family learning project. (The 'back end' is written in google app script and the data is stored in spreadsheets.)
+In other words: Home Learning App is the 'front end' part of our family learning project. (The 'back end' is written in google app script and the data is stored in spreadsheets.)
 
 # Short Story
 When my older son was in year 2 in school, he had to learn around 6-10 words a week to spell (these were his spelling words of the week.) The lists followed the National Curriculum spelling list recommendations.
