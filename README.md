@@ -16,19 +16,29 @@ Then this app was born, which we now use not only for daily spelling, but also h
 
 # App Screenshots
 ## Main
-<img src="https://github.com/rezita/HomeLearning/assets/43845243/42eba095-3c5e-43ff-8c1f-ff2edf56446b" width="200">
-
-<img src="https://github.com/rezita/HomeLearning/assets/43845243/fdd6294d-1898-4cbb-bc8f-55641f3724ad" width="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/a7ec4f2b-6b4a-4dab-9557-6e2a324b12ca" width="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/50db6b26-e917-4cfb-8874-10a667028b15" width="200">
 
 ## Spelling
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/150d506a-db44-4d9b-9461-18d84944d217" width="200">
 
 ## Reading
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/af12675b-cd71-41d5-8667-4c59965a9d7e" height="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/298404f2-a30f-41dc-878b-6b53b41c67f8" height="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/b7dfab03-bdd0-45e2-a89b-911451c984c3" height="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/853f563f-4f73-4ff5-bb8b-e444e5c373a0" height="200">
 
 ## Irregular Verbs
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/583a6bb6-3423-47c5-826a-3ee25d79c260" width="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/6fca9f92-33e4-4f79-abf8-a7ec00143dc1" width="200">
 
 ## Homophones
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/4c865e3a-67c2-43c6-8d6a-4ecb1cb91fc0" width="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/7bdde463-9a04-48be-8274-5e7253433962" width="200">
 
 ## Upload New Words
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/abd991e9-0678-4a0e-bc79-4ae17339ad9c" width="200">
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/ec1f7ed5-ee0d-468e-a307-38f8b2b24282" width="200">
 
 # Getting Started
 Set the sheetId and ScriptId
