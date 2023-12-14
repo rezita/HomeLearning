@@ -51,7 +51,7 @@ scriptID="YOUR_GOOGLE_SCRIPT_ID"
 testSheetID="YOUR_GOOGLE_SHEET_ID"
 sheetID="YOUR_GOOGLE_SHEET_ID"
 ```
-As you can see, there are two sheetIDs you need to set. One for the debud and one for the release version of the app. (See `build.gradle` `buildTypes` section.)
+As you can see, there are two sheetIDs you need to set. One for the debug and one for the release version of the app. (See `build.gradle` `buildTypes` section.)
 
 ## github access key
 For using the partiallyeditabletext library, you need to set the github access token and username in the `gradle.properties` file:
@@ -86,10 +86,13 @@ keyAlias=YOUR_KEY_ALIAS
 storeFile=YOUR_FILE_PATH
 ```
 
-# TODO
+# Next Steps
 - restore from log: timeout after 6 mins -> using a variable to check the process (how many rows were processed)
 - add: Mark log restore from log 
 - dialog sheetAction differently
 - uploadWord Adapter sheet action differently 
 - negative response: handle differently (eg. remove progressbar, inform the user)
 - dialog: check edittexts when the focus leaves (remove error message when the word is correct, or show when it is not correct)
+
+# License
+ [Apache 2.0]
