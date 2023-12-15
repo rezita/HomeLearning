@@ -129,22 +129,19 @@ These are the main sheets of the spelling. The following table describes the col
 (*) Few words about the word selection. The words can be in the selected list in two ways:
 - If the `repeat` value is 1. The repeat value is 1 if the word was marked to 'incorrect' the last time. 
 - If the word is selected via the selection procedure. Every word gets a `weight` value which is calculated by multiplying a random number by the `attempt/incorrect` ratio. 
-  This means higher the attempt/incorrect ratio, the lower chance of selectiong the word, but not impossible (The random number weight can influence the final weight of the word).  
+  This means higher the attempt/incorrect ratio, the lower chance of selectiong the word, but not impossible (The random number weight can influence the final weight of the word).
+
 
 ## logs_Erik_spelling and logs_Mark_spelling
 Thiese are the logging sheets for spelling. Every changes (insert, update, restore) of `spellingErik` and `spellingMark` sheets has an entri in these sheets. The following table describes the columns of the sheets:
 
 |Column Name | Type | Description|
 |--- |--- |---------- |
-|word | String | This is the spelling `word` needs to be practise. |
-|category | String | This is the category of the word. (The categories are defined in `erikSpellingCategories` and `markSpellingCategories` constants.)|
-|comment | String | Any comment for the word (e.g. CEW, plural etc)|
-|repeat | Number (0/1) | It can be 0 or 1. It 1 the word will be selected next time for practising. (*)|
-|attempt | Number (0/1) | It shows how many times the word was selected before.|
-|inCorrect | Number (0/1) | It shows the number of the incorrect attempts.|
-
-date	user	action	parameter
-
+|date | Date | Date of the action. |
+|user| String | The name of the user made the action.|
+|action | String | Action description: update, insert or restore from log.|
+|parameter | String | Parameters of the action.|
+			
 # Next Steps
 - restore from log: timeout after 6 mins -> using a variable to check the process (how many rows were processed)
 - add: Mark log restore from log 
