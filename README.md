@@ -45,7 +45,9 @@ The appearance of the words follows the Monster Phonics' colour code.
 # Getting Started
 For using the app, you need to set some variables. 
 ## App scriptID and sheet ID
-In `local.properties` insert the following lines:
+The Google Apps Script files can be found under the `gscript` folder. Feel free to create your own Apps Script Project using them.
+
+Insert the following lines into `local.properties` of Home Learning App:
 ```
 scriptID="YOUR_GOOGLE_SCRIPT_ID"
 testSheetID="YOUR_GOOGLE_SHEET_ID"
@@ -85,6 +87,49 @@ keyPassword=YOUR_PASSWORD
 keyAlias=YOUR_KEY_ALIAS
 storeFile=YOUR_FILE_PATH
 ```
+
+# Google Scripts Projecet and Spreadheets
+The Home Learning App and the Google Apps Script communicate each outher using Http(s) protocoll. 
+
+According to the Http(s)'s `action` parameter of the request, the Google App Script calls different functions and sends back different kind of data. 
+The following table summarise the available requests:
+
+|Action Name | GET/PUT | Sheet Name | Description|
+|--- |--- |--- |---------- |
+|getErikSpellingWords | GET | spellingErik | Returns words from the `spellingErik` sheet according to the `erikSpellingCategoryRules`. !!!!!!!!! |
+|getErikSpellingCategories | GET |- | Returns the predefined `erikSpellingCategories`|
+|insertErikSpellingWords | PUT | spellingErik, logs_Erik_spelling | Inserts new spelling words into the `spellingErik` sheet and makes a log entry of the insertation. |
+|updateErikSpellingWords | PUT | spellingErik, logs_Erik_spelling | Updates spelling words in `spellingErik` sheet according to the value of the `result` and makes a log entry of the update. |
+|getMarkSpellingWords | GET | spellingMark | Returns words from the `spellingMark` sheet according to the `markSpellingCategoryRules`. !!!!!!!!! |
+|getMarkSpellingCategories | GET | -  |Returns the predefined `markSpellingCategories` |
+|insertMarkSpellingWords | PUT |spellingMark, logs_Mark_spelling  | Inserts new spelling words into the `spellingMark` sheet and makes a log entry of the insertation.|
+|updateMarkSpellingWords | PUT |spellingMark, logs_Mark_spelling  |Updates spelling words in `spellingMark` sheet according to the value of the `result` and makes a log entry of the update. |
+|getReadingWords | GET | readWords | Returns the marked words from the `readWords` sheet. |
+|getReadingCEW | GET | readCEW | Returns the marked words from the `readCEW` sheet. (CEW means Common Exception Word)|
+|getIrregularVerbs | GET | irregVerbs | Returns predefined number of irrgular verbs entries from the `irregVerbs` sheet.|
+|updateIrregularVerbs | PUT | irregVerbs, logs_irregular | Updates irregular verbs entries in `irregVerbs` sheet according to the value of the `result` and makes a log entry of the update. |
+|getHomophones | GET | homophones | Returns predefined number of homophones entries from the `homophones` sheet.|
+|updateHomophones | PUT | homophones, logs_homophones | Updates homophones entries in `homophones` sheet according to the value of the `result` and makes a log entry of the update. |
+|restoreErikSpellingFromLogs | PUT | spellingErik, logs_Erik_spelling | Rebuilds the spellingErik sheet from strach according to the log entries.|
+
+# Sheets
+The App uses the following sheets:
+## spellingErik and spellingMark
+This is the main sheet of the spelling. The following table describes the columns of the sheets
+
+|Column Name | Type | Description|
+|--- |--- |---------- |
+|word | String | This is the spelling `word` needs to be practise. |
+|category | String | This is the category of the word. (The categories are defined in `erikSpellingCategories` and `markSpellingCategories` constants.)|
+|comment | String | Any comment for the word (e.g. CEW, plural etc)|
+|repeat | Number (0/1) | It can be 0 or 1. It 1 the word will be selected next time for practising. (*)|
+|attempt | Number (0/1) | It shows how many times the word was selected before.|
+|inCorrect | Number (0/1) | It shows the number of the incorrect attempts.|
+
+(*) Few words about the word selection. The words can be in the selected list in two ways:
+- If the `repeat` value is 1. The repeat value is 1 if the word was marked to 'incorrect' the last time. 
+- If the word is selected via the selection procedure. Every word gets a `weight` value which is calculated by multiplying a random number by the `attempt/incorrect` ratio. 
+  This means higher the attempt/incorrect ratio, the lower chance of selectiong the word, but not impossible (The random number weight can influence the final weight of the word).  
 
 # Next Steps
 - restore from log: timeout after 6 mins -> using a variable to check the process (how many rows were processed)
