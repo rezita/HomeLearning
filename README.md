@@ -133,7 +133,7 @@ These are the main sheets of the spelling. The following table describes the col
 
 
 ## logs_Erik_spelling and logs_Mark_spelling
-Thiese are the logging sheets for spelling. Every changes (insert, update, restore) of `spellingErik` and `spellingMark` sheets has an entri in these sheets. The following table describes the columns of the sheets:
+These are the logging sheets for spelling. Every changes (insert, update, restore) of `spellingErik` and `spellingMark` sheets has an entri in these sheets. The following table describes the columns of the sheets:
 
 |Column Name | Type | Description|
 |--- |--- |---------- |
