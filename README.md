@@ -130,7 +130,9 @@ These are the main sheets of the spelling. The following table describes the col
 - If the `repeat` value is 1. The repeat value is 1 if the word was marked to 'incorrect' the last time. 
 - If the word is selected via the selection procedure. Every word gets a `weight` value which is calculated by multiplying a random number by the `attempt/incorrect` ratio. 
   This means higher the attempt/incorrect ratio, the lower chance of selectiong the word, but not impossible (The random number weight can influence the final weight of the word).
+
 Exmaple:
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/757a9670-2822-41dd-9519-1b7f77ca039e" width="600">
 
 ## logs_Erik_spelling and logs_Mark_spelling
@@ -144,6 +146,7 @@ These are the logging sheets for spelling. Every changes (insert, update, restor
 |parameter | String | Parameters of the action.|
 
 Example:
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/29154fc4-2e70-4fd0-a33f-8ccd9bedb2ce" width="600">
 
 ## irregVerbs and homophones
@@ -161,7 +164,9 @@ As each `Suggestions` has more than one `Sentences`, the selection algorithm is 
 - Collect all the unique `suggestions`, then summarise all the `attempts` and `nrOfIncorrect` attempts. 
 - Calculate the weight according to the ratio of the attempts and nrOfIncorrect attempts and multiply by a random number. 
 - It then selects the first “n” highest weighted `suggestions` and then selects a random sentence for each of them.
+
 Example:
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/fe1f5184-d8a7-4b9a-a8ca-4cd1b2677970" width="600">
 
 ## logs_irregular and logs_homophones
@@ -171,7 +176,9 @@ Example:
 |user| String | The name of the user made the action.|
 |action | String | Action description: update, insert or restore from log.|
 |parameter | String | Parameters of the action.|
+
 Example:
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/427adb6e-ebc4-4b28-b75c-9a223f760cde" width="600">
 
 ## readWords and readCEW
@@ -187,6 +194,7 @@ Sheets for reading.
 Selection rule: the rows which `isReadable` cell contains "x" or "X" will be selected.
 
 Example:
+
 <img src="https://github.com/rezita/HomeLearning/assets/43845243/fe064630-0b50-49d2-b2b5-5a18c26e5aa6" width="600">
    
 # Next Steps
