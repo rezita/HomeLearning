@@ -123,14 +123,15 @@ These are the main sheets of the spelling. The following table describes the col
 |category | String | This is the category of the word. (The categories are defined in `erikSpellingCategories` and `markSpellingCategories` constants.)|
 |comment | String | Any comment for the word (e.g. CEW, plural etc)|
 |repeat | Number (0/1) | It can be 0 or 1. It 1 the word will be selected next time for practising. (*)|
-|attempt | Number (0/1) | It shows how many times the word was selected before.|
-|inCorrect | Number (0/1) | It shows the number of the incorrect attempts.|
+|attempt | Number | It shows how many times the word was selected before.|
+|inCorrect | Number | It shows the number of the incorrect attempts.|
 
 (*) Few words about the word selection. The words can be in the selected list in two ways:
 - If the `repeat` value is 1. The repeat value is 1 if the word was marked to 'incorrect' the last time. 
 - If the word is selected via the selection procedure. Every word gets a `weight` value which is calculated by multiplying a random number by the `attempt/incorrect` ratio. 
   This means higher the attempt/incorrect ratio, the lower chance of selectiong the word, but not impossible (The random number weight can influence the final weight of the word).
-
+Exmaple:
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/757a9670-2822-41dd-9519-1b7f77ca039e" width="600">
 
 ## logs_Erik_spelling and logs_Mark_spelling
 These are the logging sheets for spelling. Every changes (insert, update, restore) of `spellingErik` and `spellingMark` sheets has an entri in these sheets. The following table describes the columns of the sheets:
@@ -141,7 +142,53 @@ These are the logging sheets for spelling. Every changes (insert, update, restor
 |user| String | The name of the user made the action.|
 |action | String | Action description: update, insert or restore from log.|
 |parameter | String | Parameters of the action.|
-			
+
+Example:
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/29154fc4-2e70-4fd0-a33f-8ccd9bedb2ce" width="600">
+
+## irregVerbs and homophones
+|Column Name | Type | Description|
+|--- |--- |---------- |
+|Sentences | String | Sentences for the excercise. |
+|Suggestions| String | Suggestions for the excercise (eg. the infinite form of the verb, homophen pairs)|
+|comment | String | Any description (eg. verb tense)|
+|solution | String | The right answer.|
+|attempt | Number | It shows how many times the sentence was selected before.|
+|NrOfinCorrect | Number | It shows the number of the incorrect attempts.|
+
+As each `Suggestions` has more than one `Sentences`, the selection algorithm is the following: 
+
+- Collect all the unique `suggestions`, then summarise all the `attempts` and `nrOfIncorrect` attempts. 
+- Calculate the weight according to the ratio of the attempts and nrOfIncorrect attempts and multiply by a random number. 
+- It then selects the first “n” highest weighted `suggestions` and then selects a random sentence for each of them.
+Example:
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/fe1f5184-d8a7-4b9a-a8ca-4cd1b2677970" width="600">
+
+## logs_irregular and logs_homophones
+|Column Name | Type | Description|
+|--- |--- |---------- |
+|date | Date | Date of the action. |
+|user| String | The name of the user made the action.|
+|action | String | Action description: update, insert or restore from log.|
+|parameter | String | Parameters of the action.|
+Example:
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/427adb6e-ebc4-4b28-b75c-9a223f760cde" width="600">
+
+## readWords and readCEW
+Sheets for reading.
+|Column Name | Type | Description|
+|--- |--- |---------- |
+|isReadable | String | If the value of this cell is "x" or "X". The word will be selected for reading. |
+|word| String | Word for reading.|
+|category | String | Custom category of the word. |
+|comment | String | Custom comment. |
+|rule | Number | Semicolon separated rules for the appearance of the word. There can be more than on rule. (Eg. white e; blue oo)|
+
+Selection rule: the rows which `isReadable` cell contains "x" or "X" will be selected.
+
+Example:
+<img src="https://github.com/rezita/HomeLearning/assets/43845243/fe064630-0b50-49d2-b2b5-5a18c26e5aa6" width="600">
+   
 # Next Steps
 - restore from log: timeout after 6 mins -> using a variable to check the process (how many rows were processed)
 - add: Mark log restore from log 
