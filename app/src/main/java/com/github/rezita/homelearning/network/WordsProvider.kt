@@ -13,7 +13,6 @@ import org.json.JSONArray
 
 class WordsProvider(val context: Context) {
 
-    private val urlBuilder = URLBuilder()
     private val _shortTimeout = 60000   //1 min
     private val _mediumTimeout = 120000   //2 min
     private val _longTimeout = 300000  //5 min
@@ -56,8 +55,8 @@ class WordsProvider(val context: Context) {
 
     private fun loadData(wordsReceiver: (String) -> Unit, action: SheetAction, retryTimeout: Int = _shortTimeout){
         val queue = Volley.newRequestQueue(context)
-        val url = urlBuilder.getGetURLAddress(action, getUserName(context))
-
+        val url = URLBuilder.getGetURLAddress(action, getUserName(context))
+        //Log.i("url info", url)
         val volleyRequest = JsonObjectRequest(
             Request.Method.GET,
             url,
@@ -80,11 +79,13 @@ class WordsProvider(val context: Context) {
 
     private fun updateData(wordsReceiver: (String) -> Unit, action: SheetAction, retryTimeout: Int, extras: Map<String, String> = HashMap<String, String>()){
         val queue = Volley.newRequestQueue(context)
-        val url = urlBuilder.getPostURLAddress()
+        val url = URLBuilder.getPostURLAddress()
+        //Log.i("url info", url)
 
         val stringRequest: StringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                Log.i("response", response.toString())
                 wordsReceiver(response.toString())
             },
             { error ->
@@ -106,7 +107,7 @@ class WordsProvider(val context: Context) {
     private fun getPostParams(action: SheetAction, extras: Map<String, String>): Map<String, String> {
         return mapOf("action" to action.value,
             "username" to getUserName(context).toString(),
-            "ssId" to urlBuilder.getSheetID()) + extras
+            "ssId" to URLBuilder.getSheetID()) + extras
     }
 
     private fun getUserName(context: Context): String? {

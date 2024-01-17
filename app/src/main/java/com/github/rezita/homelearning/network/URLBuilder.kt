@@ -3,20 +3,14 @@ package com.github.rezita.homelearning.network
 import android.net.Uri
 import com.github.rezita.homelearning.BuildConfig
 
-class URLBuilder() {
+object URLBuilder {
     private val _baseURL = "script.google.com"
     private val _baseURL2 = "/macros/s/"
 
-    private var scriptID: String = ""
-    private var sheetID: String = ""
-
-    init{
-        scriptID = BuildConfig.scriptID
-        sheetID = BuildConfig.sheetID
-    }
+    private val scriptID = BuildConfig.scriptID
+    private val sheetID = BuildConfig.sheetID
 
     fun getGetURLAddress(action: SheetAction, userName: String?): String{
-
         val uri = Uri.Builder()
         uri.scheme("https")
             .authority(_baseURL)
