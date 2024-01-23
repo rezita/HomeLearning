@@ -1,25 +1,27 @@
 package com.github.rezita.homelearning.view
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import arrow.core.Either
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.adapters.SentenceAdapter
+import com.github.rezita.homelearning.databinding.ActivityFillInSentencesBinding
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsProvider
 import com.github.rezita.homelearning.utils.JSONSerializer
 import com.github.rezita.homelearning.utils.RemoteError
-import com.github.rezita.homelearning.adapters.SentenceAdapter
-import com.github.rezita.homelearning.databinding.ActivityFillInSentencesBinding
-import com.github.rezita.homelearning.network.SheetAction
+
 
 class FillInSentencesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFillInSentencesBinding
@@ -130,6 +132,7 @@ class FillInSentencesActivity : AppCompatActivity() {
         if (!isAllAnswered()) {
             showNotAllAnsweredDialog()
         } else {
+            hideKeyboard()
             updateAndSaveResults()
         }
     }
@@ -203,5 +206,15 @@ class FillInSentencesActivity : AppCompatActivity() {
             false -> binding.sentencesProgressbar.root.visibility = View.GONE
         }
         invalidateOptionsMenu()
+    }
+
+    private fun hideKeyboard(){
+        //edittext.onEditorAction(EditorInfo.IME_ACTION_DONE);
+        try {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        } catch (e: Exception) {
+            // TODO: handle exception
+        }
     }
 }
