@@ -74,7 +74,7 @@ class SentenceAdapter(
                 else -> {
                     resultText.visibility = View.VISIBLE
                     sentenceText.visibility = View.GONE
-                    resultText.text = fillInSentence.getAsResult().insert(0, indexSting)
+                    resultText.setText(fillInSentence.getAsResult().insert(0, indexSting), TextView.BufferType.NORMAL)
                 }
             }
         }

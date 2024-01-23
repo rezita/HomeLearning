@@ -41,6 +41,10 @@
         android:paddingBottom="10sp"
         android:textSize="18sp"
         android:visibility="visible"
+        android:clickable="false"
+        android:linksClickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
