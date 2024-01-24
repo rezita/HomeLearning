@@ -88,6 +88,7 @@ keyAlias=YOUR_KEY_ALIAS
 storeFile=YOUR_FILE_PATH
 ```
 
+NOTE: Do not forget Sync Project with gradle files (File/ Sync Project with gradle files)
 # Google Scripts Projecet and Spreadheets
 The Home Learning App and the Google Apps Script communicate each outher using Http(s) protocoll. 
 
