@@ -87,6 +87,10 @@ keyPassword=YOUR_PASSWORD
 keyAlias=YOUR_KEY_ALIAS
 storeFile=YOUR_FILE_PATH
 ```
+Also add the followings to the `gradle.properties` file:
+```
+android.useAndroidX=true
+```
 
 NOTE: Do not forget Sync Project with gradle files (File/ Sync Project with gradle files)
 # Google Scripts Projecet and Spreadheets
