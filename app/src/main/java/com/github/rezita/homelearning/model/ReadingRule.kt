@@ -2,9 +2,10 @@ package com.github.rezita.homelearning.model
 
 import android.graphics.Color
 
-class ReadingRule(val word: String, val subWord: String, private val ruleName: String) {
-    private val _silentEndE: String = "silente"
-    private val _underline = "ul"
+private const val SILENT_END_E: String = "silente"
+private const val UNDERLINE = "ul"
+
+data class ReadingRule(val word: String, val subWord: String, private val ruleName: String) {
 
     fun getRuleColor(): Int{
         return when(ruleName) {
@@ -33,10 +34,10 @@ class ReadingRule(val word: String, val subWord: String, private val ruleName: S
     }
 
     fun isSilentEndE(): Boolean{
-        return ruleName == _silentEndE
+        return ruleName == SILENT_END_E
     }
 
     fun isUnderline(): Boolean{
-        return ruleName == _underline
+        return ruleName == UNDERLINE
     }
 }

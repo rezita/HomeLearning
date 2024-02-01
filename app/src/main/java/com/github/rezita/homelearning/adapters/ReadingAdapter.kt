@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.model.getDecorated
 
 class ReadingAdapter(val context: Context,
                      private val wordList: List<ReadingWord>)
