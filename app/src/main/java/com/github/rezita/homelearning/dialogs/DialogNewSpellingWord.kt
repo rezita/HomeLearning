@@ -29,7 +29,7 @@ class DialogNewSpellingWord(
 
     private var spinnerAdapter: ArrayAdapter<String>? = null
     private var categories: ArrayList<String> = ArrayList()
-    private var word = SpellingWord("")
+    private var word = SpellingWord("", "", "")
 
     private val _maxWordLength = 30
     private val _maxCommentLength = 25

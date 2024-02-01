@@ -18,7 +18,7 @@ import com.github.rezita.homelearning.view.UploadSpellingWordsActivity as Upload
 
 class UploadWordsAdapter(val context: Context,
                          private val selectionDeleteInteraction: (Int) -> Unit,
-                         private val selectionChangeInteraction: (Int, String, String, String) -> Unit,
+                         private val selectionChangeInteraction: (Int, SpellingWord) -> Unit,
                          private val wordList: List<SpellingWord>,
                          private val categories: ArrayList<String>,
                          private val sheetAction: SheetAction)
@@ -104,7 +104,7 @@ class UploadWordsAdapter(val context: Context,
         }
 
         private fun changeWord(word: SpellingWord){
-            selectionChangeInteraction(adapterPosition, word.word, word.comment, word.category)
+            selectionChangeInteraction(adapterPosition, word)
         }
     }
 

@@ -88,13 +88,8 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
         wordsAdapter = UploadWordsAdapter(
             this,
             { position -> onItemRemove(position) },
-            { position, wordText, comment, category ->
-                onItemChange(
-                    position,
-                    wordText,
-                    comment,
-                    category
-                )
+            { position, word ->
+                onItemChange(position, word)
             },
             words, categories, getCategoryAction()
         )
@@ -110,10 +105,19 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
         wordsAdapter?.notifyDataSetChanged()
     }
 
+    /*
+        @SuppressLint("NotifyDataSetChanged")
+        private fun onItemChange(position: Int, wordText: String, comment: String, category: String) {
+            //words.removeAt(position - 1)
+            words[position - 1].changeWord(wordText, comment, category)
+            //updateLayout()
+            wordsAdapter?.notifyDataSetChanged()
+        }
+     */
     @SuppressLint("NotifyDataSetChanged")
-    private fun onItemChange(position: Int, wordText: String, comment: String, category: String) {
+    private fun onItemChange(position: Int, word: SpellingWord) {
         //words.removeAt(position - 1)
-        words[position - 1].changeWord(wordText, comment, category)
+        words[position - 1] = word
         //updateLayout()
         wordsAdapter?.notifyDataSetChanged()
     }
@@ -121,13 +125,21 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
     private fun loadCategoriesAndPrepareView() {
         updateLayout()
         setPrBarVisibility(true)
-        wordsProvider?.loadSpellingCategories(getCategoryAction()) { categories -> onCategoriesReceived(categories) }
+        wordsProvider?.loadSpellingCategories(getCategoryAction()) { categories ->
+            onCategoriesReceived(
+                categories
+            )
+        }
     }
 
     private fun saveNewWords() {
         setInfoTextProperties(getString(R.string.info_uploading))
         setPrBarVisibility(true)
-        wordsProvider?.saveNewSpellingWords({ response -> onWordsSaved(response) }, words, sheetAction)
+        wordsProvider?.saveNewSpellingWords(
+            { response -> onWordsSaved(response) },
+            words,
+            sheetAction
+        )
     }
 
     private fun onWordsSaved(response: String) {

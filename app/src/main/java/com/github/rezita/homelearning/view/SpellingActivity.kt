@@ -119,7 +119,8 @@ class SpellingActivity : AppCompatActivity() {
     }
 
     private fun onItemSelected(position: Int, status: WordStatus) {
-        spellingWords[position].changeStatus(status)
+        val word = spellingWords[position]
+        spellingWords[position] = word.copy(status = status)
         updateScores()
         //change the adapter's list
         this.wordsAdapter?.notifyItemChanged(position)
