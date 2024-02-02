@@ -37,7 +37,8 @@ class FillInSentencesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         wordsProvider = WordsProvider(applicationContext)
 
-        val action: String = intent.getStringExtra("action") ?: SheetAction.READ_IRREGULAR_VERBS.value
+        val action: String =
+            intent.getStringExtra("action") ?: SheetAction.READ_IRREGULAR_VERBS.value
         sheetAction = SheetAction.forValue(action)!!
 
         binding = ActivityFillInSentencesBinding.inflate(layoutInflater)
@@ -63,7 +64,7 @@ class FillInSentencesActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_check-> {
+            R.id.menu_check -> {
                 checkAndUploadResults()
                 true
             }
@@ -71,13 +72,13 @@ class FillInSentencesActivity : AppCompatActivity() {
         }
     }
 
-    private fun isCheckable() :Boolean {
+    private fun isCheckable(): Boolean {
         val resultText = binding.irregularInfoLayout.scoreText
         val progressBar = binding.sentencesProgressbar.root
         return (resultText.visibility == View.GONE && progressBar.visibility == View.GONE)
     }
 
-    private fun setRecyclerView(){
+    private fun setRecyclerView() {
         sentencesAdapter =
             SentenceAdapter(
                 this,
@@ -87,16 +88,16 @@ class FillInSentencesActivity : AppCompatActivity() {
         recyclerView!!.adapter = sentencesAdapter
     }
 
-    private fun loadSentences(){
+    private fun loadSentences() {
         setPrBarVisibility(true)
-        wordsProvider?.loadFillInSentences(sheetAction) { onVerbsReceived(it)  }
+        wordsProvider?.loadFillInSentences(sheetAction) { onVerbsReceived(it) }
     }
 
-    private fun onVerbsReceived(response: String){
+    private fun onVerbsReceived(response: String) {
         setPrBarVisibility(false)
         parseItems(response).fold(
             { e -> Log.e("error", e.message) },
-            { fillInSentences.addAll(it)}
+            { fillInSentences.addAll(it) }
         )
         updateViewAfterLoading()
     }
@@ -105,7 +106,7 @@ class FillInSentencesActivity : AppCompatActivity() {
         return JSONSerializer().parseSentences(jsonResponses)
     }
 
-    private fun prepareView(){
+    private fun prepareView() {
         setPrBarVisibility(false)
         binding.sentencesContainer.visibility = View.GONE
         setInfoTextProperties(getString(R.string.loading_data_text))
@@ -113,22 +114,22 @@ class FillInSentencesActivity : AppCompatActivity() {
 
     }
 
-    private fun updateViewAfterLoading(){
+    private fun updateViewAfterLoading() {
         setPrBarVisibility(false)
         if (fillInSentences.size == 0) {
             //error when loading
-            setInfoTextProperties( getString(R.string.loading_fail_text))
+            setInfoTextProperties(getString(R.string.loading_fail_text))
             binding.sentencesContainer.visibility = View.GONE
             //Toast.makeText(this, getString(R.string.loading_fail_text), Toast.LENGTH_SHORT).show()
         } else {
             setRecyclerView()
-            setInfoTextProperties( getString(R.string.irregular_verb_instruction))
+            setInfoTextProperties(getString(R.string.irregular_verb_instruction))
             binding.sentencesContainer.visibility = View.VISIBLE
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun checkAndUploadResults(){
+    private fun checkAndUploadResults() {
         if (!isAllAnswered()) {
             showNotAllAnsweredDialog()
         } else {
@@ -137,28 +138,38 @@ class FillInSentencesActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateAndSaveResults(){
+    private fun updateAndSaveResults() {
         setPrBarVisibility(true)
-        setInfoTextProperties( getString(R.string.irregular_checking_text))
+        setInfoTextProperties(getString(R.string.irregular_checking_text))
         updateAnswers()
         saveFillInSentenceResults()
     }
 
-    private fun updateAnswers(){
+    private fun updateAnswers() {
         //get answers and update sentences
-        for (index in 0 until fillInSentences.size){
+        for (index in 0 until fillInSentences.size) {
             val answer = sentencesAdapter!!.getAnswer(index)
-            fillInSentences[index].answer = answer
+            val currentSentence = fillInSentences[index]
+            fillInSentences[index] = getUpdatedSentence(answer, currentSentence)
             sentencesAdapter!!.notifyItemChanged(index)
         }
     }
 
+    private fun getUpdatedSentence(answer: String, sentence: FillInSentence): FillInSentence {
+        val status = when (answer) {
+            "" -> WordStatus.UNCHECKED
+            in sentence.solutions -> WordStatus.CORRECT
+            else -> WordStatus.INCORRECT
+        }
+        return sentence.copy(answer = answer, status = status)
+    }
+
     private fun saveFillInSentenceResults() {
-        val action = when(sheetAction){
+        val action = when (sheetAction) {
             SheetAction.READ_IRREGULAR_VERBS -> SheetAction.UPDATE_IRREGULAR_VERBS
             else -> SheetAction.UPDATE_HOMOPHONES
         }
-        wordsProvider?.updateFillInSentences({ onWordsUpdated(it)}, fillInSentences, action)
+        wordsProvider?.updateFillInSentences({ onWordsUpdated(it) }, fillInSentences, action)
     }
 
     private fun onWordsUpdated(response: String) {
@@ -174,7 +185,7 @@ class FillInSentencesActivity : AppCompatActivity() {
         return sentencesAdapter!!.isAllAnswered()
     }
 
-    private fun showNotAllAnsweredDialog(){
+    private fun showNotAllAnsweredDialog() {
         AlertDialog.Builder(this)
             .setMessage(getString(R.string.irregular_verb_not_all_filled_message))
             .setNeutralButton(getString(R.string.ok)) { dialogInterface, _ -> dialogInterface.cancel() }
@@ -184,31 +195,37 @@ class FillInSentencesActivity : AppCompatActivity() {
     }
 
     @SuppressLint("StringFormatInvalid")
-    private fun updateScores(){
+    private fun updateScores() {
         val resultText = binding.irregularInfoLayout.scoreText
 
         val answeredQuestions = fillInSentences.filter { word -> word.isChanged() }.size
-        val correctAnswers = fillInSentences.filter { word -> word.status == WordStatus.CORRECT }.size
-        val resultRatio = correctAnswers *100 / answeredQuestions
-        val scoreString = getString(R.string.irregular_verb_result, correctAnswers, answeredQuestions, resultRatio)
+        val correctAnswers =
+            fillInSentences.filter { word -> word.status == WordStatus.CORRECT }.size
+        val resultRatio = correctAnswers * 100 / answeredQuestions
+        val scoreString = getString(
+            R.string.irregular_verb_result,
+            correctAnswers,
+            answeredQuestions,
+            resultRatio
+        )
         //binding.scoreTex.text = "Result: ${correctAnswers} / ${answeredQuestions} ( ${result}%)"
         resultText.text = scoreString
         resultText.visibility = View.VISIBLE
     }
 
-    private fun setInfoTextProperties(text: String){
+    private fun setInfoTextProperties(text: String) {
         binding.irregularInfoLayout.infoText.text = text
     }
 
-    private fun setPrBarVisibility(isVisible : Boolean){
-        when(isVisible){
+    private fun setPrBarVisibility(isVisible: Boolean) {
+        when (isVisible) {
             true -> binding.sentencesProgressbar.root.visibility = View.VISIBLE
             false -> binding.sentencesProgressbar.root.visibility = View.GONE
         }
         invalidateOptionsMenu()
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         //edittext.onEditorAction(EditorInfo.IME_ACTION_DONE);
         try {
             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
