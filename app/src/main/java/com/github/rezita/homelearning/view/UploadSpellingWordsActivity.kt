@@ -72,10 +72,12 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
                 createNewSpellingWord()
                 true
             }
+
             R.id.menu_save -> {
                 saveNewWords()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -242,7 +244,7 @@ class UploadSpellingWordsActivity : AppCompatActivity() {
         binding.uploadWordsInfoLayout.infoText.text = text
     }
 
-    private fun getCategoryAction(): SheetAction{
+    private fun getCategoryAction(): SheetAction {
         return when (sheetAction) {
             SheetAction.SAVE_ERIK_WORDS -> SheetAction.READ_ERIK_SPELLING_CATEGORIES
             else -> SheetAction.READ_MARK_SPELLING_CATEGORIES

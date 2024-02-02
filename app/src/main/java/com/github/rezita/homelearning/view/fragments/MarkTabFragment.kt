@@ -43,7 +43,6 @@ class MarkTabFragment : Fragment() {
         binding.btnStartMarkSpelling.setOnClickListener{startMarkSpelling()}
         binding.btnAddMarkSpellingWords.setOnClickListener { addNewWords() }
         return binding.root
-
     }
 
     private fun startReading(readingAction: SheetAction) {
@@ -74,6 +73,4 @@ class MarkTabFragment : Fragment() {
                 }
             }
     }
-
-
 }
