@@ -32,7 +32,7 @@ class ErikTabFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentErikTabBinding.inflate(inflater, container, false)
         binding.btnStartSpelling.setOnClickListener { startErikSpelling() }
         binding.btnStartIrregular.setOnClickListener { startFillInSentences(SheetAction.READ_IRREGULAR_VERBS) }

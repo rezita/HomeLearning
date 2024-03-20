@@ -14,7 +14,7 @@ enum class SheetAction(val value: String) {
 
     //Erik sentences - irregular verbs, homophones
     READ_IRREGULAR_VERBS("getIrregularVerbs"),
-    UPDATE_IRREGULAR_VERBS( "updateIrregularVerbs"),
+    UPDATE_IRREGULAR_VERBS("updateIrregularVerbs"),
     READ_HOMOPHONES("getHomophones"),
     UPDATE_HOMOPHONES("updateHomophones"),
 
@@ -27,6 +27,6 @@ enum class SheetAction(val value: String) {
     //RESTORE_MARK_SPELLING_FROM_LOG("restoreSpellingFromLogs"),
 
     companion object {
-        fun forValue(value: String) = values().find{ it.value == value }
+        fun forValue(value: String) = values().find { it.value == value }
     }
 }
