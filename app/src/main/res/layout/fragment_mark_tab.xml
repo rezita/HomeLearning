@@ -32,8 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:enabled="true"
-            android:text="@string/start_mark_spelling"
-            android:visibility="visible" />
+            android:text="@string/start_mark_spelling" />
 
         <Button
             android:id="@+id/btn_addMarkSpellingWords"
@@ -41,8 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:enabled="true"
-            android:text="@string/upload_mark_words"
-            android:visibility="visible" />
+            android:text="@string/upload_mark_words" />
 
     </LinearLayout>
 </FrameLayout>

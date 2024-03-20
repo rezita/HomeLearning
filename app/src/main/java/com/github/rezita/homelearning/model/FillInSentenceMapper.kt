@@ -1,21 +1,17 @@
 package com.github.rezita.homelearning.model
 
-import com.github.rezita.homelearning.utils.joinWithSeparator
-import com.github.rezita.homelearning.utils.toListBySeparator
+import org.json.JSONException
+import org.json.JSONObject
 
-fun ApiFillInSentence.asFillInSentence() = FillInSentence(
-    sentence = sentence,
-    suggestion = suggestion,
-    solutions = solution.toListBySeparator(SOLUTION_SEPARATOR),
-    answer = answer,
-    tense = tense
-)
+private const val JSON_SUGGESTION = "suggestion"
+private const val JSON_SENTENCE = "sentence"
+private const val JSON_RESULT = "result"
 
-fun FillInSentence.asAPISentence() = ApiFillInSentence(
-    sentence = sentence,
-    suggestion = suggestion,
-    solution = solutions.joinWithSeparator(SOLUTION_SEPARATOR),
-    answer = answer,
-    tense = tense,
-    result = status.value.toString()
-)
+@Throws(JSONException::class)
+fun FillInSentence.convertToJSON() : JSONObject {
+    val jsonObj = JSONObject()
+    jsonObj.put(JSON_SUGGESTION, suggestion)
+    jsonObj.put(JSON_SENTENCE, sentence)
+    jsonObj.put(JSON_RESULT, status.value)
+    return jsonObj
+}
