@@ -59,6 +59,7 @@
     <string name="info_words_to_upload">Words to be uploaded</string>
     <string name="info_uploading">Saving words&#8230;</string>
 
+    <string name="edit_spelling_word_title">Edit spelling word</string>
     <string name="save_spelling_word_title">Add new spelling word</string>
     <string name="saving_spelling_word_text">Saving word&#8230;</string>
     <string name="message_loading_category">Loading categories&#8230;</string>

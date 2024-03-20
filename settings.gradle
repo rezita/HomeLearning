@@ -7,16 +7,22 @@ pluginManagement {
 }
 def usernameProvider = providers.gradleProperty("user")
 def passwordProvider = providers.gradleProperty("acckey")
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(file("github.properties")))
+
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
         maven {
-            url = uri("https://maven.pkg.github.com/rezita/PartiallyEditableText")
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/rezita/PartiallyEditableText"
             credentials {
-                username = usernameProvider.getOrNull()
-                password = passwordProvider.getOrNull()
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
             }
         }
     }

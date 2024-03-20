@@ -2,12 +2,10 @@ package com.github.rezita.homelearning.view.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.databinding.FragmentErikTabBinding
+import androidx.fragment.app.Fragment
 import com.github.rezita.homelearning.databinding.FragmentMarkTabBinding
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.view.ReadingActivity
@@ -36,11 +34,11 @@ class MarkTabFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMarkTabBinding.inflate(inflater, container, false)
         binding.btnStartReading.setOnClickListener { startReading(SheetAction.READ_READING_WORDS) }
         binding.btnReadingCEW.setOnClickListener { startReading(SheetAction.READ_READING_CEW) }
-        binding.btnStartMarkSpelling.setOnClickListener{startMarkSpelling()}
+        binding.btnStartMarkSpelling.setOnClickListener { startMarkSpelling() }
         binding.btnAddMarkSpellingWords.setOnClickListener { addNewWords() }
         return binding.root
     }
