@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 interface AppContainer {
     val wordRepository: WordRepository
@@ -20,7 +21,11 @@ class DefaultAppContainer : AppContainer {
 
     val logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
-    val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(logging).build()
+    val client: OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(logging)
+        .readTimeout(60000, TimeUnit.MILLISECONDS)  //1 min
+        .writeTimeout(120000, TimeUnit.MILLISECONDS)    //2 min
+        .build()
 
     private val baseUrl =
         "https://script.google.com"
