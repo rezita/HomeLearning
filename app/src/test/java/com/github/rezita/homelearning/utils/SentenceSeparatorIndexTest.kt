@@ -4,7 +4,7 @@ import com.github.rezita.homelearning.model.FillInSentence
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class SentenceSparatorIndexTest {
+class SentenceSeparatorIndexTest {
     @Test
     fun fillInSentence_with_no_separator() {
         val sentence = "I have never been to Italy."

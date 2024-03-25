@@ -5,7 +5,7 @@ import org.junit.Test
 
 class SentenceMapperTest {
     @Test
-    fun test_sentence_to_APISentence_correctAnswer() {
+    fun test_sentence_to_APISentence_correctAnswer_separator_with_spaces() {
         val original = FillInSentence(
             sentence = "This is the example",
             suggestion = "answer / wrong",
@@ -16,12 +16,12 @@ class SentenceMapperTest {
         val expectedResult = ApiFillInSentence(
             sentence = "This is the example",
             suggestion = "answer / wrong",
-            solution = "answer / correct",
+            solution = "answer/correct",
             answer = "answer",
             tense = "present",
             result = "1"
         )
-        Assert.assertEquals (expectedResult, original.asAPISentence())
+        Assert.assertEquals(expectedResult, original.asAPISentence())
     }
 
     @Test
@@ -36,7 +36,7 @@ class SentenceMapperTest {
         val expectedResult = ApiFillInSentence(
             sentence = "This is the example",
             suggestion = "answer / wrong",
-            solution = "answer / correct",
+            solution = "answer/correct",
             answer = "answers",
             tense = "present",
             result = "-1"
@@ -56,12 +56,12 @@ class SentenceMapperTest {
         val expectedResult = ApiFillInSentence(
             sentence = "This is the example",
             suggestion = "answer / wrong",
-            solution = "answer / correct",
+            solution = "answer/correct",
             answer = "",
             tense = "present",
             result = "0"
         )
-        Assert.assertEquals (expectedResult, original.asAPISentence())
+        Assert.assertEquals(expectedResult, original.asAPISentence())
     }
 
     @Test
@@ -151,4 +151,27 @@ class SentenceMapperTest {
         Assert.assertEquals(result, expectedResult)
         Assert.assertEquals(result.status, WordStatus.UNCHECKED)
     }
+
+    @Test
+    fun test_APISentence_to_sentence_suggestions_no_separator() {
+        val expectedResult = FillInSentence(
+            sentence = "I accidentally \$£ on the dog's foot and it yelped.",
+            suggestion = "tread",
+            solutions = listOf("trod", "treaded"),
+            answer = "trod",
+            tense = "present",
+        )
+        val original = ApiFillInSentence(
+            sentence = "I accidentally \$£ on the dog's foot and it yelped.",
+            suggestion = "tread",
+            solution = "trod/treaded",
+            answer = "trod",
+            tense = "present",
+            result = "-1"
+        )
+        val result = original.asFillInSentence()
+        Assert.assertEquals(result, expectedResult)
+        Assert.assertEquals(result.status, WordStatus.CORRECT)
+    }
+
 }

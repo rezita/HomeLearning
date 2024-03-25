@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 const val SEPARATOR = "$£"
 const val SPACE = " "
-const val SOLUTION_SEPARATOR = " / "
+const val SOLUTION_SEPARATOR = "/"
 
 data class FillInSentence(
     val sentence: String,
