@@ -11,10 +11,23 @@
     <string name="start_mark_spelling">Mark spelling</string>
     <string name="upload_mark_words">Upload Mark words</string>
 
+    <!-- ProgressBar loading messages-->
+    <string name="loading">Loading. Ready soon.</string>
+    <string name="uploading">Saving. Ready soon.</string>
+
+    <!--Error page -->
+    <string name="error_button_caption">Try again</string>
+
+
     <!-- Action Bar Titles-->
     <string name="activity_irregular_verbs">Irregular Verbs</string>
     <string name="activity_upload_words">Upload Words</string>
+    <string name="activity_reading_title">Reading</string>
     <string name="activity_spelling">Spelling</string>
+    <string name="reading_black_display">Monochrome display</string>
+    <string name="reading_colour_display">Coloured display</string>
+    <string name="app_bar_loading_title">Loading...</string>
+    <string name="app_bar_error_title">Error</string>
 
     <!-- Main Activity Tabs-->
     <string name="main_activity_tab1">Erik</string>
