@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.data
 
+import android.util.Log
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.PostApiParameter
 import com.github.rezita.homelearning.model.ReadingWord
@@ -17,99 +18,240 @@ import kotlinx.serialization.json.encodeToJsonElement
 
 interface
 WordRepository {
-    suspend fun getReadingWords(): List<ReadingWord>
-    suspend fun getCEWWords(): List<ReadingWord>
+    suspend fun getReadingWords(): SimpleRepositoryResult<ReadingWord>
+    suspend fun getCEWWords(): SimpleRepositoryResult<ReadingWord>
 
-    suspend fun getIrregularVerbs(): List<FillInSentence>
-    suspend fun getHomophones(): List<FillInSentence>
+    suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence>
+    suspend fun getHomophones(): NormalRepositoryResult<FillInSentence>
 
-    suspend fun getErikSpellingWords(): List<SpellingWord>
-    suspend fun getMarkSpellingWords(): List<SpellingWord>
+    suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord>
+    suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord>
 
-    suspend fun getErikCategories(): List<String>
-    suspend fun getMarkCategories(): List<String>
+    suspend fun getErikCategories(): ComplexRepositoryResult<String, SpellingWord>
+    suspend fun getMarkCategories(): ComplexRepositoryResult<String, SpellingWord>
 
-    suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): String
-    suspend fun updateHomophones(sentences: List<FillInSentence>): String
+    suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
+    suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
 
-    suspend fun updateErikSpellingWords(words: List<SpellingWord>): String
-    suspend fun updateMarkSpellingWords(words: List<SpellingWord>): String
+    suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
+    suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
 
-    suspend fun saveErikSpellingWords(words: List<SpellingWord>): String
-    suspend fun saveMarkSpellingWords(words: List<SpellingWord>): String
+    suspend fun saveErikSpellingWords(
+        words: List<SpellingWord>,
+        downloaded: List<String>
+    ): ComplexRepositoryResult<String, SpellingWord>
 
-    //suspend fun restoreSpellingWordsFromLogs(): String
+    suspend fun saveMarkSpellingWords(
+        words: List<SpellingWord>,
+        downloaded: List<String>
+    ): ComplexRepositoryResult<String, SpellingWord>
+
+    //suspend fun restoreSpellingWordsFromLogs(): RepositoryResult<SpellingWord>
 }
 
 class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     WordRepository {
 
     /** Fetches list of ReadingWords from wordsAPIService */
-    override suspend fun getReadingWords(): List<ReadingWord> =
+    override suspend fun getReadingWords(): SimpleRepositoryResult<ReadingWord> =
         getReadingWords(SheetAction.READ_READING_WORDS)
 
-    override suspend fun getCEWWords(): List<ReadingWord> =
+    override suspend fun getCEWWords(): SimpleRepositoryResult<ReadingWord> =
         getReadingWords(SheetAction.READ_READING_CEW)
 
-    private suspend fun getReadingWords(sheetAction: SheetAction): List<ReadingWord> =
-        wordsAPIService.getReadingWords(sheetAction.value).items.map { it.asReadingWord() }
+    private suspend fun getReadingWords(sheetAction: SheetAction): SimpleRepositoryResult<ReadingWord> {
+        wordsAPIService.getReadingWords(action = sheetAction.value)
+            .onSuccess { response ->
+                return if (response.items.isNotEmpty()) {
+                    SimpleRepositoryResult.Downloaded(response.items.map { it.asReadingWord() })
+                } else {
+                    SimpleRepositoryResult.DownloadingError(response.message)
+                }
+            }
+            .onFailure {
+                return SimpleRepositoryResult.DownloadingError(it.message.toString())
+            }
+        return SimpleRepositoryResult.DownloadingError("Error")
+    }
 
-    override suspend fun getHomophones(): List<FillInSentence> =
+    override suspend fun getHomophones(): NormalRepositoryResult<FillInSentence> =
         getFillInSentences(sheetAction = SheetAction.READ_HOMOPHONES)
 
-    override suspend fun getIrregularVerbs(): List<FillInSentence> =
+    override suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence> =
         getFillInSentences(sheetAction = SheetAction.READ_IRREGULAR_VERBS)
 
-    private suspend fun getFillInSentences(sheetAction: SheetAction): List<FillInSentence> =
-        wordsAPIService.getFillInSentences(sheetAction.value).items.map { it.asFillInSentence() }
+    private suspend fun getFillInSentences(sheetAction: SheetAction): NormalRepositoryResult<FillInSentence> {
+        wordsAPIService.getFillInSentences(action = sheetAction.value)
+            .onSuccess { response ->
+                return if (response.items.isNotEmpty()) {
+                    NormalRepositoryResult.Downloaded(response.items.map { it.asFillInSentence() })
+                } else {
+                    NormalRepositoryResult.DownloadingError(response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return NormalRepositoryResult.DownloadingError(it.message.toString())
+            }
+        return NormalRepositoryResult.DownloadingError("Error")
 
-    override suspend fun getMarkSpellingWords(): List<SpellingWord> =
+    }
+
+    override suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord> =
         getSpellingWords(SheetAction.READ_MARK_SPELLING_WORDS)
 
-    override suspend fun getErikSpellingWords(): List<SpellingWord> =
+    override suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord> =
         getSpellingWords(SheetAction.READ_ERIK_SPELLING_WORDS)
 
-    private suspend fun getSpellingWords(sheetAction: SheetAction): List<SpellingWord> =
-        wordsAPIService.getSpellingWords(sheetAction.value).items.map { it.asSpellingWord() }
+    private suspend fun getSpellingWords(sheetAction: SheetAction): NormalRepositoryResult<SpellingWord> {
+        wordsAPIService.getSpellingWords(action = sheetAction.value)
+            .onSuccess { response ->
+                return if (response.items.isNotEmpty()) {
+                    NormalRepositoryResult.Downloaded(response.items.map { it.asSpellingWord() })
+                } else {
+                    NormalRepositoryResult.DownloadingError(response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return NormalRepositoryResult.DownloadingError(it.message.toString())
+            }
+        return NormalRepositoryResult.DownloadingError("Error")
 
-    override suspend fun getErikCategories(): List<String> =
+    }
+
+    override suspend fun getErikCategories(): ComplexRepositoryResult<String, SpellingWord> =
         getCategories(SheetAction.READ_ERIK_SPELLING_CATEGORIES)
 
-    override suspend fun getMarkCategories(): List<String> =
+    override suspend fun getMarkCategories(): ComplexRepositoryResult<String, SpellingWord> =
         getCategories(SheetAction.READ_MARK_SPELLING_CATEGORIES)
 
-    private suspend fun getCategories(sheetAction: SheetAction): List<String> =
-        wordsAPIService.getCategories(sheetAction.value).categories
+    private suspend fun getCategories(sheetAction: SheetAction): ComplexRepositoryResult<String, SpellingWord> {
+        wordsAPIService.getCategories(sheetAction.value)
+            .onSuccess { response ->
+                return if (response.categories.isNotEmpty()) {
+                    ComplexRepositoryResult.Downloaded(
+                        downloaded = response.categories,
+                        uploadable = emptyList()
+                    )
+                } else {
+                    ComplexRepositoryResult.DownloadingError(response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return ComplexRepositoryResult.DownloadingError(it.message.toString())
+            }
+        return ComplexRepositoryResult.DownloadingError("Error")
+    }
 
-    override suspend fun updateHomophones(sentences: List<FillInSentence>): String =
-        updateFillInSentences(sheetAction = SheetAction.UPDATE_HOMOPHONES, sentences = sentences)
+    override suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> {
+        val result = updateFillInSentences(
+            sheetAction = SheetAction.UPDATE_HOMOPHONES,
+            sentences = sentences
+        )
+        Log.i("result01", result.toString())
+        return result
+    }
 
-    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): String =
+    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> =
         updateFillInSentences(
             sheetAction = SheetAction.UPDATE_IRREGULAR_VERBS,
             sentences = sentences
         )
 
-    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): String =
-        updateSpellingWords(SheetAction.UPDATE_ERIK_SPELLING_WORDS, words)
+    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> {
+        return updateSpellingWords(
+            sheetAction = SheetAction.UPDATE_ERIK_SPELLING_WORDS,
+            words = words
+        )
+    }
 
-    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): String =
-        updateSpellingWords(SheetAction.UPDATE_MARK_SPELLING_WORDS, words)
+    override suspend fun updateMarkSpellingWords(uploadable: List<SpellingWord>): NormalRepositoryResult<SpellingWord> =
+        updateSpellingWords(
+            sheetAction = SheetAction.UPDATE_MARK_SPELLING_WORDS,
+            words = uploadable
+        )
 
+    override suspend fun saveErikSpellingWords(
+        uploadable: List<SpellingWord>,
+        downloaded: List<String>
+    ): ComplexRepositoryResult<String, SpellingWord> =
+        saveSpellingWords(
+            downloaded = downloaded,
+            sheetAction = SheetAction.SAVE_ERIK_WORDS,
+            words = uploadable
+        )
 
-    override suspend fun saveErikSpellingWords(words: List<SpellingWord>): String =
-        saveSpellingWords(SheetAction.SAVE_ERIK_WORDS, words)
-
-    override suspend fun saveMarkSpellingWords(words: List<SpellingWord>): String =
-        saveSpellingWords(SheetAction.SAVE_MARK_WORDS, words)
+    override suspend fun saveMarkSpellingWords(
+        words: List<SpellingWord>,
+        downloaded: List<String>
+    ): ComplexRepositoryResult<String, SpellingWord> =
+        saveSpellingWords(
+            downloaded = downloaded,
+            sheetAction = SheetAction.SAVE_MARK_WORDS,
+            words = words
+        )
 
     private suspend fun saveSpellingWords(
+        downloaded: List<String>,
         sheetAction: SheetAction,
         words: List<SpellingWord>
-    ): String {
+    ): ComplexRepositoryResult<String, SpellingWord> {
         val wordsParam = words.map { it.asAPISellingWord() }
 
-        return if (wordsParam.isNotEmpty()) {
+        if (wordsParam.isEmpty()) {
+            return ComplexRepositoryResult.UploadError(
+                downloaded = downloaded,
+                uploadable = words,
+                message = "No data has given"
+            )
+        }
+        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val params = PostApiParameter(
+            items = wordsParam,
+            action = sheetAction.value
+        )
+        wordsAPIService.updateData(parameter = json.encodeToJsonElement(params))
+            .onSuccess { response ->
+                return if (response.result.isNotEmpty()) {
+                    ComplexRepositoryResult.Uploaded(
+                        downloaded = downloaded,
+                        uploadable = emptyList(),
+                        message = response.result,
+                    )
+                } else {
+                    ComplexRepositoryResult.UploadError(
+                        downloaded = downloaded,
+                        uploadable = words,
+                        message = response.message
+                    )
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return ComplexRepositoryResult.UploadError(
+                    downloaded = downloaded,
+                    uploadable = words,
+                    message = it.message.toString()
+                )
+            }
+        return return ComplexRepositoryResult.UploadError(
+            downloaded = downloaded,
+            uploadable = words,
+            message = "Error"
+        )
+    }
+
+    private suspend fun updateSpellingWords(
+        sheetAction: SheetAction,
+        words: List<SpellingWord>
+    ): NormalRepositoryResult<SpellingWord> {
+        val wordsParam = words
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asAPISellingWord() }
+
+        if (wordsParam.isNotEmpty()) {
             val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
             val params = PostApiParameter(
                 items = wordsParam,
@@ -118,38 +260,30 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             wordsAPIService.updateData(
                 parameter = json.encodeToJsonElement(params)
             )
+                .onSuccess { response ->
+                    return if (response.result.isNotEmpty()) {
+                        NormalRepositoryResult.Uploaded(data = words, message = response.result)
+                    } else {
+                        NormalRepositoryResult.UploadError(data = words, message = response.message)
+                    }
+                }
+                .onFailure {
+                    Log.e("onFailure", it.message.toString())
+                    return NormalRepositoryResult.UploadError(
+                        data = words,
+                        message = it.message.toString()
+                    )
+                }
+            return NormalRepositoryResult.UploadError(data = words, message = "Error")
         } else {
-            ""
-        }
-    }
-
-    private suspend fun updateSpellingWords(
-        sheetAction: SheetAction,
-        words: List<SpellingWord>
-    ): String {
-        val wordsParam = words
-            .filter { it.status != WordStatus.UNCHECKED }
-            .map { it.asAPISellingWord() }
-
-        return if (wordsParam.isNotEmpty()) {
-            val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
-            val params = PostApiParameter(
-                items = wordsParam,
-                action = sheetAction.value
-            )
-            return wordsAPIService.updateData(
-                parameter = json.encodeToJsonElement(params)
-            )
-            //callingUpdateData(wordsParam, sheetAction)
-        } else {
-            ""
+            return NormalRepositoryResult.UploadError(data = words, message = "No data has given")
         }
     }
 
     private suspend fun updateFillInSentences(
         sheetAction: SheetAction,
         sentences: List<FillInSentence>
-    ): String {
+    ): NormalRepositoryResult<FillInSentence> {
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
         val sentenceParam = sentences
@@ -160,33 +294,30 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             items = sentenceParam,
             action = sheetAction.value
         )
-        return wordsAPIService.updateData(
+        wordsAPIService.updateData(
             parameter = json.encodeToJsonElement(params)
         )
+            .onSuccess { response ->
+                return if (response.result.isNotEmpty()) {
+                    NormalRepositoryResult.Uploaded(data = sentences, message = response.result)
+                } else {
+                    NormalRepositoryResult.UploadError(data = sentences, message = response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return NormalRepositoryResult.UploadError(
+                    data = sentences,
+                    message = it.message.toString()
+                )
+            }
+        return NormalRepositoryResult.UploadError(data = sentences, message = "Error")
     }
-    /*
-        private suspend fun <T> callingUpdateData(words: List<T>, action: SheetAction): String {
-            val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
-
-            Log.i("words", words.toString())
-            Log.i("action", action.toString())
-
-
-            val params = PostApiParameters(
-                words = words,
-                action = action.value
-            )
-            return wordsAPIService.updateData(
-                parameter = json.encodeToJsonElement(PostParameters(params))
-            )
-        }
-
-     */
 
     /*
     override suspend fun restoreSpellingWordsFromLogs(): String {
         val sheetAction = SheetAction.RESTORE_ERIK_SPELLING_FROM_LOG.value.toRequestBody()
         return wordsAPIService.restoreSpellingWordsFromLogs(action = sheetAction)
     }
-*/
+    */
 }

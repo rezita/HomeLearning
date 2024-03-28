@@ -27,10 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-import com.github.rezita.homelearning.ui.uiState.UIState
 import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplay
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
@@ -47,7 +48,7 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
     val configuration = LocalConfiguration.current
     Scaffold(
         topBar = {
-            ReadingTopAppBar(readingState.state,
+            ReadingTopAppBar(readingState,
                 { value -> viewModel.setColorDisplay(value) },
                 viewModel.isColourDisplay
             )
@@ -55,20 +56,20 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
     ) {
         when (configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> ErrorDisplay(
-                message = "Not in portrait mode",
+                message = stringResource(id = R.string.msg_turn_portrait_mode),
                 callback = { viewModel.load() })
 
             else -> {
-                when (readingState.state) {
-                    UIState.LOADING -> LoadingProgressBar()
-                    UIState.SUCCESS -> ReadingWordItems(
-                        words = readingState.words,
+                when (val state = readingState) {
+                    is SimpleRepositoryResult.Downloading -> LoadingProgressBar()
+                    is SimpleRepositoryResult.Downloaded -> ReadingWordItems(
+                        words = readingState.data,
                         isColorDisplay = viewModel.isColourDisplay,
                         modifier = Modifier.padding(it)
                     )
 
-                    else -> ErrorDisplay(
-                        message = readingState.message,
+                    is SimpleRepositoryResult.DownloadingError -> ErrorDisplay(
+                        message = state.message,
                         callback = { viewModel.load() })
                 }
             }

@@ -21,8 +21,13 @@ class SentenceAdapter(
     private var isChecked: Boolean = false
 
     @SuppressLint("NotifyDataSetChanged")
-    fun loadSentences(sentences: List<FillInSentence>, isChecked: Boolean) {
+    fun loadSentences(sentences: List<FillInSentence>) {
         this.sentences = sentences.toMutableList()
+        notifyItemRangeChanged(0, sentences.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setChecked(isChecked: Boolean) {
         this.isChecked = isChecked
         notifyItemRangeChanged(0, sentences.size)
     }

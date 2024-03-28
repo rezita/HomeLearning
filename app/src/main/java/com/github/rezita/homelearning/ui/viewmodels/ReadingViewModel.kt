@@ -10,24 +10,24 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.HomeLearningApplication
+import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.network.SheetAction
-import com.github.rezita.homelearning.ui.uiState.ReadingUIState
-import com.github.rezita.homelearning.ui.uiState.UIState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class ReadingViewModel(
     private val wordRepository: WordRepository,
     private val sheetAction: SheetAction
 ) : ViewModel() {
-    private val _readingUIState = MutableStateFlow(ReadingUIState())
-    val readingUIState: StateFlow<ReadingUIState> = _readingUIState.asStateFlow()
+    private val _readingUIState =
+        MutableStateFlow<SimpleRepositoryResult<ReadingWord>>(SimpleRepositoryResult.Downloading())
+    val readingUIState: StateFlow<SimpleRepositoryResult<ReadingWord>> =
+        _readingUIState.asStateFlow()
 
     var isColourDisplay by mutableStateOf(true)
         private set
@@ -41,61 +41,30 @@ class ReadingViewModel(
         when (sheetAction) {
             SheetAction.READ_READING_CEW -> getCEWWords()
             SheetAction.READ_READING_WORDS -> getReadingWords()
-            else ->
-                _readingUIState.update {
-                    it.copy(
-                        words = emptyList(),
-                        message = "Wrong action provided",
-                        state = UIState.ERROR,
-                    )
-                }
+            else -> _readingUIState.value =
+                SimpleRepositoryResult.DownloadingError("Wrong action provided")
         }
     }
 
-    fun setColorDisplay(value: Boolean){
+    fun setColorDisplay(value: Boolean) {
         isColourDisplay = value
     }
 
     private fun resetUiState() {
-        _readingUIState.update {
-            it.copy(
-                words = emptyList(),
-                message = "",
-                state = UIState.LOADING,
-            )
-        }
+        _readingUIState.value = SimpleRepositoryResult.Downloading()
     }
 
-    fun getCEWWords() {
+    private fun getCEWWords() {
         getWords { wordRepository.getCEWWords() }
     }
 
-    fun getReadingWords() {
+    private fun getReadingWords() {
         getWords { wordRepository.getReadingWords() }
     }
 
-    private fun getWords(callback: suspend () -> List<ReadingWord>) {
+    private fun getWords(callback: suspend () -> SimpleRepositoryResult<ReadingWord>) {
         viewModelScope.launch {
-            try {
-                resetUiState()
-                val words = callback()
-                _readingUIState.update {
-                    it.copy(
-                        words = words,
-                        state = UIState.SUCCESS,
-                        message = ""
-                    )
-                }
-            } catch (e: IOException) {
-                Log.i("IOException", e.message.toString())
-                _readingUIState.update {
-                    it.copy(
-                        words = emptyList(),
-                        state = UIState.ERROR,
-                        message = "Error"
-                    )
-                }
-            }
+            _readingUIState.value = callback()
         }
     }
 

@@ -17,9 +17,11 @@
 
     <!--Error page -->
     <string name="error_button_caption">Try again</string>
+    <string name="msg_wrong_action">Wrong action provided.</string>
 
 
     <!-- Action Bar Titles-->
+    <string name="back_button">Back</string>
     <string name="activity_irregular_verbs">Irregular Verbs</string>
     <string name="activity_upload_words">Upload Words</string>
     <string name="activity_reading_title">Reading</string>
@@ -105,6 +107,10 @@
 
     <!-- Irregular Verbs words / Spelling / Reading words -->
     <string name="loading_fail_text">Loading words failed.</string>
+
+    <!-- Reading words -->
+    <string name="msg_turn_portrait_mode">Please turn your device into portrait mode.</string>
+
 
     <!-- other-->
     <string name="ok">OK</string>

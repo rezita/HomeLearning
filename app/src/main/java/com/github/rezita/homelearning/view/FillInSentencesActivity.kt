@@ -6,39 +6,54 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.adapters.SentenceAdapter
+import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.databinding.ActivityFillInSentencesBinding
+import com.github.rezita.homelearning.model.FillInSentence
+import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.network.SheetAction
-import com.github.rezita.homelearning.ui.uiState.UIState
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
 import kotlinx.coroutines.launch
 
 
 class FillInSentencesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFillInSentencesBinding
-    private val viewModel: FillInSentenceViewModel by viewModels { FillInSentenceViewModel.Factory }
+    private lateinit var viewModel: FillInSentenceViewModel
     private var sheetAction = SheetAction.READ_IRREGULAR_VERBS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupSheetAction()
+        viewModel =
+            ViewModelProvider(
+                this,
+                FillInSentenceViewModel.FillInSentenceViewModelFactory(sheetAction)
+            )
+                .get(
+                    FillInSentenceViewModel::class.java
+                )
+
         binding = ActivityFillInSentencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupToolbar()
-        setupSheetAction()
+
+        setupProgressBar()
+        setupScoreText()
         setupView()
         setupAdapter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.irregular_verb_menu, menu)
+
         lifecycleScope.launch {
-            viewModel.sentenceUIState.collect { value ->
-                menu?.findItem(R.id.menu_check)?.isVisible = value.checkable
+            viewModel.isAllAnswered.collect() { value ->
+                menu?.findItem(R.id.menu_check)?.isVisible = value
             }
         }
         return true
@@ -46,8 +61,8 @@ class FillInSentencesActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         lifecycleScope.launch {
-            viewModel.sentenceUIState.collect { value ->
-                menu?.findItem(R.id.menu_check)?.isVisible = value.checkable
+            viewModel.isAllAnswered.collect { value ->
+                menu?.findItem(R.id.menu_check)?.isVisible = value
             }
         }
         return true
@@ -70,22 +85,52 @@ class FillInSentencesActivity : AppCompatActivity() {
             showNotAllAnsweredDialog()
         } else {
             hideKeyboard()
-            if(sheetAction == SheetAction.READ_IRREGULAR_VERBS){
+            if (sheetAction == SheetAction.READ_IRREGULAR_VERBS) {
                 viewModel.saveIrregularVerbs()
-            }else {
+            } else {
                 viewModel.saveHomophones()
             }
         }
     }
 
     private fun isAllAnswered(): Boolean {
-        return viewModel.sentenceUIState.value.checkable
+        return viewModel.isAllAnswered.value
     }
 
     private fun setupToolbar() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
+
+    private fun setupProgressBar() {
+        lifecycleScope.launch {
+            viewModel.sentenceUIState.collect { value ->
+                binding.sentencesProgressbar.root.visibility =
+                    when (value) {
+                        is NormalRepositoryResult.Downloading -> View.VISIBLE
+                        is NormalRepositoryResult.Uploading -> View.VISIBLE
+                        else -> View.GONE
+                    }
+            }
+        }
+    }
+
+    private fun setupScoreText() {
+        lifecycleScope.launch {
+            viewModel.sentenceUIState.collect { value ->
+                val scoreText = binding.irregularInfoLayout.scoreText
+                when (value) {
+                    is NormalRepositoryResult.Uploaded -> {
+                        scoreText.text = getScores(value.data)
+                        scoreText.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        scoreText.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     private fun setupSheetAction() {
@@ -97,27 +142,33 @@ class FillInSentencesActivity : AppCompatActivity() {
     private fun setupView() {
         lifecycleScope.launch {
             viewModel.sentenceUIState.collect { value ->
-                binding.sentencesProgressbar.root.visibility =
-                    if (value.state == UIState.LOADING) View.VISIBLE else View.GONE
-
-                binding.irregularInfoLayout.infoText.text = value.errorMessage
-                binding.irregularInfoLayout.infoText.visibility =
-                    if (value.errorMessage == "") View.GONE else View.VISIBLE
-                val scoreText = binding.irregularInfoLayout.scoreText
-                when (value.state == UIState.CHECKED) {
-                    true -> {
-                        scoreText.text = getScores()
-                        scoreText.visibility = View.VISIBLE
+                val infotext = binding.irregularInfoLayout.infoText
+                when (value) {
+                    is NormalRepositoryResult.DownloadingError -> {
+                        infotext.visibility = View.VISIBLE
+                        infotext.text = value.message
                     }
 
-                    else -> scoreText.visibility = View.GONE
+                    is NormalRepositoryResult.UploadError -> {
+                        infotext.visibility = View.VISIBLE
+                        infotext.text = value.message
+                    }
+                    is NormalRepositoryResult.Uploaded -> {
+                        infotext.visibility = View.VISIBLE
+                        infotext.text = value.message
+                    }
+
+                    else -> {
+                        infotext.visibility = View.GONE
+                        infotext.text = ""
+                    }
                 }
             }
         }
     }
 
     private fun setupAdapter() {
-        if (sheetAction == SheetAction.READ_IRREGULAR_VERBS){
+        if (sheetAction == SheetAction.READ_IRREGULAR_VERBS) {
             viewModel.getIrregularVerbs()
         } else {
             viewModel.getHomophones()
@@ -126,17 +177,23 @@ class FillInSentencesActivity : AppCompatActivity() {
         binding.sentencesContainer.adapter = adapter
         lifecycleScope.launch {
             viewModel.sentenceUIState.collect { value ->
-                adapter.loadSentences(value.sentences, value.state == UIState.CHECKED)
+                if (value is NormalRepositoryResult.Downloaded) {
+                    adapter.loadSentences(value.data)
+                }
+                adapter.setChecked(value is NormalRepositoryResult.Uploaded)
             }
         }
     }
 
-    private fun getScores(): String {
+    private fun getScores(sentences: List<FillInSentence>): String {
+        val nrOfQuestions = sentences.size
+        val nrOfCorrect = sentences.filter { it.status == WordStatus.CORRECT }.size
+        val ratio = if (nrOfQuestions == 0) 0 else nrOfCorrect * 100 / nrOfQuestions
         return getString(
             R.string.irregular_verb_result,
-            viewModel.sentenceUIState.value.nrOfCorrect,
-            viewModel.sentenceUIState.value.nrOfQuestions,
-            viewModel.sentenceUIState.value.ratio
+            nrOfCorrect,
+            nrOfQuestions,
+            ratio
         )
     }
 

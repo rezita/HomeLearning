@@ -1,196 +1,257 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.HomeLearningApplication
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.ComplexRepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
-import com.github.rezita.homelearning.ui.uiState.EditState
-import com.github.rezita.homelearning.ui.uiState.UIState
-import com.github.rezita.homelearning.ui.uiState.UploadWordUIState
+import com.github.rezita.homelearning.network.SheetAction
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.IOException
 
-
+const val MAX_NR_OF_WORDS = 10
 const val MAX_WORD_LENGTH = 30
 const val MAX_COMMENT_LENGTH = 25
 private val wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s'-]{1,35}")
 private val commentPattern = Regex("[\\w\\s-']{1,35}")
 
-class UploadWordViewModel(private val wordRepository: WordRepository) : ViewModel() {
-    private val _uploadWordsUIState = MutableStateFlow(UploadWordUIState())
-    val uploadWordUIState: StateFlow<UploadWordUIState>
+data class EditState(
+    val isEditing: Boolean = false,
+    val word: SpellingWord = SpellingWord("", "", ""),
+    val invalidFields: List<Pair<String, Int>>? = arrayListOf(),
+    val index: Int? = null
+)
+
+class UploadWordViewModel(
+    private val wordRepository: WordRepository,
+    private val sheetAction: SheetAction
+) : ViewModel() {
+
+    private val _uploadWordsUIState =
+        MutableStateFlow<ComplexRepositoryResult<String, SpellingWord>>(ComplexRepositoryResult.Downloading())
+    val uploadWordUIState: StateFlow<ComplexRepositoryResult<String, SpellingWord>>
         get() = _uploadWordsUIState.asStateFlow()
 
-    fun loadErikCategories() = loadCategories { wordRepository.getErikCategories() }
+    private var _isFull = MutableStateFlow(false)
+    val isFull: StateFlow<Boolean> = _isFull.asStateFlow()
 
-    fun loadMarkCategories() = loadCategories { wordRepository.getMarkCategories() }
+    private var _currentEdited = MutableStateFlow(EditState())
+    val currentEdited: StateFlow<EditState> = _currentEdited.asStateFlow()
 
-    fun saveMarkSpellingWords() = saveSpellingWords { wordRepository.saveMarkSpellingWords(it) }
+    val expandable = combine(
+        _uploadWordsUIState,
+        _isFull,
+        currentEdited
+    ) { stateValue, fullValue, editedValue ->
+        if (editedValue.isEditing || fullValue) {
+            false
+        } else {
+            when (stateValue) {
+                is ComplexRepositoryResult.Downloaded -> true
+                is ComplexRepositoryResult.Uploaded -> true
+                else -> false
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(300),
+        initialValue = MutableStateFlow(false)
+    )
 
-    fun saveErikSpellingWords() = saveSpellingWords { wordRepository.saveErikSpellingWords(it) }
+    init {
+        initCurrentEdited()
+        load()
+    }
 
-    private fun loadCategories(callback: suspend () -> List<String>) {
-        viewModelScope.launch {
-            try {
-                _uploadWordsUIState.update {
-                    it.copy(
-                        state = UIState.LOADING,
-                        message = "",
-                        categories = emptyList()
-                    )
-                }
-                val categories = callback()
-
-                _uploadWordsUIState.update {
-                    it.copy(
-                        categories = categories,
-                        state = UIState.SUCCESS,
-                        message = ""
-                    )
-                }
-            } catch (e: IOException) {
-                Log.i("Error", e.message.toString())
-                _uploadWordsUIState.update {
-                    it.copy(
-                        categories = emptyList(),
-                        state = UIState.ERROR,
-                        message = "Error"
-                    )
-                }
+    private fun load() {
+        resetUiState()
+        when (sheetAction) {
+            SheetAction.SAVE_ERIK_WORDS -> loadErikCategories()
+            SheetAction.SAVE_MARK_WORDS -> loadMarkCategories()
+            else -> _uploadWordsUIState.update {
+                ComplexRepositoryResult.DownloadingError("Wrong action provided")
             }
         }
     }
 
-    private fun saveSpellingWords(callback: suspend (List<SpellingWord>) -> String) {
+    private fun initCurrentEdited() {
+        _currentEdited.update { EditState() }
+    }
+
+    private fun resetUiState() {
+        _uploadWordsUIState.update { ComplexRepositoryResult.Downloading() }
+    }
+
+    private fun loadErikCategories() = loadCategories { wordRepository.getErikCategories() }
+
+    private fun loadMarkCategories() = loadCategories { wordRepository.getMarkCategories() }
+
+    fun saveMarkSpellingWords() = saveSpellingWords { uploadable, downloadable ->
+        wordRepository.saveMarkSpellingWords(uploadable, downloadable)
+    }
+
+    fun saveErikSpellingWords() = saveSpellingWords { uploadable, downloadable ->
+        wordRepository.saveErikSpellingWords(uploadable, downloadable)
+    }
+
+    private fun loadCategories(callback: suspend () -> ComplexRepositoryResult<String, SpellingWord>) {
         viewModelScope.launch {
-            try {
-                _uploadWordsUIState.update {
-                    it.copy(state = UIState.LOADING)
-                }
-                val result = callback(uploadWordUIState.value.words)
-                _uploadWordsUIState.update {
-                    it.copy(
-                        words = emptyList(),
-                        state = UIState.SUCCESS,
-                        message = result,
-                        currentWord = EditState()
-                    )
-                }
-                //TODO: notify user if success
-            } catch (e: IOException) {
-                Log.i("IOException", e.message.toString())
-                _uploadWordsUIState.update {
-                    it.copy(
-                        state = UIState.ERROR,
-                        message = "Error while uploading"
-                    )
-                }
-            }
+            _uploadWordsUIState.emit(callback())
         }
+    }
+
+    private fun saveSpellingWords(callback: suspend (List<SpellingWord>, List<String>) -> ComplexRepositoryResult<String, SpellingWord>) {
+        when (_uploadWordsUIState.value) {
+            is ComplexRepositoryResult.Downloaded -> {
+                /**There are no words to upload*/
+                val words = _uploadWordsUIState.value.uploadable
+                if (words.isEmpty()) {
+                    return
+                }
+                    viewModelScope.launch {
+                        _uploadWordsUIState.update {
+                            ComplexRepositoryResult.Uploading(
+                                downloaded = _uploadWordsUIState.value.downloaded,
+                                uploadable = words
+                            )
+                        }
+                        _uploadWordsUIState.update {
+                            callback(
+                                words,
+                                _uploadWordsUIState.value.downloaded
+                            )
+                        }
+                    }
+            }
+
+            else -> return
+        }
+
     }
 
     fun setForEditing(index: Int? = null, word: SpellingWord = SpellingWord("", "", "")) {
-        val currentWord = EditState(word = word)
-        _uploadWordsUIState.update {
+        _currentEdited.update {
             it.copy(
-                currentWord = currentWord,
-                state = UIState.EDITING,
-                currentIndex = index
+                isEditing = true,
+                index = index,
+                word = word
             )
         }
     }
 
     fun removeWord(index: Int) {
-        val words = _uploadWordsUIState.value.words.toMutableList()
-        words.removeAt(index)
-        _uploadWordsUIState.update {
-            it.copy(words = words)
+        //TODO: check if empty
+        if (_uploadWordsUIState.value is ComplexRepositoryResult.Downloaded) {
+            val words = _uploadWordsUIState.value.uploadable.toMutableList()
+            if (words.isEmpty()) {
+                return
+            }
+            words.removeAt(index)
+            _uploadWordsUIState.update {
+                ComplexRepositoryResult.Downloaded(
+                    downloaded = _uploadWordsUIState.value.downloaded,
+                    uploadable = words
+                )
+            }
         }
     }
 
     fun updateWord() {
+        if (_uploadWordsUIState.value !is ComplexRepositoryResult.Downloaded) {
+            return
+        }
+
         if (validateWord()) {
             //add new word
-            val index = _uploadWordsUIState.value.currentIndex
-            val words = _uploadWordsUIState.value.words.toMutableList()
+            val index = _currentEdited.value.index
+            val words =
+                _uploadWordsUIState.value.uploadable.toMutableList()
             when (index) {
-                null -> words.add(_uploadWordsUIState.value.currentWord.word)
+                null -> {
+                    words.add(_currentEdited.value.word)
+                    _isFull.value = words.size == MAX_NR_OF_WORDS
+                }
+
                 else -> words[index] = words[index].copy(
-                    word = _uploadWordsUIState.value.currentWord.word.word,
-                    category = _uploadWordsUIState.value.currentWord.word.category,
-                    comment = _uploadWordsUIState.value.currentWord.word.comment
+                    word = _currentEdited.value.word.word,
+                    category = _currentEdited.value.word.category,
+                    comment = _currentEdited.value.word.comment
                 )
             }
             _uploadWordsUIState.update {
-                it.copy(
-                    words = words as List<SpellingWord>,
-                    currentWord = EditState(),
-                    state = UIState.SUCCESS,
-                    currentIndex = null
+                ComplexRepositoryResult.Downloaded(
+                    uploadable = words,
+                    downloaded = _uploadWordsUIState.value.downloaded
                 )
             }
-            Log.i("currentWord", uploadWordUIState.value.currentWord.word.toString())
+            //init the _currentEdited
+            initCurrentEdited()
         }
     }
 
     fun cancelUpdate() {
-        _uploadWordsUIState.update {
+        initCurrentEdited()
+    }
+
+    fun updateCurrentWordWord(word: String) {
+        val currentWord = _currentEdited.value.word
+        val updatedWord = currentWord.copy(word = word)
+        _currentEdited.update {
             it.copy(
-                currentWord = EditState(),
-                state = UIState.SUCCESS,
-                currentIndex = null
+                word = updatedWord
             )
         }
     }
 
-    fun updateCurrentWordWord(word: String) {
-        val updatedWord = uploadWordUIState.value.currentWord.word.copy(word = word)
-        val current = uploadWordUIState.value.currentWord.copy(word = updatedWord)
-        _uploadWordsUIState.update { it.copy(currentWord = current) }
-    }
-
     fun updateCurrentWordCategory(category: String) {
-        val updatedWord = uploadWordUIState.value.currentWord.word.copy(category = category)
-        val current = uploadWordUIState.value.currentWord.copy(word = updatedWord)
-        _uploadWordsUIState.update { it.copy(currentWord = current) }
+        val currentWord = _currentEdited.value.word
+        val updatedWord = currentWord.copy(category = category)
+        _currentEdited.update {
+            it.copy(
+                word = updatedWord
+            )
+        }
     }
 
     fun updateCurrentWordComment(comment: String) {
-        val updatedWord = uploadWordUIState.value.currentWord.word.copy(comment = comment)
-        val current = uploadWordUIState.value.currentWord.copy(word = updatedWord)
-        _uploadWordsUIState.update { it.copy(currentWord = current) }
-
+        val currentWord = _currentEdited.value.word
+        val updatedWord = currentWord.copy(comment = comment)
+        _currentEdited.update {
+            it.copy(
+                word = updatedWord
+            )
+        }
     }
 
     private fun validateWord(): Boolean {
         val invalidFields = arrayListOf<Pair<String, Int>>()
-        val currentWord = _uploadWordsUIState.value.currentWord
-        if (!isValidText(currentWord.word.word, wordPattern)) {
+        val currentWord = _currentEdited.value.word
+        if (!isValidText(currentWord.word, wordPattern)) {
             invalidFields.add(INPUT_WORD)
         }
-        if (currentWord.word.comment.isNotEmpty() &&
-            !isValidText(currentWord.word.comment, commentPattern)
+        if (currentWord.comment.isNotEmpty() &&
+            !isValidText(currentWord.comment, commentPattern)
         ) {
             invalidFields.add(INPUT_COMMENT)
         }
-        if (currentWord.word.category.isEmpty()) {
+        if (currentWord.category.isEmpty()) {
             invalidFields.add(INPUT_CATEGORY)
         }
         if (invalidFields.isNotEmpty()) {
-            _uploadWordsUIState.update { it.copy(currentWord = currentWord.copy(invalidFields = invalidFields)) }
+            _currentEdited.update { it.copy(invalidFields = invalidFields) }
             return false
         }
-        _uploadWordsUIState.update { it.copy(currentWord = currentWord.copy(invalidFields = null)) }
+        _currentEdited.update { it.copy(invalidFields = arrayListOf()) }
         return true
     }
 
@@ -199,60 +260,24 @@ class UploadWordViewModel(private val wordRepository: WordRepository) : ViewMode
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras
-            ): T {
-                // Get the Application object from extras
-                val application =
-                    checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-                // Create a SavedStateHandle for this ViewModel from extras
-                val savedStateHandle = extras.createSavedStateHandle()
-
-                return UploadWordViewModel(
-                    (application as HomeLearningApplication).container.wordRepository
-                ) as T
-            }
-        }
-
         //Validation
         val INPUT_WORD = "WORD" to R.string.upload_dialog_error_word_message
         val INPUT_COMMENT = "INPUT_COMMENT" to R.string.upload_dialog_error_comment_message
         val INPUT_CATEGORY = "INPUT_CATEGORY" to R.string.upload_dialog_error_category_message
     }
-}
 
-/*
-private fun isValidInputs(): Boolean {
-        var result = true
+    class UploadWordViewModelFactory(
+        private val sheetAction: SheetAction
+    ) : ViewModelProvider.Factory {
 
-        val wordLayout = binding.uploadDialogWordTextLayout
-        val wordText = wordLayout.editText?.text.toString().trim()
-        if (!isValidText(wordText, _wordPattern)) {
-            result = false
-            wordLayout.error = getString(R.string.upload_dialog_error_word_message)
-            wordLayout.setErrorIconDrawable(0)
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+            val application =
+                checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
+            return UploadWordViewModel(
+                (application as HomeLearningApplication).container.wordRepository,
+                sheetAction
+            ) as T
         }
-
-        val commentLayout = binding.uploadDialogCommentTextLayout
-        val commentText = commentLayout.editText?.text.toString().trim()
-        if (commentText.isNotEmpty() && !isValidText(commentText, _commentPattern)) {
-            result = false
-            commentLayout.error = getString(R.string.upload_dialog_error_comment_message)
-            commentLayout.setErrorIconDrawable(0)
-        }
-
-        val spinnerLayout = binding.uploadDialogCategoriesTextLayout
-        if (getSelectedCategory().isEmpty()) {
-            result = false
-            spinnerLayout.error = getString(R.string.upload_dialog_error_category_message)
-            spinnerLayout.setErrorIconDrawable(0)
-        }
-        return result
     }
-
-
-
- */
+}

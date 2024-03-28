@@ -30,7 +30,7 @@
             android:id="@+id/upload_editor_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{viewModel.uploadWordUIState.editing ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.currentEdited.editing ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uploadWords_info_layout">
@@ -59,7 +59,7 @@
                     android:maxLength="25"
                     android:minWidth="120dp"
                     android:minHeight="48dp"
-                    android:text="@{viewModel.uploadWordUIState.currentWord.word.word}" />
+                    android:text="@{viewModel.currentEdited.word.word}" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -87,7 +87,7 @@
                     android:minWidth="120dp"
                     android:minHeight="48dp"
                     android:padding="10dp"
-                    android:text="@{viewModel.uploadWordUIState.currentWord.word.comment}" />
+                    android:text="@{viewModel.currentEdited.word.comment}" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:afterTextChanged="@{(value) -> viewModel.updateCurrentWordCategory(value.toString)}"
                     android:inputType="none"
-                    android:text="@{viewModel.uploadWordUIState.currentWord.word.category}" />
+                    android:text="@{viewModel.currentEdited.word.category}" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,7 +164,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="24dp"
             android:scrollbars="vertical"
-            android:visibility="@{viewModel.uploadWordUIState.words.empty ? View.GONE : View.VISIBLE}"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

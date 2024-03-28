@@ -14,8 +14,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.SimpleRepositoryResult
+import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-import com.github.rezita.homelearning.ui.uiState.UIState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,7 +41,7 @@ fun LearningAppBar(
             IconButton(onClick = navigateUp) {
                 Icon(
                     painterResource(id = R.drawable.baseline_arrow_back_24),
-                    contentDescription = "Navigation icon",
+                    contentDescription = stringResource(id = R.string.back_button),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
@@ -48,19 +50,18 @@ fun LearningAppBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReadingTopAppBar(
-    status: UIState,
+    state: SimpleRepositoryResult<ReadingWord>,
     callback: (Boolean) -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = when (status) {
-            UIState.SUCCESS -> stringResource(id = R.string.activity_reading_title)
-            UIState.LOADING -> stringResource(id = R.string.app_bar_loading_title)
-            UIState.ERROR -> stringResource(id = R.string.app_bar_error_title)
+        titleText = when (state) {
+            is SimpleRepositoryResult.Downloaded -> stringResource(id = R.string.activity_reading_title)
+            is SimpleRepositoryResult.Downloading -> stringResource(id = R.string.app_bar_loading_title)
+            is SimpleRepositoryResult.DownloadingError -> stringResource(id = R.string.app_bar_error_title)
             else -> ""
         },
 
@@ -95,7 +96,7 @@ fun ReadingTopAppBar(
 @Composable
 fun ReadingTopAppBarBlackPreview_success() {
     HomeLearningTheme {
-        ReadingTopAppBar(status = UIState.SUCCESS, callback = {}, isColorDisplay = false)
+        ReadingTopAppBar(state = SimpleRepositoryResult.Downloaded(emptyList()), callback = {}, isColorDisplay = false)
     }
 }
 
@@ -103,7 +104,7 @@ fun ReadingTopAppBarBlackPreview_success() {
 @Composable
 fun ReadingTopAppBarColorPreview_loading() {
     HomeLearningTheme {
-        ReadingTopAppBar(status = UIState.LOADING, callback = {}, isColorDisplay = true)
+        ReadingTopAppBar(state = SimpleRepositoryResult.Downloading(), callback = {}, isColorDisplay = true)
     }
 }
 
@@ -111,14 +112,6 @@ fun ReadingTopAppBarColorPreview_loading() {
 @Composable
 fun ReadingTopAppBarColorPreview_error() {
     HomeLearningTheme {
-        ReadingTopAppBar(status = UIState.ERROR, callback = {}, isColorDisplay = true)
-    }
-}
-
-@Preview
-@Composable
-fun ReadingTopAppBarBlackPreview_inrelevant_uistatus() {
-    HomeLearningTheme {
-        ReadingTopAppBar(status = UIState.EDITING, callback = {}, isColorDisplay = false)
+        ReadingTopAppBar(state = SimpleRepositoryResult.DownloadingError(""), callback = {}, isColorDisplay = true)
     }
 }

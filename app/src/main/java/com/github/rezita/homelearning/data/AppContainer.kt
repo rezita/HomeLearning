@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.data
 
+import com.github.rezita.homelearning.network.ResponseCallAdapterFactory
 import com.github.rezita.homelearning.network.WordsApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -34,6 +35,7 @@ class DefaultAppContainer : AppContainer {
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addCallAdapterFactory(ResponseCallAdapterFactory())
         .baseUrl(baseUrl)
         .client(client)
         .build()
