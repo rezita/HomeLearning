@@ -1,10 +1,14 @@
 package com.github.rezita.homelearning.fake
 
+import com.github.rezita.homelearning.data.ComplexRepositoryResult
+import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ApiFillInSentence
-import com.github.rezita.homelearning.model.ApiSpellingWord
 import com.github.rezita.homelearning.model.ApiReadingWord
+import com.github.rezita.homelearning.model.ApiSpellingWord
 import com.github.rezita.homelearning.model.Category
 import com.github.rezita.homelearning.model.GetRequestApiItems
+import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.asFillInSentence
 import com.github.rezita.homelearning.model.asReadingWord
 import com.github.rezita.homelearning.model.asSpellingWord
@@ -30,10 +34,14 @@ object FakeReadingDataSource {
 
     /** This will be returned when the FakeWordsApiService.getReadingWords will be called */
     val apiReadingWords =
-        GetRequestApiItems(items = listOf(readingAPIWord1, readingAPIWord2, readingAPIWord3))
+        GetRequestApiItems(
+            items = listOf(readingAPIWord1, readingAPIWord2, readingAPIWord3),
+            message = ""
+        )
 
     /** This is what the repository should return */
-    val readingWords = listOf(readingWord1, readingWord2, readingWord3)
+    val readingWords =
+        SimpleRepositoryResult.Downloaded(listOf(readingWord1, readingWord2, readingWord3))
 
 }
 
@@ -52,12 +60,17 @@ object FakeSpellingDataSource {
         result = "0"
     )
     val apiSpellingWords =
-        GetRequestApiItems(items = listOf(spellingApi1, spellingApi2, spellingApi3, spellingApi4))
-    val spellingWords = listOf(
-        spellingApi1.asSpellingWord(),
-        spellingApi2.asSpellingWord(),
-        spellingApi3.asSpellingWord(),
-        spellingApi4.asSpellingWord()
+        GetRequestApiItems(
+            items = listOf(spellingApi1, spellingApi2, spellingApi3, spellingApi4),
+            message = ""
+        )
+    val spellingWords = NormalRepositoryResult.Downloaded(
+        listOf(
+            spellingApi1.asSpellingWord(),
+            spellingApi2.asSpellingWord(),
+            spellingApi3.asSpellingWord(),
+            spellingApi4.asSpellingWord()
+        )
     )
 }
 
@@ -88,18 +101,20 @@ object FakeSentenceDataSource {
         tense = "Y3-4",
         result = "0"
     )
-    val apiSentences = GetRequestApiItems(items = listOf(sentenceApi1, sentenceApi2, sentenceApi3))
+    val apiSentences =
+        GetRequestApiItems(items = listOf(sentenceApi1, sentenceApi2, sentenceApi3), message = "")
 
-    val sentences = listOf(
-        sentenceApi1.asFillInSentence(),
-        sentenceApi2.asFillInSentence(),
-        sentenceApi3.asFillInSentence()
-    )
+    val sentences = NormalRepositoryResult.Downloaded(
+        listOf(
+            sentenceApi1.asFillInSentence(),
+            sentenceApi2.asFillInSentence(),
+            sentenceApi3.asFillInSentence()
+        ))
 }
 
 /**CATEGORY*/
 object FakeCategoryDataSource {
     val apiCategories = Category(categories = listOf("school", "home"))
 
-    val categories = listOf("school", "home")
+    val categories = ComplexRepositoryResult.Downloaded<String, SpellingWord>(downloaded = listOf("school", "home"), uploadable = emptyList())
 }
