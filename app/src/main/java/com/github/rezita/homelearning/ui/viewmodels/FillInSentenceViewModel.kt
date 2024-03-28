@@ -66,22 +66,28 @@ class FillInSentenceViewModel(
     }
 
     fun updateAnswer(index: Int, answer: String) {
-        if (_sentenceUIState.value is NormalRepositoryResult.Downloaded) {
-            val sentences = _sentenceUIState.value.data.toMutableList()
-            sentences[index] = sentences[index].copy(answer = answer)
-            _sentenceUIState.update { NormalRepositoryResult.Downloaded(sentences) }
-            _isAllAnswered.update {
-                sentences.none { it.status == WordStatus.UNCHECKED }
+        when (val state = _sentenceUIState.value) {
+            is NormalRepositoryResult.Downloaded -> {
+                val sentences =
+                    state.data.toMutableList()
+                        .apply { this[index] = this[index].copy(answer = answer) }
+
+                _sentenceUIState.update { state.copy(data = sentences) }
+                _isAllAnswered.update {
+                    sentences.none { it.status == WordStatus.UNCHECKED }
+                }
             }
+
+            else -> return
         }
     }
 
     private fun saveFillInSentenceResults(callback: suspend (List<FillInSentence>) -> NormalRepositoryResult<FillInSentence>) {
-        when (_sentenceUIState.value) {
+        when (val state = _sentenceUIState.value) {
             is NormalRepositoryResult.Downloaded -> {
                 if (_isAllAnswered.value) {
                     viewModelScope.launch {
-                        val data = _sentenceUIState.value.data
+                        val data = state.data
                         _sentenceUIState.emit(NormalRepositoryResult.Uploading(data))
                         _sentenceUIState.emit(callback(data))
                     }
@@ -91,7 +97,7 @@ class FillInSentenceViewModel(
             is NormalRepositoryResult.UploadError -> {
                 if (_isAllAnswered.value) {
                     viewModelScope.launch {
-                        val data = _sentenceUIState.value.data
+                        val data = state.data
                         _sentenceUIState.emit(NormalRepositoryResult.Uploading(data))
                         _sentenceUIState.emit(callback(data))
                     }

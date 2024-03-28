@@ -62,18 +62,23 @@ class SpellingViewModel(
     }
 
     fun updateWordStatus(index: Int, status: WordStatus) {
-        if (_spellingUIState.value is NormalRepositoryResult.Downloaded) {
-            val updatedWords = _spellingUIState.value.data.toMutableList()
-                .apply { this[index] = this[index].copy(status = status) }
-            _spellingUIState.update { NormalRepositoryResult.Downloaded(updatedWords) }
+        when (val state = _spellingUIState.value) {
+            is NormalRepositoryResult.Downloaded -> {
+                val updatedWords = state.data.toMutableList()
+                    .apply { this[index] = this[index].copy(status = status) }
+                //_spellingUIState.update { NormalRepositoryResult.Downloaded(updatedWords) }
+                _spellingUIState.update { state.copy(data = updatedWords) }
+            }
+
+            else -> return
         }
     }
 
     private fun saveSpellingResults(callback: suspend (List<SpellingWord>) -> NormalRepositoryResult<SpellingWord>) {
-        when (_spellingUIState.value) {
+        when (val state = _spellingUIState.value) {
             is NormalRepositoryResult.Downloaded -> {
                 viewModelScope.launch {
-                    val data = _spellingUIState.value.data
+                    val data = state.data
                     _spellingUIState.emit(NormalRepositoryResult.Uploading(data))
                     _spellingUIState.emit(callback(data))
                 }
@@ -81,7 +86,7 @@ class SpellingViewModel(
 
             is NormalRepositoryResult.UploadError -> {
                 viewModelScope.launch {
-                    val data = _spellingUIState.value.data
+                    val data = state.data
                     _spellingUIState.emit(NormalRepositoryResult.Uploading(data))
                     _spellingUIState.emit(callback(data))
                 }

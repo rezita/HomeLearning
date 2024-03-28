@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
@@ -96,7 +95,11 @@ fun ReadingTopAppBar(
 @Composable
 fun ReadingTopAppBarBlackPreview_success() {
     HomeLearningTheme {
-        ReadingTopAppBar(state = SimpleRepositoryResult.Downloaded(emptyList()), callback = {}, isColorDisplay = false)
+        ReadingTopAppBar(
+            state = SimpleRepositoryResult.Downloaded(emptyList()),
+            callback = {},
+            isColorDisplay = false
+        )
     }
 }
 
@@ -104,7 +107,11 @@ fun ReadingTopAppBarBlackPreview_success() {
 @Composable
 fun ReadingTopAppBarColorPreview_loading() {
     HomeLearningTheme {
-        ReadingTopAppBar(state = SimpleRepositoryResult.Downloading(), callback = {}, isColorDisplay = true)
+        ReadingTopAppBar(
+            state = SimpleRepositoryResult.Downloading(),
+            callback = {},
+            isColorDisplay = true
+        )
     }
 }
 
@@ -112,6 +119,10 @@ fun ReadingTopAppBarColorPreview_loading() {
 @Composable
 fun ReadingTopAppBarColorPreview_error() {
     HomeLearningTheme {
-        ReadingTopAppBar(state = SimpleRepositoryResult.DownloadingError(""), callback = {}, isColorDisplay = true)
+        ReadingTopAppBar(
+            state = SimpleRepositoryResult.DownloadingError(""),
+            callback = {},
+            isColorDisplay = true
+        )
     }
 }

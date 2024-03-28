@@ -111,27 +111,27 @@ class UploadWordViewModel(
     }
 
     private fun saveSpellingWords(callback: suspend (List<SpellingWord>, List<String>) -> ComplexRepositoryResult<String, SpellingWord>) {
-        when (_uploadWordsUIState.value) {
+        when (val state = _uploadWordsUIState.value) {
             is ComplexRepositoryResult.Downloaded -> {
                 /**There are no words to upload*/
-                val words = _uploadWordsUIState.value.uploadable
+                val words = state.uploadable
                 if (words.isEmpty()) {
                     return
                 }
-                    viewModelScope.launch {
-                        _uploadWordsUIState.update {
-                            ComplexRepositoryResult.Uploading(
-                                downloaded = _uploadWordsUIState.value.downloaded,
-                                uploadable = words
-                            )
-                        }
-                        _uploadWordsUIState.update {
-                            callback(
-                                words,
-                                _uploadWordsUIState.value.downloaded
-                            )
-                        }
+                viewModelScope.launch {
+                    _uploadWordsUIState.update {
+                        ComplexRepositoryResult.Uploading(
+                            downloaded = state.downloaded,
+                            uploadable = words
+                        )
                     }
+                    _uploadWordsUIState.update {
+                        callback(
+                            words,
+                            state.downloaded
+                        )
+                    }
+                }
             }
 
             else -> return
@@ -150,53 +150,61 @@ class UploadWordViewModel(
     }
 
     fun removeWord(index: Int) {
-        //TODO: check if empty
-        if (_uploadWordsUIState.value is ComplexRepositoryResult.Downloaded) {
-            val words = _uploadWordsUIState.value.uploadable.toMutableList()
-            if (words.isEmpty()) {
-                return
+        when (val state = _uploadWordsUIState.value) {
+            is ComplexRepositoryResult.Downloaded -> {
+                val words = state.uploadable.toMutableList()
+                if (words.isEmpty()) {
+                    return
+                }
+                words.removeAt(index)
+                _uploadWordsUIState.update {
+                    ComplexRepositoryResult.Downloaded(
+                        downloaded = state.downloaded,
+                        uploadable = words
+                    )
+                }
             }
-            words.removeAt(index)
-            _uploadWordsUIState.update {
-                ComplexRepositoryResult.Downloaded(
-                    downloaded = _uploadWordsUIState.value.downloaded,
-                    uploadable = words
-                )
-            }
+
+            else -> return
         }
     }
 
     fun updateWord() {
-        if (_uploadWordsUIState.value !is ComplexRepositoryResult.Downloaded) {
-            return
-        }
+        when (val state = _uploadWordsUIState.value) {
+            is ComplexRepositoryResult.Downloaded -> {
+                if (validateWord()) {
+                    //add new word
+                    val index = _currentEdited.value.index
 
-        if (validateWord()) {
-            //add new word
-            val index = _currentEdited.value.index
-            val words =
-                _uploadWordsUIState.value.uploadable.toMutableList()
-            when (index) {
-                null -> {
-                    words.add(_currentEdited.value.word)
-                    _isFull.value = words.size == MAX_NR_OF_WORDS
+                    val words = state.uploadable.toMutableList()
+                    when (index) {
+                        null -> {
+                            words.add(_currentEdited.value.word)
+                            _isFull.value = words.size == MAX_NR_OF_WORDS
+                        }
+
+                        else -> words[index] = words[index].copy(
+                            word = _currentEdited.value.word.word,
+                            category = _currentEdited.value.word.category,
+                            comment = _currentEdited.value.word.comment
+                        )
+                    }
+                    _uploadWordsUIState.update {
+                        ComplexRepositoryResult.Downloaded(
+                            uploadable = words,
+                            downloaded = state.downloaded
+                        )
+                    }
+                    //init the _currentEdited
+                    initCurrentEdited()
                 }
 
-                else -> words[index] = words[index].copy(
-                    word = _currentEdited.value.word.word,
-                    category = _currentEdited.value.word.category,
-                    comment = _currentEdited.value.word.comment
-                )
             }
-            _uploadWordsUIState.update {
-                ComplexRepositoryResult.Downloaded(
-                    uploadable = words,
-                    downloaded = _uploadWordsUIState.value.downloaded
-                )
-            }
-            //init the _currentEdited
-            initCurrentEdited()
+
+            else -> return
         }
+
+
     }
 
     fun cancelUpdate() {

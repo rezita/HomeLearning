@@ -63,7 +63,7 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
                 when (val state = readingState) {
                     is SimpleRepositoryResult.Downloading -> LoadingProgressBar()
                     is SimpleRepositoryResult.Downloaded -> ReadingWordItems(
-                        words = readingState.data,
+                        words = state.data,
                         isColorDisplay = viewModel.isColourDisplay,
                         modifier = Modifier.padding(it)
                     )
