@@ -55,7 +55,7 @@ fun ReadingWord.getOutlineText(): AnnotatedString = buildAnnotatedString {
         style = SpanStyle(
             color = Color.Black,
             drawStyle = Stroke(
-                width = 2f,
+                width = 3f,
                 join = StrokeJoin.Round
             )
         ),

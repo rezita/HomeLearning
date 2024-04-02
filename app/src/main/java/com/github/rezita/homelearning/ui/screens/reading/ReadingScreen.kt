@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.reading
+package com.github.rezita.homelearning.ui.screens
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -27,15 +27,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplay
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.ReadingTopAppBar
+import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
+import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
 import com.github.rezita.homelearning.utils.getForBlackDisplay
 import com.github.rezita.homelearning.utils.getForColorDisplay
 import com.github.rezita.homelearning.utils.getOutlineText
@@ -48,7 +47,8 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
     val configuration = LocalConfiguration.current
     Scaffold(
         topBar = {
-            ReadingTopAppBar(readingState,
+            ReadingTopAppBar(
+                readingState,
                 { value -> viewModel.setColorDisplay(value) },
                 viewModel.isColourDisplay
             )
