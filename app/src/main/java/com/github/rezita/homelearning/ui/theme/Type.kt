@@ -8,19 +8,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.github.rezita.homelearning.R
 
-val amarant = FontFamily(
-    Font(R.font.amaranth)
+val balsamiq = FontFamily(
+    Font(R.font.balsamiq_sans_regular)
 )
 
 val typography = Typography(
     //Text for reading
     displayLarge = TextStyle(
-        fontFamily = amarant,
+        fontFamily = balsamiq,
         fontWeight = FontWeight.Normal,
         fontSize = 96.sp
     ),
     labelSmall = TextStyle(
-        fontFamily = amarant,
+        fontFamily = balsamiq,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
     ),

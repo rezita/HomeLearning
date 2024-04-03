@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.HomeLearningApplication
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
@@ -26,12 +24,12 @@ class ReadingViewModel(
 ) : ViewModel() {
     private val _readingUIState =
         MutableStateFlow<SimpleRepositoryResult<ReadingWord>>(SimpleRepositoryResult.Downloading())
-    val readingUIState: StateFlow<SimpleRepositoryResult<ReadingWord>> =
-        _readingUIState.asStateFlow()
-
     var isColourDisplay by mutableStateOf(true)
         private set
 
+    val readingUIState: StateFlow<SimpleRepositoryResult<ReadingWord>> =
+        _readingUIState.asStateFlow()
+    
     init {
         load()
     }

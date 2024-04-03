@@ -1,8 +1,9 @@
 package com.github.rezita.homelearning.utils.readingWordsDisplay
 
+import androidx.compose.ui.graphics.Color
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.utils.getForBlackDisplay
+import com.github.rezita.homelearning.utils.getUndecorated
 import org.junit.Assert
 import org.junit.Test
 
@@ -16,8 +17,13 @@ class ReadingWordsSimpleDisplayTest {
             comment = "tricky words",
             rules = emptyList()
         )
-        val result = word.getForBlackDisplay()
-        Assert.assertEquals(result.spanStyles.size, 0)
+        val result = word.getUndecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[0]
+        Assert.assertEquals(result.spanStyles.size, 1)
+        Assert.assertEquals(span1.start, 0)
+        Assert.assertEquals(span1.end, 4)
+        Assert.assertEquals(span1.item.color, Color(android.graphics.Color.BLACK))
     }
 
     @Test
@@ -30,8 +36,14 @@ class ReadingWordsSimpleDisplayTest {
                 ReadingRule(word = "now", subWord = "ow", ruleName = "brown")
             )
         )
-        val result = word.getForBlackDisplay()
-        Assert.assertEquals(result.spanStyles.size, 0)
+        val result = word.getUndecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[0]
+        Assert.assertEquals(result.spanStyles.size, 1)
+        Assert.assertEquals(span1.start, 0)
+        Assert.assertEquals(span1.end, 3)
+        Assert.assertEquals(span1.item.color, Color(android.graphics.Color.BLACK))
+
     }
 
     @Test
@@ -44,8 +56,13 @@ class ReadingWordsSimpleDisplayTest {
                 ReadingRule(word = "have", subWord = "e", ruleName = "silente")
             )
         )
-        val result = word.getForBlackDisplay()
-        Assert.assertEquals(result.spanStyles.size, 0)
+        val result = word.getUndecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[0]
+        Assert.assertEquals(result.spanStyles.size, 1)
+        Assert.assertEquals(span1.start, 0)
+        Assert.assertEquals(span1.end, 4)
+        Assert.assertEquals(span1.item.color, Color(android.graphics.Color.BLACK))
     }
 
     @Test
@@ -58,8 +75,14 @@ class ReadingWordsSimpleDisplayTest {
                 ReadingRule(word = "that", subWord = "th", ruleName = "ul")
             )
         )
-        val result = word.getForBlackDisplay()
-        Assert.assertEquals(result.spanStyles.size, 0)
+        val result = word.getUndecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[0]
+        Assert.assertEquals(result.spanStyles.size, 1)
+        Assert.assertEquals(span1.start, 0)
+        Assert.assertEquals(span1.end, 4)
+        Assert.assertEquals(span1.item.color, Color(android.graphics.Color.BLACK))
+
     }
 
     @Test
@@ -73,7 +96,13 @@ class ReadingWordsSimpleDisplayTest {
                 ReadingRule(word = "she", subWord = "e", ruleName = "green")
             )
         )
-        val result = word.getForBlackDisplay()
-        Assert.assertEquals(result.spanStyles.size, 0)
+        val result = word.getUndecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[0]
+        Assert.assertEquals(result.spanStyles.size, 1)
+        Assert.assertEquals(span1.start, 0)
+        Assert.assertEquals(span1.end, 3)
+        Assert.assertEquals(span1.item.color, Color(android.graphics.Color.BLACK))
+
     }
 }

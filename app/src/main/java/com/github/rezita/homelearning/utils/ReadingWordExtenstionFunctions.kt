@@ -10,13 +10,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import com.github.rezita.homelearning.model.ReadingWord
 
 
-fun ReadingWord.getForBlackDisplay(): AnnotatedString {
-    return buildAnnotatedString { append(word) }
+fun ReadingWord.getUndecorated(baseColor: Color): AnnotatedString {
+    return buildAnnotatedString {
+        append(word)
+        addStyle(SpanStyle(color = baseColor), start = 0, end = word.length)
+    }
 }
 
-fun ReadingWord.getForColorDisplay(): AnnotatedString {
+fun ReadingWord.getDecorated(baseColor: Color): AnnotatedString {
     val annotated = buildAnnotatedString {
         append(word)
+        addStyle(SpanStyle(color = baseColor), start = 0, end = word.length)
         for (rule in rules) {
             if (rule.isSilentEndE()) {
                 if (word[word.length - 1].toString().equals("e", ignoreCase = false)) {

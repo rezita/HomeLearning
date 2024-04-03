@@ -1,7 +1,8 @@
-package com.github.rezita.homelearning.ui.screens
+package com.github.rezita.homelearning.ui.screens.reading
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,11 +34,10 @@ import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplay
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
-import com.github.rezita.homelearning.ui.screens.common.ReadingTopAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
-import com.github.rezita.homelearning.utils.getForBlackDisplay
-import com.github.rezita.homelearning.utils.getForColorDisplay
+import com.github.rezita.homelearning.utils.getUndecorated
+import com.github.rezita.homelearning.utils.getDecorated
 import com.github.rezita.homelearning.utils.getOutlineText
 
 
@@ -108,8 +109,10 @@ fun ReadingWordItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        elevation = CardDefaults.cardElevation(12.dp),
+        //elevation = CardDefaults.cardElevation(12.dp),
         shape = MaterialTheme.shapes.small,
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
@@ -144,6 +147,7 @@ fun ReadingWordItem(
 
 @Composable
 fun TextDisplay(word: ReadingWord, isDecorated: Boolean, modifier: Modifier = Modifier) {
+    val color = MaterialTheme.colorScheme.onSurface
     Box(
         modifier = modifier
             .fillMaxWidth(),
@@ -151,7 +155,9 @@ fun TextDisplay(word: ReadingWord, isDecorated: Boolean, modifier: Modifier = Mo
     )
     {
         Text(
-            text = if (isDecorated) word.getForColorDisplay() else word.getForBlackDisplay(),
+            text = if (isDecorated) word.getDecorated(color) else word.getUndecorated(
+                color
+            ),
             style = MaterialTheme.typography.displayLarge,
             textAlign = TextAlign.Center,
         )
@@ -164,7 +170,8 @@ fun TextDisplay(word: ReadingWord, isDecorated: Boolean, modifier: Modifier = Mo
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ReadingWordItemDisplayBlackReview() {
     val rule1 = ReadingRule(word = "she", subWord = "sh", ruleName = "ul")
@@ -180,15 +187,21 @@ fun ReadingWordItemDisplayBlackReview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ReadingWordItemDisplayColorfulReview() {
-    val rule1 = ReadingRule(word = "she", subWord = "sh", ruleName = "ul")
-    val rule2 = ReadingRule(word = "she", subWord = "e", ruleName = "green")
+    val rule1 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "a", ruleName = "ul")
+    val rule2 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "g", ruleName = "white")
+    val rule3 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "I", ruleName = "yellow")
+    val rule4 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "kv", ruleName = "red")
+    val rule5 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "wi", ruleName = "blue")
+    val rule6 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "tl", ruleName = "pink")
+    val rule7 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "hn", ruleName = "green")
     val readingWord = ReadingWord(
-        word = "she",
+        word = "agIfkvwitlhnmrube",
         comment = "tricky words",
-        rules = listOf(rule1, rule2),
+        rules = listOf(rule1, rule2, rule3, rule4, rule5, rule6, rule7),
         category = "phase2"
     )
     HomeLearningTheme {
@@ -196,7 +209,8 @@ fun ReadingWordItemDisplayColorfulReview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ReadingWordItemsReview() {
     val rule1 = ReadingRule(word = "she", subWord = "sh", ruleName = "ul")
@@ -223,7 +237,15 @@ fun ReadingWordItemsReview() {
         category = "phase2"
     )
 
-    val words = listOf(readingWord1, readingWord2, readingWord3)
+    val rule4 = ReadingRule(word = "I", subWord = "I", ruleName = "yellow")
+    val readingWord4 = ReadingWord(
+        word = "I",
+        comment = "tricky",
+        rules = listOf(rule4),
+        category = "phase2"
+    )
+
+    val words = listOf(readingWord4, readingWord2, readingWord3, readingWord1)
     HomeLearningTheme {
         ReadingWordItems(words, true)
     }
