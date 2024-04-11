@@ -55,30 +55,6 @@ sheetID="YOUR_GOOGLE_SHEET_ID"
 ```
 As you can see, there are two sheetIDs you need to set. One for the debug and one for the release version of the app. (See `build.gradle` `buildTypes` section.)
 
-## github access key
-For using the partiallyeditabletext library, you need to set the github access token and username in the `gradle.properties` file:
-```
-user = "YOUR_USERNAME"
-acckey = "YOUR_GITHUB_TOKEN"
-```
-(For more information, see the partiableEdditableText description: https://github.com/rezita/PartiallyEditableText)
-
-Or you can edit the `settings.gradle` file directly:
-```
-dependencyResolutionManagement {
-    ...
-    repositories {
-        ...
-        maven {
-            url = uri("https://maven.pkg.github.com/rezita/PartiallyEditableText")
-            credentials {
-                username = YOUR_USERNAME
-                password = YOUR_PASSWORD
-            }
-        }
-    }
-```
-
 ## For Signed Release
 If you would like to generate a signed apk, you also need to set some variable in the `gradle.properties` file:
 ```
