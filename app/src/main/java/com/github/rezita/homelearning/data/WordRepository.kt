@@ -37,12 +37,12 @@ WordRepository {
     suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
 
     suspend fun saveErikSpellingWords(
-        words: List<SpellingWord>,
+        uploadable: List<SpellingWord>,
         downloaded: List<String>
     ): ComplexRepositoryResult<String, SpellingWord>
 
     suspend fun saveMarkSpellingWords(
-        words: List<SpellingWord>,
+        uploadable: List<SpellingWord>,
         downloaded: List<String>
     ): ComplexRepositoryResult<String, SpellingWord>
 
@@ -167,10 +167,10 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         )
     }
 
-    override suspend fun updateMarkSpellingWords(uploadable: List<SpellingWord>): NormalRepositoryResult<SpellingWord> =
+    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> =
         updateSpellingWords(
             sheetAction = SheetAction.UPDATE_MARK_SPELLING_WORDS,
-            words = uploadable
+            words = words
         )
 
     override suspend fun saveErikSpellingWords(
@@ -180,30 +180,30 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         saveSpellingWords(
             downloaded = downloaded,
             sheetAction = SheetAction.SAVE_ERIK_WORDS,
-            words = uploadable
+            uploadable = uploadable
         )
 
     override suspend fun saveMarkSpellingWords(
-        words: List<SpellingWord>,
+        uploadable: List<SpellingWord>,
         downloaded: List<String>
     ): ComplexRepositoryResult<String, SpellingWord> =
         saveSpellingWords(
             downloaded = downloaded,
             sheetAction = SheetAction.SAVE_MARK_WORDS,
-            words = words
+            uploadable = uploadable
         )
 
     private suspend fun saveSpellingWords(
         downloaded: List<String>,
         sheetAction: SheetAction,
-        words: List<SpellingWord>
+        uploadable: List<SpellingWord>
     ): ComplexRepositoryResult<String, SpellingWord> {
-        val wordsParam = words.map { it.asAPISellingWord() }
+        val wordsParam = uploadable.map { it.asAPISellingWord() }
 
         if (wordsParam.isEmpty()) {
             return ComplexRepositoryResult.UploadError(
                 downloaded = downloaded,
-                uploadable = words,
+                uploadable = uploadable,
                 message = "No data has given"
             )
         }
@@ -223,7 +223,7 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                 } else {
                     ComplexRepositoryResult.UploadError(
                         downloaded = downloaded,
-                        uploadable = words,
+                        uploadable = uploadable,
                         message = response.message
                     )
                 }
@@ -232,13 +232,13 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                 Log.e("onFailure", it.message.toString())
                 return ComplexRepositoryResult.UploadError(
                     downloaded = downloaded,
-                    uploadable = words,
+                    uploadable = uploadable,
                     message = it.message.toString()
                 )
             }
         return return ComplexRepositoryResult.UploadError(
             downloaded = downloaded,
-            uploadable = words,
+            uploadable = uploadable,
             message = "Error"
         )
     }
