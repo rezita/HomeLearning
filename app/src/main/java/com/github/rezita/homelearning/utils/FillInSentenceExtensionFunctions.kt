@@ -1,18 +1,33 @@
 package com.github.rezita.homelearning.utils
 
-import android.graphics.Color
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
-import android.text.style.StrikethroughSpan
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.SEPARATOR
 import com.github.rezita.homelearning.model.SOLUTION_SEPARATOR
-import com.github.rezita.homelearning.model.SPACE
 import com.github.rezita.homelearning.model.WordStatus
 
+fun FillInSentence.splitBySparatorWithSuggestion(): Pair<String, String> {
+    val index = this.sentence.indexOf(SEPARATOR)
+    return when (index) {
+        -1 -> Pair("", " ${this.sentence.trim()} ($suggestion)")
+        0 -> Pair("", " ${this.sentence.substringAfter(SEPARATOR).trim()} ($suggestion)")
+        this.sentence.length - SEPARATOR.length -> Pair(
+            "${this.sentence.substringBefore(SEPARATOR).trim()} ", " ($suggestion)"
+        )
 
-fun FillInSentence.getSeparatorIndex(): Int{
+        else -> Pair(
+            "${this.sentence.substringBefore(SEPARATOR).trim()} ",
+            " ${this.sentence.substringAfter(SEPARATOR).trim()} ($suggestion)"
+        )
+    }
+}
+
+
+fun FillInSentence.getSeparatorIndex(): Int {
     return sentence.indexOfOrZero(SEPARATOR)
 }
 
@@ -21,62 +36,62 @@ private fun FillInSentence.getWithSuggestionsAndSeparatorReplaced(replacement: S
     return "$sentenceReplaced ($suggestion)"
 }
 
-fun FillInSentence.getForDisplay(): String {
-    return getWithSuggestionsAndSeparatorReplaced(SPACE)
+fun FillInSentence.getWithResult(): AnnotatedString {
+    val (prefix, suffix) = splitBySparatorWithSuggestion()
+
+    val annotated = buildAnnotatedString {
+        append(prefix)
+        append(getResultText())
+        append(suffix)
+    }
+    return annotated
 }
 
-fun FillInSentence.getWithResult(): SpannableStringBuilder {
-    val separatorIndex = sentence.indexOfOrZero(SEPARATOR)
-    val result = SpannableStringBuilder(getWithSuggestionsAndSeparatorReplaced(""))
+private fun FillInSentence.getResultText(): AnnotatedString {
     val solutionsString = solutions.joinWithSeparator(SOLUTION_SEPARATOR)
-    when (status) {
-        WordStatus.UNCHECKED -> {
-            result.insert(separatorIndex, solutionsString)
-            result.setSpan(
-                ForegroundColorSpan(Color.RED),
-                separatorIndex,
-                separatorIndex + solutionsString.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
 
-        WordStatus.CORRECT -> {
-            result.insert(separatorIndex, answer)
-            result.setSpan(
-                ForegroundColorSpan(Color.GREEN),
-                separatorIndex,
-                separatorIndex + answer.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
+    val annotated = buildAnnotatedString {
+        when (status) {
+            WordStatus.UNCHECKED -> {
+                append(solutionsString)
+                addStyle(
+                    style = SpanStyle(color = Color.Red),
+                    start = 0,
+                    end = solutionsString.length
+                )
+            }
 
-        WordStatus.INCORRECT -> {
-            result.insert(separatorIndex, answer)
-            result.setSpan(
-                ForegroundColorSpan(Color.RED),
-                separatorIndex,
-                separatorIndex + answer.length,
-                Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-            )
+            WordStatus.CORRECT -> {
+                append(answer)
+                addStyle(
+                    style = SpanStyle(color = Color.Green),
+                    start = 0,
+                    end = answer.length
+                )
 
-            result.setSpan(
-                StrikethroughSpan(),
-                separatorIndex,
-                separatorIndex + answer.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            }
 
-            //add extra space between answer and solutions
-            result.insert(separatorIndex + answer.length, " ")
-
-            result.insert(separatorIndex + answer.length + 1, solutionsString)
-            result.setSpan(
-                ForegroundColorSpan(Color.GREEN),
-                separatorIndex + answer.length + 1,
-                separatorIndex + answer.length + solutionsString.length + 1,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+            WordStatus.INCORRECT -> {
+                append(answer)
+                addStyle(
+                    style = SpanStyle(
+                        textDecoration = TextDecoration.LineThrough,
+                        color = Color.Red
+                    ),
+                    start = 0,
+                    end = answer.length
+                )
+                //add extra space between answer and solutions
+                append(" ")
+                append(solutionsString)
+                addStyle(
+                    style = SpanStyle(color = Color.Green),
+                    start = answer.length + 1,
+                    end = answer.length + solutionsString.length + 1
+                )
+            }
         }
     }
-    return result
+
+    return annotated
 }

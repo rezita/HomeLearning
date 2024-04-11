@@ -58,14 +58,14 @@ class FakeNetworkWorkRepository : WordRepository {
     }
 
     override suspend fun saveErikSpellingWords(
-        words: List<SpellingWord>,
+        uploadable: List<SpellingWord>,
         downloaded: List<String>
     ): ComplexRepositoryResult<String, SpellingWord> {
         TODO("Not yet implemented")
     }
 
     override suspend fun saveMarkSpellingWords(
-        words: List<SpellingWord>,
+        uploadable: List<SpellingWord>,
         downloaded: List<String>
     ): ComplexRepositoryResult<String, SpellingWord> {
         TODO("Not yet implemented")

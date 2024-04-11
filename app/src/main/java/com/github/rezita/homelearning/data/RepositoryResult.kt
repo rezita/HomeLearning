@@ -11,9 +11,8 @@ sealed class SimpleRepositoryResult<T : Any?> {
     data class DownloadingError<T : Any>(val message: String) : SimpleRepositoryResult<T>()
 }
 
-sealed class NormalRepositoryResult<T : Any?>(
-) {
-    class Downloading<T : Any>() : NormalRepositoryResult<T>() {
+sealed class NormalRepositoryResult<T : Any?> {
+    class Downloading<T : Any> : NormalRepositoryResult<T>() {
         override fun equals(other: Any?): Boolean = other is Downloading<*>
         override fun hashCode(): Int = javaClass.hashCode()
     }
@@ -31,9 +30,8 @@ sealed class NormalRepositoryResult<T : Any?>(
         NormalRepositoryResult<T>()
 }
 
-sealed class ComplexRepositoryResult<T : Any?, U : Any?>(
-) {
-    class Downloading<T : Any, U : Any>() :
+sealed class ComplexRepositoryResult<T : Any?, U : Any?> {
+    class Downloading<T : Any, U : Any> :
         ComplexRepositoryResult<T, U>() {
         override fun equals(other: Any?): Boolean = other is Downloading<*, *>
         override fun hashCode(): Int = javaClass.hashCode()

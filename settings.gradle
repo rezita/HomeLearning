@@ -5,26 +5,12 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-def usernameProvider = providers.gradleProperty("user")
-def passwordProvider = providers.gradleProperty("acckey")
-
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(file("github.properties")))
-
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/rezita/PartiallyEditableText"
-            credentials {
-                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
-            }
-        }
     }
 }
 rootProject.name = "Home Learning"

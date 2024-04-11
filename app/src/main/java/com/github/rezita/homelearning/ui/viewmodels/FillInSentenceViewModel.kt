@@ -1,5 +1,8 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -28,9 +31,8 @@ class FillInSentenceViewModel(
     val sentenceUIState: StateFlow<NormalRepositoryResult<FillInSentence>> =
         _sentenceUIState.asStateFlow()
 
-    //var isAllAnswered by mutableStateOf(false)
-    var _isAllAnswered = MutableStateFlow(false)
-    val isAllAnswered: StateFlow<Boolean> = _isAllAnswered.asStateFlow()
+    var isAllAnswered by mutableStateOf(false)
+        private set
 
     init {
         load()
@@ -48,16 +50,29 @@ class FillInSentenceViewModel(
     }
 
     private fun resetUiState() {
+        isAllAnswered = false
         _sentenceUIState.update { NormalRepositoryResult.Downloading() }
     }
 
     fun getIrregularVerbs() = getSentences { wordRepository.getIrregularVerbs() }
 
-    fun getHomophones() = getSentences { wordRepository.getHomophones() }
+    private fun getHomophones() = getSentences { wordRepository.getHomophones() }
 
-    fun saveIrregularVerbs() = saveFillInSentenceResults { wordRepository.updateIrregularVerbs(it) }
 
-    fun saveHomophones() = saveFillInSentenceResults { wordRepository.updateHomophones(it) }
+    fun saveSentences() {
+        when (sheetAction) {
+            SheetAction.READ_IRREGULAR_VERBS -> saveIrregularVerbs()
+            SheetAction.READ_HOMOPHONES -> saveHomophones()
+            else -> _sentenceUIState.update {
+                NormalRepositoryResult.UploadError(emptyList(), "Wrong action provided")
+            }
+        }
+    }
+
+    private fun saveIrregularVerbs() =
+        saveFillInSentenceResults { wordRepository.updateIrregularVerbs(it) }
+
+    private fun saveHomophones() = saveFillInSentenceResults { wordRepository.updateHomophones(it) }
 
     private fun getSentences(callback: suspend () -> NormalRepositoryResult<FillInSentence>) {
         viewModelScope.launch {
@@ -73,9 +88,7 @@ class FillInSentenceViewModel(
                         .apply { this[index] = this[index].copy(answer = answer) }
 
                 _sentenceUIState.update { state.copy(data = sentences) }
-                _isAllAnswered.update {
-                    sentences.none { it.status == WordStatus.UNCHECKED }
-                }
+                isAllAnswered =  sentences.none { it.status == WordStatus.UNCHECKED }
             }
 
             else -> return
@@ -83,28 +96,26 @@ class FillInSentenceViewModel(
     }
 
     private fun saveFillInSentenceResults(callback: suspend (List<FillInSentence>) -> NormalRepositoryResult<FillInSentence>) {
-        when (val state = _sentenceUIState.value) {
-            is NormalRepositoryResult.Downloaded -> {
-                if (_isAllAnswered.value) {
+        if (isAllAnswered) {
+            when (val state = _sentenceUIState.value) {
+                is NormalRepositoryResult.Downloaded -> {
                     viewModelScope.launch {
                         val data = state.data
                         _sentenceUIState.emit(NormalRepositoryResult.Uploading(data))
                         _sentenceUIState.emit(callback(data))
                     }
                 }
-            }
 
-            is NormalRepositoryResult.UploadError -> {
-                if (_isAllAnswered.value) {
+                is NormalRepositoryResult.UploadError -> {
                     viewModelScope.launch {
                         val data = state.data
                         _sentenceUIState.emit(NormalRepositoryResult.Uploading(data))
                         _sentenceUIState.emit(callback(data))
                     }
                 }
-            }
 
-            else -> return
+                else -> return
+            }
         }
     }
 

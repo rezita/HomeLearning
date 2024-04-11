@@ -19,16 +19,25 @@
     <string name="error_button_caption">Try again</string>
     <string name="msg_wrong_action">Wrong action provided.</string>
 
+    <!--SnackBar messages-->
+    <string name="snackBar_error_loading">A problem occurred during loading your data.\nPlease try again.</string>
+    <string name="snackBar_save_success">All done!\nResults were saved successfully.</string>
+    <string name="snackBar_save_error">A problem happened while saving the results.\nPlease try again.</string>
+
+
 
     <!-- Action Bar Titles-->
     <string name="back_button">Back</string>
     <string name="activity_irregular_verbs">Irregular Verbs</string>
+    <string name="activity_homophones">Homophones</string>
+    <string name="activity_sentences">Sentences</string>
     <string name="activity_upload_words">Upload Words</string>
     <string name="activity_reading_title">Reading</string>
     <string name="activity_spelling">Spelling</string>
     <string name="reading_black_display">Monochrome display</string>
     <string name="reading_colour_display">Coloured display</string>
     <string name="app_bar_loading_title">Loading...</string>
+    <string name="app_bar_uploading_title">Saving...</string>
     <string name="app_bar_error_title">Error</string>
 
     <!-- Main Activity Tabs-->
