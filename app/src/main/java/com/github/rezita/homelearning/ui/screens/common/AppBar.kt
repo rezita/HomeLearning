@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.ui.screens.common
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,80 +50,3 @@ fun LearningAppBar(
     )
 }
 
-@Composable
-fun ReadingTopAppBar(
-    state: SimpleRepositoryResult<ReadingWord>,
-    callback: (Boolean) -> Unit,
-    isColorDisplay: Boolean,
-    modifier: Modifier = Modifier
-) {
-    LearningAppBar(
-        titleText = when (state) {
-            is SimpleRepositoryResult.Downloaded -> stringResource(id = R.string.activity_reading_title)
-            is SimpleRepositoryResult.Downloading -> stringResource(id = R.string.app_bar_loading_title)
-            is SimpleRepositoryResult.DownloadingError -> stringResource(id = R.string.app_bar_error_title)
-            else -> ""
-        },
-
-        navigateUp = {},
-
-        actions = {
-            // Change how to display the words (simple black / colorful)
-            if (isColorDisplay) {
-                IconButton(onClick = { callback(false) }) {
-                    Icon(
-                        painterResource(id = R.drawable.baseline_invert_colors_off_24),
-                        contentDescription = stringResource(id = R.string.reading_black_display),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            } else {
-                IconButton(onClick = { callback(true) }) {
-                    Icon(
-                        painterResource(id = R.drawable.baseline_invert_colors_24),
-                        contentDescription = stringResource(id = R.string.reading_colour_display),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
-        },
-        modifier = modifier
-    )
-}
-
-
-@Preview
-@Composable
-fun ReadingTopAppBarBlackPreview_success() {
-    HomeLearningTheme {
-        ReadingTopAppBar(
-            state = SimpleRepositoryResult.Downloaded(emptyList()),
-            callback = {},
-            isColorDisplay = false
-        )
-    }
-}
-
-@Preview
-@Composable
-fun ReadingTopAppBarColorPreview_loading() {
-    HomeLearningTheme {
-        ReadingTopAppBar(
-            state = SimpleRepositoryResult.Downloading(),
-            callback = {},
-            isColorDisplay = true
-        )
-    }
-}
-
-@Preview
-@Composable
-fun ReadingTopAppBarColorPreview_error() {
-    HomeLearningTheme {
-        ReadingTopAppBar(
-            state = SimpleRepositoryResult.DownloadingError(""),
-            callback = {},
-            isColorDisplay = true
-        )
-    }
-}

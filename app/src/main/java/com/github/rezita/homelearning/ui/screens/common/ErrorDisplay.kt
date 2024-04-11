@@ -1,36 +1,125 @@
 package com.github.rezita.homelearning.ui.screens.common
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun ErrorDisplay(message: String, callback: () -> Unit, modifier: Modifier = Modifier) {
+fun ErrorDisplayInColumn(message: String, callback: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = message)
-        Button(onClick = callback) {
-            Text(stringResource(id = R.string.error_button_caption))
+        TextWithButton(
+            message = message,
+            callback = callback,
+            textModifier = Modifier.padding(bottom = 16.dp)
+        )
+    }
+}
+
+@Composable
+fun ErrorDisplayInRow(message: String, callback: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextWithButton(
+            message = message,
+            callback = callback,
+            textModifier = Modifier
+                .padding(end = 16.dp)
+                .weight(1f)
+        )
+    }
+}
+
+@Composable
+fun ErrorDisplayWithContent(
+    message: String,
+    callback: () -> Unit,
+    content: @Composable() () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+    ) {
+        ErrorDisplayInRow(
+            message = message,
+            callback = callback,
+        )
+        Divider(
+            color = Color.LightGray,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+                .height(1.dp)
+                .fillMaxHeight()
+                .fillMaxWidth()
+        )
+        content()
+    }
+}
+
+@Composable
+fun TextWithButton(
+    message: String,
+    callback: () -> Unit,
+    textModifier: Modifier = Modifier,
+    buttonModifier: Modifier = Modifier
+) {
+    Text(text = message, modifier = textModifier)
+    OutlinedButton(onClick = callback, modifier = buttonModifier) {
+        Text(stringResource(id = R.string.error_button_caption))
+
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+fun ErrorDisplayPreviewColumn() {
+    HomeLearningTheme {
+        Scaffold() {
+            ErrorDisplayInColumn(
+                message = "This is a long long long long long long long long the error message",
+                callback = {},
+                modifier = Modifier.padding(it)
+            )
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun ErrorDisplayPreview() {
+fun ErrorDisplayPreviewRow() {
     HomeLearningTheme {
-        ErrorDisplay(message = "This will be the error message", callback = {})
+        Scaffold() {
+            ErrorDisplayInRow(
+                message = "This is a long long long long long long long long long long the error message",
+                callback = {},
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }

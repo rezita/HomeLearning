@@ -1,8 +1,7 @@
 package com.github.rezita.homelearning.data
 
 
-sealed class SimpleRepositoryResult<T : Any?>(
-) {
+sealed class SimpleRepositoryResult<T : Any?> {
     class Downloading<T : Any> : SimpleRepositoryResult<T>() {
         override fun equals(other: Any?): Boolean = other is Downloading<*>
         override fun hashCode(): Int = javaClass.hashCode()

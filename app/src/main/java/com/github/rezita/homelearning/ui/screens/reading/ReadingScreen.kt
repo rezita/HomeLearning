@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,16 +33,15 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.ui.screens.common.ErrorDisplay
+import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
-import com.github.rezita.homelearning.utils.getUndecorated
 import com.github.rezita.homelearning.utils.getDecorated
 import com.github.rezita.homelearning.utils.getOutlineText
+import com.github.rezita.homelearning.utils.getUndecorated
 
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
     val readingState by viewModel.readingUIState.collectAsState()
@@ -56,7 +56,7 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
         }
     ) {
         when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> ErrorDisplay(
+            Configuration.ORIENTATION_PORTRAIT -> ErrorDisplayInColumn(
                 message = stringResource(id = R.string.msg_turn_portrait_mode),
                 callback = { viewModel.load() })
 
@@ -69,7 +69,7 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
                         modifier = Modifier.padding(it)
                     )
 
-                    is SimpleRepositoryResult.DownloadingError -> ErrorDisplay(
+                    is SimpleRepositoryResult.DownloadingError -> ErrorDisplayInColumn(
                         message = state.message,
                         callback = { viewModel.load() })
                 }
@@ -115,7 +115,7 @@ fun ReadingWordItem(
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
         Column(
             modifier = Modifier
@@ -131,7 +131,10 @@ fun ReadingWordItem(
         }
         Column(
             modifier = Modifier
-                .padding(end = 16.dp, bottom = 16.dp),
+                .padding(
+                    end = dimensionResource(id = R.dimen.padding_medium),
+                    bottom = dimensionResource(id = R.dimen.padding_medium)
+                ),
             verticalArrangement = Arrangement.Bottom
         ) {
             Text(
