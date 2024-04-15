@@ -40,7 +40,7 @@ fun LearningAppBar(
         navigationIcon = {
             IconButton(onClick = navigateUp) {
                 Icon(
-                    painterResource(id = R.drawable.baseline_arrow_back_24),
+                    painterResource(id = R.drawable.ic_navigation_back),
                     contentDescription = stringResource(id = R.string.back_button),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )

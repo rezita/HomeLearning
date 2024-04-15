@@ -24,8 +24,6 @@
     <string name="snackBar_save_success">All done!\nResults were saved successfully.</string>
     <string name="snackBar_save_error">A problem happened while saving the results.\nPlease try again.</string>
 
-
-
     <!-- Action Bar Titles-->
     <string name="back_button">Back</string>
     <string name="activity_irregular_verbs">Irregular Verbs</string>

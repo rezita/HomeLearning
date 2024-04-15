@@ -36,7 +36,7 @@ fun ReadingTopAppBar(
             if (isColorDisplay) {
                 IconButton(onClick = { callback(false) }) {
                     Icon(
-                        painterResource(id = R.drawable.baseline_invert_colors_off_24),
+                        painterResource(id = R.drawable.ic_menu_black),
                         contentDescription = stringResource(id = R.string.reading_black_display),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -44,7 +44,7 @@ fun ReadingTopAppBar(
             } else {
                 IconButton(onClick = { callback(true) }) {
                     Icon(
-                        painterResource(id = R.drawable.baseline_invert_colors_24),
+                        painterResource(id = R.drawable.ic_menu_colors),
                         contentDescription = stringResource(id = R.string.reading_colour_display),
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
