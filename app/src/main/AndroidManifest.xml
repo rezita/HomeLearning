@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name=".view.FillInSentencesActivity"
-            android:theme="@style/Theme.SpellingWords.FullScreenNoActionBar"
+            android:theme="@style/Theme.SpellingWords.NoActionBar"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -50,7 +50,7 @@
         <activity
             android:name=".view.ReadingActivity"
             android:exported="false"
-            android:theme="@style/Theme.SpellingWords.FullScreenNoActionBar">
+            android:theme="@style/Theme.SpellingWords.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />
