@@ -45,14 +45,24 @@ class SpellingViewModel(
         _spellingUIState.update { NormalRepositoryResult.Downloading() }
     }
 
-    fun getErikSpellingWords() = getSpellingWords { wordRepository.getErikSpellingWords() }
+    private fun getErikSpellingWords() = getSpellingWords { wordRepository.getErikSpellingWords() }
 
-    fun getMarkSpellingWords() = getSpellingWords { wordRepository.getMarkSpellingWords() }
+    private fun getMarkSpellingWords() = getSpellingWords { wordRepository.getMarkSpellingWords() }
 
-    fun saveErikSpellingResults() =
+    fun saveSpellingResults() {
+        when (sheetAction) {
+            SheetAction.READ_ERIK_SPELLING_WORDS -> saveErikSpellingResults()
+            SheetAction.READ_MARK_SPELLING_WORDS -> saveMarkSpellingResults()
+            else -> _spellingUIState.update {
+                NormalRepositoryResult.UploadError(emptyList(), "Wrong action provided", )
+            }
+        }
+    }
+
+    private fun saveErikSpellingResults() =
         saveSpellingResults { wordRepository.updateErikSpellingWords(it) }
 
-    fun saveMarkSpellingResults() =
+    private fun saveMarkSpellingResults() =
         saveSpellingResults { wordRepository.updateMarkSpellingWords(it) }
 
     private fun getSpellingWords(callback: suspend () -> NormalRepositoryResult<SpellingWord>) {

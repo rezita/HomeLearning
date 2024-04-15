@@ -47,8 +47,14 @@
 
     </style>
 
-    <style name ="Theme.SpellingWords.FullScreenNoActionBar" parent="Theme.SpellingWordsNoActionBar">
+    <style name ="Theme.SpellingWords.FullScreenNoActionBar" parent="Theme.SpellingWords">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <style name="Theme.SpellingWords.NoActionBar" parent="Theme.SpellingWordsNoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>

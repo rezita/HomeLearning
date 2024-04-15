@@ -39,6 +39,10 @@
     <string name="app_bar_loading_title">Loading...</string>
     <string name="app_bar_uploading_title">Saving...</string>
     <string name="app_bar_error_title">Error</string>
+    <string name="spelling_save">Save results</string>
+    <string name="spelling_add_new_word">Add new word</string>
+    <string name="sentences_check_and_save">Check and save</string>
+
 
     <!-- Main Activity Tabs-->
     <string name="main_activity_tab1">Erik</string>

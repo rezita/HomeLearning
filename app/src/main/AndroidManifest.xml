@@ -25,8 +25,8 @@
         </activity>
         <activity
             android:name=".view.SpellingActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.SpellingWords.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.MainActivity" />
