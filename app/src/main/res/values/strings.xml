@@ -15,7 +15,7 @@
     <string name="loading">Loading. Ready soon.</string>
     <string name="uploading">Saving. Ready soon.</string>
 
-    <!--Error page -->
+    <!--Error messages -->
     <string name="error_button_caption">Try again</string>
     <string name="msg_wrong_action">Wrong action provided.</string>
 
@@ -97,16 +97,20 @@
     <string name="header_upload_words_word">Word</string>
     <string name="header_upload_words_comment">Comment</string>
     <string name="header_upload_words_category">Category</string>
-    <!-- upload word dialog-->
-    <string name="upload_dialog_hint_word">Word</string>
-    <string name="upload_dialog_hint_comment">Comment</string>
-    <string name="upload_dialog_hint_category">Category</string>
-    <string name="upload_dialog_save">Save</string>
-    <string name="upload_dialog_cancel">Cancel</string>
-    <string name="upload_dialog_message_invalid_word">Invalid word</string>
-    <string name="upload_dialog_error_word_message">Please provide valid word!</string>
-    <string name="upload_dialog_error_comment_message">Please provide a valid comment!</string>
-    <string name="upload_dialog_error_category_message">Please select a category!</string>
+    <!-- upload word-->
+    <string name="upload_word_label">Word</string>
+    <string name="upload_comment_label">Comment</string>
+    <string name="upload_category_label">Category</string>
+    <string name="upload_save">Save</string>
+    <string name="upload_cancel">Cancel</string>
+    <string name="upload_message_invalid_word">Invalid word</string>
+    <string name="upload_error_word_message">Please provide valid word!</string>
+    <string name="upload_error_comment_message">Please provide a valid comment!</string>
+    <string name="upload_error_category_message">Please select a category!</string>
+    <string name="upload_delete_word">Delete word</string>
+    <string name="upload_edit_word">Edit word</string>
+    <string name="upload_no_words_message">There\'s nothing to save. \nPlease create at least one word.</string>
+
 
     <!-- Fill In Sentences Activity -->
     <string name="irregular_verb_dialog_title">Unable to check</string>

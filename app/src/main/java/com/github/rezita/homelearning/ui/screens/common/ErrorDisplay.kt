@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -59,7 +59,7 @@ fun ErrorDisplayInRow(message: String, callback: () -> Unit, modifier: Modifier 
 fun ErrorDisplayWithContent(
     message: String,
     callback: () -> Unit,
-    content: @Composable() () -> Unit,
+    content: @Composable () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -69,7 +69,7 @@ fun ErrorDisplayWithContent(
             message = message,
             callback = callback,
         )
-        Divider(
+        HorizontalDivider(
             color = Color.LightGray,
             modifier = Modifier
                 .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
@@ -91,7 +91,6 @@ fun TextWithButton(
     Text(text = message, modifier = textModifier)
     OutlinedButton(onClick = callback, modifier = buttonModifier) {
         Text(stringResource(id = R.string.error_button_caption))
-
     }
 }
 
@@ -100,7 +99,7 @@ fun TextWithButton(
 @Composable
 fun ErrorDisplayPreviewColumn() {
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             ErrorDisplayInColumn(
                 message = "This is a long long long long long long long long the error message",
                 callback = {},
@@ -115,7 +114,7 @@ fun ErrorDisplayPreviewColumn() {
 @Composable
 fun ErrorDisplayPreviewRow() {
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             ErrorDisplayInRow(
                 message = "This is a long long long long long long long long long long the error message",
                 callback = {},

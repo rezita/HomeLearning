@@ -44,7 +44,6 @@ import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SpellingScreen(
     viewModel: SpellingViewModel,
@@ -66,7 +65,7 @@ fun SpellingScreen(
     ) {
         when (val state = spellingState) {
             is NormalRepositoryResult.Downloading ->
-                LoadingProgressBar()
+                LoadingProgressBar(modifier = Modifier.padding(it))
 
             is NormalRepositoryResult.Downloaded -> {
                 SpellingItems(
@@ -80,7 +79,9 @@ fun SpellingScreen(
                 LoadingErrorSnackbar(scope = scope, snackbarHostState = snackbarHostState)
                 ErrorDisplayInColumn(
                     message = state.message,
-                    callback = { viewModel.load() })
+                    callback = { viewModel.load() },
+                    modifier = Modifier.padding(it)
+                    )
 
             }
 

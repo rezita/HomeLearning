@@ -27,8 +27,8 @@ WordRepository {
     suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord>
     suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord>
 
-    suspend fun getErikCategories(): ComplexRepositoryResult<String, SpellingWord>
-    suspend fun getMarkCategories(): ComplexRepositoryResult<String, SpellingWord>
+    suspend fun getErikCategories(): RepositoryResult<List<String>>
+    suspend fun getMarkCategories(): RepositoryResult<List<String>>
 
     suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
     suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
@@ -36,15 +36,9 @@ WordRepository {
     suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
     suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
 
-    suspend fun saveErikSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord>
+    suspend fun saveErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
-    suspend fun saveMarkSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord>
+    suspend fun saveMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
     //suspend fun restoreSpellingWordsFromLogs(): RepositoryResult<SpellingWord>
 }
@@ -120,29 +114,26 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
 
     }
 
-    override suspend fun getErikCategories(): ComplexRepositoryResult<String, SpellingWord> =
+    override suspend fun getErikCategories(): RepositoryResult<List<String>> =
         getCategories(SheetAction.READ_ERIK_SPELLING_CATEGORIES)
 
-    override suspend fun getMarkCategories(): ComplexRepositoryResult<String, SpellingWord> =
+    override suspend fun getMarkCategories(): RepositoryResult<List<String>> =
         getCategories(SheetAction.READ_MARK_SPELLING_CATEGORIES)
 
-    private suspend fun getCategories(sheetAction: SheetAction): ComplexRepositoryResult<String, SpellingWord> {
+    private suspend fun getCategories(sheetAction: SheetAction): RepositoryResult<List<String>> {
         wordsAPIService.getCategories(sheetAction.value)
             .onSuccess { response ->
                 return if (response.categories.isNotEmpty()) {
-                    ComplexRepositoryResult.Downloaded(
-                        downloaded = response.categories,
-                        uploadable = emptyList()
-                    )
+                    RepositoryResult.Success(data = response.categories)
                 } else {
-                    ComplexRepositoryResult.DownloadingError(response.message)
+                    RepositoryResult.Error(response.message)
                 }
             }
             .onFailure {
                 Log.e("onFailure", it.message.toString())
-                return ComplexRepositoryResult.DownloadingError(it.message.toString())
+                return RepositoryResult.Error(it.message.toString())
             }
-        return ComplexRepositoryResult.DownloadingError("Error")
+        return RepositoryResult.Error("Error")
     }
 
     override suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> {
@@ -173,39 +164,26 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             words = words
         )
 
-    override suspend fun saveErikSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord> =
+    override suspend fun saveErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> =
         saveSpellingWords(
-            downloaded = downloaded,
             sheetAction = SheetAction.SAVE_ERIK_WORDS,
-            uploadable = uploadable
+            words = words
         )
 
-    override suspend fun saveMarkSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord> =
+    override suspend fun saveMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String> =
         saveSpellingWords(
-            downloaded = downloaded,
             sheetAction = SheetAction.SAVE_MARK_WORDS,
-            uploadable = uploadable
+            words = words
         )
 
     private suspend fun saveSpellingWords(
-        downloaded: List<String>,
         sheetAction: SheetAction,
-        uploadable: List<SpellingWord>
-    ): ComplexRepositoryResult<String, SpellingWord> {
-        val wordsParam = uploadable.map { it.asAPISellingWord() }
+        words: List<SpellingWord>
+    ): RepositoryResult<String> {
+        val wordsParam = words.map { it.asAPISellingWord() }
 
         if (wordsParam.isEmpty()) {
-            return ComplexRepositoryResult.UploadError(
-                downloaded = downloaded,
-                uploadable = uploadable,
-                message = "No data has given"
-            )
+            return RepositoryResult.Error(message = "No data has given")
         }
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
         val params = PostApiParameter(
@@ -215,30 +193,22 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         wordsAPIService.updateData(parameter = json.encodeToJsonElement(params))
             .onSuccess { response ->
                 return if (response.result.isNotEmpty()) {
-                    ComplexRepositoryResult.Uploaded(
-                        downloaded = downloaded,
-                        uploadable = emptyList(),
-                        message = response.result,
+                    RepositoryResult.Success(
+                        data = response.result
                     )
                 } else {
-                    ComplexRepositoryResult.UploadError(
-                        downloaded = downloaded,
-                        uploadable = uploadable,
+                    RepositoryResult.Error(
                         message = response.message
                     )
                 }
             }
             .onFailure {
                 Log.e("onFailure", it.message.toString())
-                return ComplexRepositoryResult.UploadError(
-                    downloaded = downloaded,
-                    uploadable = uploadable,
+                return RepositoryResult.Error(
                     message = it.message.toString()
                 )
             }
-        return return ComplexRepositoryResult.UploadError(
-            downloaded = downloaded,
-            uploadable = uploadable,
+        return return RepositoryResult.Error(
             message = "Error"
         )
     }

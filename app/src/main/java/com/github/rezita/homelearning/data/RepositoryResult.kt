@@ -30,31 +30,7 @@ sealed class NormalRepositoryResult<T : Any?> {
         NormalRepositoryResult<T>()
 }
 
-sealed class ComplexRepositoryResult<T : Any?, U : Any?> {
-    class Downloading<T : Any, U : Any> :
-        ComplexRepositoryResult<T, U>() {
-        override fun equals(other: Any?): Boolean = other is Downloading<*, *>
-        override fun hashCode(): Int = javaClass.hashCode()
-    }
-
-    data class Downloaded<T : Any, U : Any>(val downloaded: List<T>, val uploadable: List<U>) :
-        ComplexRepositoryResult<T, U>()
-
-    data class DownloadingError<T : Any, U : Any>(val message: String) :
-        ComplexRepositoryResult<T, U>()
-
-    data class Uploading<T : Any, U : Any>(val downloaded: List<T>, val uploadable: List<U>) :
-        ComplexRepositoryResult<T, U>()
-
-    data class UploadError<T : Any, U : Any>(
-        val downloaded: List<T>,
-        val uploadable: List<U>,
-        val message: String
-    ) : ComplexRepositoryResult<T, U>()
-
-    data class Uploaded<T : Any, U : Any>(
-        val downloaded: List<T>,
-        val uploadable: List<U>,
-        val message: String
-    ) : ComplexRepositoryResult<T, U>()
+sealed class RepositoryResult<out R> {
+    data class Success<out T>(val data: T) : RepositoryResult<T>()
+    data class Error(val message: String) : RepositoryResult<Nothing>()
 }

@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.common
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -13,11 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
-import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

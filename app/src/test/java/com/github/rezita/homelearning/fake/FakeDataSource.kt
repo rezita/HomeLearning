@@ -1,14 +1,13 @@
 package com.github.rezita.homelearning.fake
 
-import com.github.rezita.homelearning.data.ComplexRepositoryResult
 import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ApiFillInSentence
 import com.github.rezita.homelearning.model.ApiReadingWord
 import com.github.rezita.homelearning.model.ApiSpellingWord
 import com.github.rezita.homelearning.model.Category
 import com.github.rezita.homelearning.model.GetRequestApiItems
-import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.asFillInSentence
 import com.github.rezita.homelearning.model.asReadingWord
 import com.github.rezita.homelearning.model.asSpellingWord
@@ -109,12 +108,13 @@ object FakeSentenceDataSource {
             sentenceApi1.asFillInSentence(),
             sentenceApi2.asFillInSentence(),
             sentenceApi3.asFillInSentence()
-        ))
+        )
+    )
 }
 
 /**CATEGORY*/
 object FakeCategoryDataSource {
     val apiCategories = Category(categories = listOf("school", "home"))
 
-    val categories = ComplexRepositoryResult.Downloaded<String, SpellingWord>(downloaded = listOf("school", "home"), uploadable = emptyList())
+    val categories = RepositoryResult.Success(listOf("school", "home"))
 }

@@ -1,7 +1,7 @@
 package com.github.rezita.homelearning.fake
 
-import com.github.rezita.homelearning.data.ComplexRepositoryResult
 import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
@@ -33,11 +33,11 @@ class FakeNetworkWorkRepository : WordRepository {
         return FakeSpellingDataSource.spellingWords
     }
 
-    override suspend fun getErikCategories(): ComplexRepositoryResult<String, SpellingWord> {
+    override suspend fun getErikCategories(): RepositoryResult<List<String>> {
         return FakeCategoryDataSource.categories
     }
 
-    override suspend fun getMarkCategories(): ComplexRepositoryResult<String, SpellingWord> {
+    override suspend fun getMarkCategories(): RepositoryResult<List<String>> {
         return FakeCategoryDataSource.categories
     }
 
@@ -58,16 +58,14 @@ class FakeNetworkWorkRepository : WordRepository {
     }
 
     override suspend fun saveErikSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord> {
+        words: List<SpellingWord>
+    ): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 
     override suspend fun saveMarkSpellingWords(
-        uploadable: List<SpellingWord>,
-        downloaded: List<String>
-    ): ComplexRepositoryResult<String, SpellingWord> {
+        words: List<SpellingWord>
+    ): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 }

@@ -61,7 +61,7 @@ fun SpellingTopAppBar(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_loading() {
+fun SpellingTopAppBar_loading() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.Downloading(),
