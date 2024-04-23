@@ -27,7 +27,9 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun ErrorDisplayInColumn(message: String, callback: () -> Unit, modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(dimensionResource(id = R.dimen.padding_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
