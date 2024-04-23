@@ -36,18 +36,18 @@ private fun FillInSentence.getWithSuggestionsAndSeparatorReplaced(replacement: S
     return "$sentenceReplaced ($suggestion)"
 }
 
-fun FillInSentence.getWithResult(): AnnotatedString {
+fun FillInSentence.getWithResult(correctColor: Color, incorrectColor: Color): AnnotatedString {
     val (prefix, suffix) = splitBySparatorWithSuggestion()
 
     val annotated = buildAnnotatedString {
         append(prefix)
-        append(getResultText())
+        append(getResultText(correctColor, incorrectColor))
         append(suffix)
     }
     return annotated
 }
 
-private fun FillInSentence.getResultText(): AnnotatedString {
+private fun FillInSentence.getResultText(correctColor: Color, incorrectColor: Color): AnnotatedString {
     val solutionsString = solutions.joinWithSeparator(SOLUTION_SEPARATOR)
 
     val annotated = buildAnnotatedString {
@@ -55,7 +55,7 @@ private fun FillInSentence.getResultText(): AnnotatedString {
             WordStatus.UNCHECKED -> {
                 append(solutionsString)
                 addStyle(
-                    style = SpanStyle(color = Color.Red),
+                    style = SpanStyle(color = incorrectColor),
                     start = 0,
                     end = solutionsString.length
                 )
@@ -64,7 +64,7 @@ private fun FillInSentence.getResultText(): AnnotatedString {
             WordStatus.CORRECT -> {
                 append(answer)
                 addStyle(
-                    style = SpanStyle(color = Color.Green),
+                    style = SpanStyle(color = correctColor),
                     start = 0,
                     end = answer.length
                 )
@@ -76,7 +76,7 @@ private fun FillInSentence.getResultText(): AnnotatedString {
                 addStyle(
                     style = SpanStyle(
                         textDecoration = TextDecoration.LineThrough,
-                        color = Color.Red
+                        color = incorrectColor
                     ),
                     start = 0,
                     end = answer.length
@@ -85,7 +85,7 @@ private fun FillInSentence.getResultText(): AnnotatedString {
                 append(" ")
                 append(solutionsString)
                 addStyle(
-                    style = SpanStyle(color = Color.Green),
+                    style = SpanStyle(color = correctColor),
                     start = answer.length + 1,
                     end = answer.length + solutionsString.length + 1
                 )

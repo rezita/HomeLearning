@@ -38,6 +38,8 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
+import com.github.rezita.homelearning.ui.theme.sentence_correct
+import com.github.rezita.homelearning.ui.theme.sentence_incorrect
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
 import com.github.rezita.homelearning.utils.getWithResult
 import com.github.rezita.homelearning.utils.splitBySparatorWithSuggestion
@@ -188,7 +190,13 @@ fun SentenceResultItems(
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
             Text(
-                text = getResultWithIndex(index, item.getWithResult()),
+                text = getResultWithIndex(
+                    index,
+                    item.getWithResult(
+                        sentence_correct,
+                        sentence_incorrect,
+                    )
+                ),
                 textAlign = TextAlign.Left,
                 modifier = Modifier.padding(
                     start = dimensionResource(id = R.dimen.padding_medium),

@@ -64,5 +64,8 @@ val md_theme_dark_surfaceTint = Color(0xFFBBC3FF)
 val md_theme_dark_outlineVariant = Color(0xFF46464F)
 val md_theme_dark_scrim = Color(0xFF000000)
 
+//for fillInSentence result display
+val sentence_correct = Color(0xFF00930a)
+val sentence_incorrect = Color(0xFF93000a)
 
 val seed = Color(0xFF2B42BC)

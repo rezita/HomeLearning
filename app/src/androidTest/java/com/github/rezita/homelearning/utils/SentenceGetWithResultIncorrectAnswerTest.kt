@@ -18,7 +18,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "was"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -60,7 +60,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "was"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -103,7 +103,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 solutions = listOf("been"),
                 answer = "was"
             )
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -143,7 +143,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "was"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -184,7 +184,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "was"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -224,7 +224,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "burn"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -264,7 +264,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "burn"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -306,7 +306,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "burn"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/
@@ -347,7 +347,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
                 answer = "burn"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
 
         /** span for the answer*/

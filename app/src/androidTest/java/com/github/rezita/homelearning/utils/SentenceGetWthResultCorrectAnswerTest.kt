@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.utils
 
+import androidx.compose.ui.graphics.Color
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import org.junit.Assert.assertEquals
@@ -18,7 +19,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "been"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "been I have never been to Italy. (be)"
@@ -32,7 +33,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
     @Test
@@ -45,7 +46,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "been"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "I have never been to $£ Italy. (be)"
@@ -59,7 +60,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
 
@@ -72,7 +73,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 solutions = listOf("been"),
                 answer = "been"
             )
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "been I have never been to Italy. (be)"
@@ -86,7 +87,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
     @Test
@@ -99,7 +100,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "been"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "I have never been to Italy. been (be)"
@@ -113,7 +114,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
 
@@ -127,7 +128,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "been"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "I have never been to Italy. (be)"
@@ -141,7 +142,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
     @Test
@@ -154,7 +155,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "burned"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "burned I have dinner yet again! (burn)"
@@ -168,7 +169,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
     @Test
@@ -181,7 +182,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "burned"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "burned I have dinner yet again! (burn)"
@@ -195,7 +196,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
     @Test
@@ -208,7 +209,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "burned"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "I have dinner yet again! burned (burn)"
@@ -222,7 +223,7 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
 
 
@@ -236,7 +237,7 @@ class SentenceGetWthResultCorrectAnswerTest {
                 answer = "burned"
             )
 
-        val result = originalSentence.getWithResult()
+        val result = originalSentence.getWithResult(Color.Green, Color.Red)
         val spans = result.spanStyles
         val span = spans[0]
         val expectedText = "I have burned dinner yet again! (burn)"
@@ -250,8 +251,6 @@ class SentenceGetWthResultCorrectAnswerTest {
         assertEquals(spans.size, nrOfSpans)
         assertEquals(span.start, expectedSpanStart)
         assertEquals(span.end, expectedSpanEnd)
-        assertEquals(span.item.color, androidx.compose.ui.graphics.Color.Green)
+        assertEquals(span.item.color, Color.Green)
     }
-
-
 }
