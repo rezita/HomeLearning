@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.reading
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +29,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
@@ -61,21 +59,40 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
                 callback = { viewModel.load() })
 
             else -> {
-                when (val state = readingState) {
-                    is SimpleRepositoryResult.Downloading -> LoadingProgressBar()
-                    is SimpleRepositoryResult.Downloaded -> ReadingWordItems(
-                        words = state.data,
-                        isColorDisplay = viewModel.isColourDisplay,
-                        modifier = Modifier.padding(it)
-                    )
+                ReadingContent(
+                    state = readingState,
+                    isColorDisplay = viewModel.isColourDisplay,
+                    onLoadCallback = { viewModel.load() },
+                    modifier = Modifier.padding(it)
+                )
 
-                    is SimpleRepositoryResult.DownloadingError -> ErrorDisplayInColumn(
-                        message = state.message,
-                        callback = { viewModel.load() })
-                }
             }
         }
     }
+}
+
+@Composable
+fun ReadingContent(
+    state: ReadingUiState,
+    isColorDisplay: Boolean = false,
+    onLoadCallback: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when (state) {
+        is ReadingUiState.Loading -> LoadingProgressBar(modifier = modifier)
+        is ReadingUiState.Downloaded -> ReadingWordItems(
+            words = state.words,
+            isColorDisplay = isColorDisplay,
+            modifier = modifier
+        )
+
+        is ReadingUiState.LoadingError -> ErrorDisplayInColumn(
+            message = stringResource(id = state.errorMessage),
+            callback = onLoadCallback,
+            modifier = modifier
+        )
+    }
+
 }
 
 @Composable

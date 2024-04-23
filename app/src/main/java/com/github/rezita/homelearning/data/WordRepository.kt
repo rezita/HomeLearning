@@ -18,8 +18,8 @@ import kotlinx.serialization.json.encodeToJsonElement
 
 interface
 WordRepository {
-    suspend fun getReadingWords(): SimpleRepositoryResult<ReadingWord>
-    suspend fun getCEWWords(): SimpleRepositoryResult<ReadingWord>
+    suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>>
+    suspend fun getCEWWords(): RepositoryResult<List<ReadingWord>>
 
     suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence>
     suspend fun getHomophones(): NormalRepositoryResult<FillInSentence>
@@ -47,25 +47,25 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     WordRepository {
 
     /** Fetches list of ReadingWords from wordsAPIService */
-    override suspend fun getReadingWords(): SimpleRepositoryResult<ReadingWord> =
+    override suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>> =
         getReadingWords(SheetAction.READ_READING_WORDS)
 
-    override suspend fun getCEWWords(): SimpleRepositoryResult<ReadingWord> =
+    override suspend fun getCEWWords(): RepositoryResult<List<ReadingWord>> =
         getReadingWords(SheetAction.READ_READING_CEW)
 
-    private suspend fun getReadingWords(sheetAction: SheetAction): SimpleRepositoryResult<ReadingWord> {
+    private suspend fun getReadingWords(sheetAction: SheetAction): RepositoryResult<List<ReadingWord>> {
         wordsAPIService.getReadingWords(action = sheetAction.value)
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
-                    SimpleRepositoryResult.Downloaded(response.items.map { it.asReadingWord() })
+                    RepositoryResult.Success(data = response.items.map { it.asReadingWord() })
                 } else {
-                    SimpleRepositoryResult.DownloadingError(response.message)
+                    RepositoryResult.Error(message = response.message)
                 }
             }
             .onFailure {
-                return SimpleRepositoryResult.DownloadingError(it.message.toString())
+                return RepositoryResult.Error(message = it.message.toString())
             }
-        return SimpleRepositoryResult.DownloadingError("Error")
+        return RepositoryResult.Error(message = "Error")
     }
 
     override suspend fun getHomophones(): NormalRepositoryResult<FillInSentence> =

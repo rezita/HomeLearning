@@ -2,18 +2,17 @@ package com.github.rezita.homelearning.fake
 
 import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.RepositoryResult
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.model.SpellingWord
 
 class FakeNetworkWorkRepository : WordRepository {
-    override suspend fun getReadingWords(): SimpleRepositoryResult<ReadingWord> {
+    override suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>> {
         return FakeReadingDataSource.readingWords
     }
 
-    override suspend fun getCEWWords(): SimpleRepositoryResult<ReadingWord> {
+    override suspend fun getCEWWords(): RepositoryResult<List<ReadingWord>> {
         return FakeReadingDataSource.readingWords
     }
 

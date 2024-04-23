@@ -10,44 +10,44 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
-import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun ReadingTopAppBar(
-    state: SimpleRepositoryResult<ReadingWord>,
+    state: ReadingUiState,
     callback: (Boolean) -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
         titleText = when (state) {
-            is SimpleRepositoryResult.Downloaded -> stringResource(id = R.string.activity_reading_title)
-            is SimpleRepositoryResult.Downloading -> stringResource(id = R.string.app_bar_loading_title)
-            is SimpleRepositoryResult.DownloadingError -> stringResource(id = R.string.app_bar_error_title)
+            is ReadingUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
+            is ReadingUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
+            is ReadingUiState.Downloaded -> stringResource(id = R.string.activity_reading_title)
         },
 
         navigateUp = {},
 
         actions = {
-            // Change how to display the words (simple black / colorful)
-            if (isColorDisplay) {
-                IconButton(onClick = { callback(false) }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_menu_black),
-                        contentDescription = stringResource(id = R.string.reading_black_display),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            } else {
-                IconButton(onClick = { callback(true) }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_menu_colors),
-                        contentDescription = stringResource(id = R.string.reading_colour_display),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+            if (state is ReadingUiState.Downloaded) {
+                // Change how to display the words (simple black / colorful)
+                if (isColorDisplay) {
+                    IconButton(onClick = { callback(false) }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_menu_black),
+                            contentDescription = stringResource(id = R.string.reading_black_display),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                } else {
+                    IconButton(onClick = { callback(true) }) {
+                        Icon(
+                            painterResource(id = R.drawable.ic_menu_colors),
+                            contentDescription = stringResource(id = R.string.reading_colour_display),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
         },
@@ -62,7 +62,7 @@ fun ReadingTopAppBar(
 fun ReadingTopAppBarBlackPreview_success() {
     HomeLearningTheme {
         ReadingTopAppBar(
-            state = SimpleRepositoryResult.Downloaded(emptyList()),
+            state = ReadingUiState.Downloaded(emptyList()),
             callback = {},
             isColorDisplay = false
         )
@@ -75,7 +75,7 @@ fun ReadingTopAppBarBlackPreview_success() {
 fun ReadingTopAppBarColorPreview_loading() {
     HomeLearningTheme {
         ReadingTopAppBar(
-            state = SimpleRepositoryResult.Downloading(),
+            state = ReadingUiState.Loading,
             callback = {},
             isColorDisplay = true
         )
@@ -88,7 +88,7 @@ fun ReadingTopAppBarColorPreview_loading() {
 fun ReadingTopAppBarColorPreview_error() {
     HomeLearningTheme {
         ReadingTopAppBar(
-            state = SimpleRepositoryResult.DownloadingError(""),
+            state = ReadingUiState.LoadingError(12),
             callback = {},
             isColorDisplay = true
         )

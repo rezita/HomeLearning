@@ -9,13 +9,16 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.HomeLearningApplication
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
+import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.ui.screens.reading.ReadingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReadingViewModel(
@@ -23,13 +26,13 @@ class ReadingViewModel(
     private val sheetAction: SheetAction
 ) : ViewModel() {
     private val _readingUIState =
-        MutableStateFlow<SimpleRepositoryResult<ReadingWord>>(SimpleRepositoryResult.Downloading())
+        MutableStateFlow<ReadingUiState>(ReadingUiState.Loading)
     var isColourDisplay by mutableStateOf(true)
         private set
 
-    val readingUIState: StateFlow<SimpleRepositoryResult<ReadingWord>> =
+    val readingUIState: StateFlow<ReadingUiState> =
         _readingUIState.asStateFlow()
-    
+
     init {
         load()
     }
@@ -39,8 +42,7 @@ class ReadingViewModel(
         when (sheetAction) {
             SheetAction.READ_READING_CEW -> getCEWWords()
             SheetAction.READ_READING_WORDS -> getReadingWords()
-            else -> _readingUIState.value =
-                SimpleRepositoryResult.DownloadingError("Wrong action provided")
+            else -> _readingUIState.update { ReadingUiState.LoadingError(errorMessage = R.string.msg_wrong_action) }
         }
     }
 
@@ -49,7 +51,7 @@ class ReadingViewModel(
     }
 
     private fun resetUiState() {
-        _readingUIState.value = SimpleRepositoryResult.Downloading()
+        _readingUIState.update { ReadingUiState.Loading }
     }
 
     private fun getCEWWords() {
@@ -60,9 +62,22 @@ class ReadingViewModel(
         getWords { wordRepository.getReadingWords() }
     }
 
-    private fun getWords(callback: suspend () -> SimpleRepositoryResult<ReadingWord>) {
+    private fun getWords(callback: suspend () -> RepositoryResult<List<ReadingWord>>) {
+        if (_readingUIState.value is ReadingUiState.Downloaded) return
+
+        _readingUIState.update { ReadingUiState.Loading }
+
         viewModelScope.launch {
-            _readingUIState.value = callback()
+            val result = callback()
+            _readingUIState.update {
+                when (result) {
+                    is RepositoryResult.Success ->
+                        ReadingUiState.Downloaded(result.data)
+
+                    is RepositoryResult.Error ->
+                        ReadingUiState.LoadingError(errorMessage = R.string.snackBar_error_loading)
+                }
+            }
         }
     }
 

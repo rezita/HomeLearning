@@ -2,7 +2,6 @@ package com.github.rezita.homelearning.fake
 
 import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.RepositoryResult
-import com.github.rezita.homelearning.data.SimpleRepositoryResult
 import com.github.rezita.homelearning.model.ApiFillInSentence
 import com.github.rezita.homelearning.model.ApiReadingWord
 import com.github.rezita.homelearning.model.ApiSpellingWord
@@ -40,7 +39,7 @@ object FakeReadingDataSource {
 
     /** This is what the repository should return */
     val readingWords =
-        SimpleRepositoryResult.Downloaded(listOf(readingWord1, readingWord2, readingWord3))
+        RepositoryResult.Success(listOf(readingWord1, readingWord2, readingWord3))
 
 }
 
