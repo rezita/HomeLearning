@@ -28,7 +28,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
@@ -43,6 +42,7 @@ import com.github.rezita.homelearning.ui.theme.sentence_incorrect
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
 import com.github.rezita.homelearning.utils.getWithResult
 import com.github.rezita.homelearning.utils.splitBySparatorWithSuggestion
+import kotlinx.coroutines.CoroutineScope
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -50,59 +50,74 @@ fun FillInSentenceSentenceScreen(
     viewModel: FillInSentenceViewModel,
     modifier: Modifier = Modifier
 ) {
-    val sentneceState by viewModel.sentenceUIState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val sentenceUiState by viewModel.uiState.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             SentenceTopAppBar(
-                state = sentneceState,
-                callback = { value -> viewModel.saveSentences() },
-                isAllAnswered = viewModel.isAllAnswered
+                state = sentenceUiState,
+                callback = { viewModel.saveSentences() }
             )
         }
     ) {
-        when (val state = sentneceState) {
-            is NormalRepositoryResult.Downloading ->
-                LoadingProgressBar()
+        SentenceContent(
+            state = sentenceUiState,
+            viewModel = viewModel,
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            modifier = Modifier.padding(it)
+        )
 
-            is NormalRepositoryResult.Downloaded ->
-                SentenceItems(
-                    sentences = state.data,
-                    onValueChange = { index, value -> viewModel.updateAnswer(index, value) },
-                    modifier = Modifier.padding(it)
-                )
+    }
+}
 
-            is NormalRepositoryResult.DownloadingError -> {
-                LoadingErrorSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-                ErrorDisplayInColumn(
-                    message = state.message,
-                    callback = { viewModel.load() })
+@Composable
+fun SentenceContent(
+    state: SentenceUiState,
+    viewModel: FillInSentenceViewModel,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    when (state) {
+        is SentenceUiState.Loading ->
+            LoadingProgressBar(modifier = modifier)
 
-            }
+        is SentenceUiState.Loaded ->
+            SentenceItems(
+                sentences = state.sentences,
+                onValueChange = { index, value -> viewModel.updateAnswer(index, value) },
+                modifier = modifier
+            )
 
-            is NormalRepositoryResult.Uploading ->
-                LoadingProgressBar()
+        is SentenceUiState.LoadingError -> {
+            LoadingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            ErrorDisplayInColumn(
+                message = stringResource(id = state.errorMessage),
+                callback = { viewModel.load() },
+                modifier = modifier
+            )
 
-            is NormalRepositoryResult.Uploaded -> {
-                SavingSuccessSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-                SentenceResultScreen(sentences = state.data, modifier = Modifier.padding(it))
-            }
+        }
+
+        is SentenceUiState.Saved -> {
+            SavingSuccessSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            SentenceResultScreen(sentences = state.sentences, modifier = modifier)
+        }
 
 
-            is NormalRepositoryResult.UploadError -> {
-                SavingErrorSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-
-                ErrorDisplayWithContent(
-                    message = state.message,
-                    callback = { viewModel.saveSentences() },
-                    content = { SentenceResultScreen(sentences = state.data) },
-                    modifier = Modifier.padding(it)
-                )
-            }
+        is SentenceUiState.SavingError -> {
+            SavingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            ErrorDisplayWithContent(
+                message = stringResource(id = state.errorMessage),
+                callback = { viewModel.saveSentences() },
+                content = { SentenceResultScreen(sentences = state.sentences) },
+                modifier = modifier
+            )
         }
     }
 }
@@ -241,7 +256,7 @@ fun SentenceItemsPreview() {
         )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        SentenceItems(sentences = sentences, onValueChange = { index, value -> {} })
+        SentenceItems(sentences = sentences, onValueChange = {_, _ -> run {} })
     }
 }
 
@@ -265,7 +280,7 @@ fun SentenceResultPreview() {
         )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             SentenceResultScreen(sentences = sentences, modifier = Modifier.padding(it))
         }
     }
@@ -291,7 +306,7 @@ fun SentenceUploadErrorPreview() {
         )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             ErrorDisplayWithContent(
                 message = "This will be the error message",
                 callback = {},

@@ -10,40 +10,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
-import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun SentenceTopAppBar(
-    state: NormalRepositoryResult<FillInSentence>,
-    callback: (Boolean) -> Unit,
-    isAllAnswered: Boolean,
+    state: SentenceUiState,
+    callback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
         titleText = when (state) {
-            is NormalRepositoryResult.Downloaded -> stringResource(id = R.string.activity_sentences)
-            is NormalRepositoryResult.Downloading -> stringResource(id = R.string.app_bar_loading_title)
-            is NormalRepositoryResult.DownloadingError -> stringResource(id = R.string.app_bar_error_title)
-            is NormalRepositoryResult.Uploading -> stringResource(id = R.string.app_bar_uploading_title)
-            is NormalRepositoryResult.Uploaded -> stringResource(id = R.string.activity_sentences)
-            is NormalRepositoryResult.UploadError -> stringResource(id = R.string.app_bar_error_title)
+            is SentenceUiState.Loaded -> stringResource(id = R.string.activity_sentences)
+            is SentenceUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
+            is SentenceUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
+            is SentenceUiState.Saved -> stringResource(id = R.string.activity_sentences)
+            is SentenceUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
         },
 
         navigateUp = {},
 
         actions = {
-            if (state is NormalRepositoryResult.Downloaded || state is NormalRepositoryResult.UploadError) {
-                if (isAllAnswered) {
-                    IconButton(onClick = { callback(false) }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_menu_check),
-                            contentDescription = stringResource(id = R.string.sentences_check_and_save),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
+            if (state.isSavable) {
+                IconButton(onClick = { callback() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_menu_check),
+                        contentDescription = stringResource(id = R.string.sentences_check_and_save),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             }
         },
@@ -58,9 +52,8 @@ fun SentenceTopAppBar(
 fun SentenceTopAppBar_success_notAllAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
-            state = NormalRepositoryResult.Downloaded(emptyList()),
+            state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = false),
             callback = {},
-            isAllAnswered = false
         )
     }
 }
@@ -71,9 +64,8 @@ fun SentenceTopAppBar_success_notAllAnswered() {
 fun SentenceTopAppBar_success_allAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
-            state = NormalRepositoryResult.Downloaded(emptyList()),
-            callback = {},
-            isAllAnswered = true
+            state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = true),
+            callback = {}
         )
     }
 }
@@ -84,9 +76,8 @@ fun SentenceTopAppBar_success_allAnswered() {
 fun SentenceTopAppBar_loading() {
     HomeLearningTheme {
         SentenceTopAppBar(
-            state = NormalRepositoryResult.Downloading(),
-            callback = {},
-            isAllAnswered = true
+            state = SentenceUiState.Loading(false),
+            callback = {}
         )
     }
 }
@@ -97,9 +88,8 @@ fun SentenceTopAppBar_loading() {
 fun SentenceTopAppBar_error() {
     HomeLearningTheme {
         SentenceTopAppBar(
-            state = NormalRepositoryResult.UploadError(emptyList(), ""),
+            state = SentenceUiState.LoadingError(isSavable = false, errorMessage = 12),
             callback = {},
-            isAllAnswered = true
         )
     }
 }

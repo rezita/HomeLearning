@@ -21,8 +21,8 @@ WordRepository {
     suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>>
     suspend fun getCEWWords(): RepositoryResult<List<ReadingWord>>
 
-    suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence>
-    suspend fun getHomophones(): NormalRepositoryResult<FillInSentence>
+    suspend fun getIrregularVerbs(): RepositoryResult<List<FillInSentence>>
+    suspend fun getHomophones(): RepositoryResult<List<FillInSentence>>
 
     suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord>
     suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord>
@@ -30,8 +30,8 @@ WordRepository {
     suspend fun getErikCategories(): RepositoryResult<List<String>>
     suspend fun getMarkCategories(): RepositoryResult<List<String>>
 
-    suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
-    suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence>
+    suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String>
+    suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String>
 
     suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
     suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
@@ -68,26 +68,26 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         return RepositoryResult.Error(message = "Error")
     }
 
-    override suspend fun getHomophones(): NormalRepositoryResult<FillInSentence> =
+    override suspend fun getHomophones(): RepositoryResult<List<FillInSentence>> =
         getFillInSentences(sheetAction = SheetAction.READ_HOMOPHONES)
 
-    override suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence> =
+    override suspend fun getIrregularVerbs(): RepositoryResult<List<FillInSentence>> =
         getFillInSentences(sheetAction = SheetAction.READ_IRREGULAR_VERBS)
 
-    private suspend fun getFillInSentences(sheetAction: SheetAction): NormalRepositoryResult<FillInSentence> {
+    private suspend fun getFillInSentences(sheetAction: SheetAction): RepositoryResult<List<FillInSentence>> {
         wordsAPIService.getFillInSentences(action = sheetAction.value)
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
-                    NormalRepositoryResult.Downloaded(response.items.map { it.asFillInSentence() })
+                    RepositoryResult.Success(response.items.map { it.asFillInSentence() })
                 } else {
-                    NormalRepositoryResult.DownloadingError(response.message)
+                    RepositoryResult.Error(response.message)
                 }
             }
             .onFailure {
                 Log.e("onFailure", it.message.toString())
-                return NormalRepositoryResult.DownloadingError(it.message.toString())
+                return RepositoryResult.Error(it.message.toString())
             }
-        return NormalRepositoryResult.DownloadingError("Error")
+        return RepositoryResult.Error("Error")
 
     }
 
@@ -136,7 +136,7 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         return RepositoryResult.Error("Error")
     }
 
-    override suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> {
+    override suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String> {
         val result = updateFillInSentences(
             sheetAction = SheetAction.UPDATE_HOMOPHONES,
             sentences = sentences
@@ -145,7 +145,7 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         return result
     }
 
-    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> =
+    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String> =
         updateFillInSentences(
             sheetAction = SheetAction.UPDATE_IRREGULAR_VERBS,
             sentences = sentences
@@ -253,7 +253,7 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     private suspend fun updateFillInSentences(
         sheetAction: SheetAction,
         sentences: List<FillInSentence>
-    ): NormalRepositoryResult<FillInSentence> {
+    ): RepositoryResult<String> {
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
         val sentenceParam = sentences
@@ -269,25 +269,17 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         )
             .onSuccess { response ->
                 return if (response.result.isNotEmpty()) {
-                    NormalRepositoryResult.Uploaded(data = sentences, message = response.result)
+                    RepositoryResult.Success(data = response.result)
                 } else {
-                    NormalRepositoryResult.UploadError(data = sentences, message = response.message)
+                    RepositoryResult.Error(message = response.message)
                 }
             }
             .onFailure {
                 Log.e("onFailure", it.message.toString())
-                return NormalRepositoryResult.UploadError(
-                    data = sentences,
+                return RepositoryResult.Error(
                     message = it.message.toString()
                 )
             }
-        return NormalRepositoryResult.UploadError(data = sentences, message = "Error")
+        return RepositoryResult.Error(message = "Error")
     }
-
-    /*
-    override suspend fun restoreSpellingWordsFromLogs(): String {
-        val sheetAction = SheetAction.RESTORE_ERIK_SPELLING_FROM_LOG.value.toRequestBody()
-        return wordsAPIService.restoreSpellingWordsFromLogs(action = sheetAction)
-    }
-    */
 }
