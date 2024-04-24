@@ -17,6 +17,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -69,6 +71,21 @@ private fun UploadItemDisplay(
     onEditCallback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val openConfirmDialog = remember { mutableStateOf(false) }
+
+    when {
+        openConfirmDialog.value ->
+            DeleteConfirmDialog(
+                onDismissRequest = {
+                    openConfirmDialog.value = false
+                },
+                onConfirmation = {
+                    onDeleteCallback()
+                    openConfirmDialog.value = false
+                },
+            )
+
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -91,7 +108,7 @@ private fun UploadItemDisplay(
             )
         }
         WordManipulationIcons(
-            onDeleteCallback = { onDeleteCallback() },
+            onDeleteCallback = { openConfirmDialog.value = true },
             onEditCallback = { onEditCallback() })
     }
 }

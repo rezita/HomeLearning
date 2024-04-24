@@ -90,7 +90,10 @@
     <string name="saving_spelling_word_text">Saving word&#8230;</string>
     <string name="message_loading_category">Loading categories&#8230;</string>
     <string name="remove_word_btn_descr">Remove word from the list</string>
-    <string name="confirm_remove_upload_word">Are you sure you want to remove this word?</string>
+    <string name="confirm_remove_upload_word">Are you sure you want to remove the following word?</string>
+    <string name="confirm_remove_title">Remove word</string>
+    <string name="confirm_remove_ok">Confirm</string>
+    <string name="confirm_remove_cancel">Cancel</string>
     <string name="edit_word_btn_descr">Edit</string>
     <string name="saving_words_response">Saving results:\n</string>
     <!--words list heading-->
