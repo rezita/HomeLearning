@@ -74,7 +74,7 @@ fun SpellingTopAppBar_loading() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_downloaded_success() {
+fun SpellingTopAppBar_downloaded_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.Downloaded(emptyList()),
@@ -87,7 +87,7 @@ fun SentenceTopAppBar_downloaded_success() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_download_error() {
+fun SpellingTopAppBar_download_error() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.DownloadingError(""),
@@ -100,7 +100,7 @@ fun SentenceTopAppBar_download_error() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_uploading() {
+fun SpellingTopAppBar_uploading() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.Uploading(emptyList()),
@@ -113,7 +113,7 @@ fun SentenceTopAppBar_uploading() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_upload_success() {
+fun SpellingTopAppBar_upload_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.Uploaded(emptyList(), ""),
@@ -126,7 +126,7 @@ fun SentenceTopAppBar_upload_success() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_uploadError() {
+fun SpellingTopAppBar_uploadError() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = NormalRepositoryResult.UploadError(emptyList(), ""),
