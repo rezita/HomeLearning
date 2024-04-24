@@ -102,7 +102,7 @@ object FakeSentenceDataSource {
     val apiSentences =
         GetRequestApiItems(items = listOf(sentenceApi1, sentenceApi2, sentenceApi3), message = "")
 
-    val sentences = NormalRepositoryResult.Downloaded(
+    val sentences = RepositoryResult.Success(
         listOf(
             sentenceApi1.asFillInSentence(),
             sentenceApi2.asFillInSentence(),

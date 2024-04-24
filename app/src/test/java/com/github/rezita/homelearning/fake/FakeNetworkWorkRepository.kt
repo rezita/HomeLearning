@@ -16,11 +16,11 @@ class FakeNetworkWorkRepository : WordRepository {
         return FakeReadingDataSource.readingWords
     }
 
-    override suspend fun getIrregularVerbs(): NormalRepositoryResult<FillInSentence> {
+    override suspend fun getIrregularVerbs(): RepositoryResult<List<FillInSentence>> {
         return FakeSentenceDataSource.sentences
     }
 
-    override suspend fun getHomophones(): NormalRepositoryResult<FillInSentence> {
+    override suspend fun getHomophones(): RepositoryResult<List<FillInSentence>> {
         return FakeSentenceDataSource.sentences
     }
 
@@ -40,11 +40,11 @@ class FakeNetworkWorkRepository : WordRepository {
         return FakeCategoryDataSource.categories
     }
 
-    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> {
+    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateHomophones(sentences: List<FillInSentence>): NormalRepositoryResult<FillInSentence> {
+    override suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 
