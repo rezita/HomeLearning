@@ -16,13 +16,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,6 +32,7 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
+import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithIcon
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
@@ -41,9 +42,12 @@ import com.github.rezita.homelearning.utils.getUndecorated
 
 
 @Composable
-fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
+fun ReadingScreen(
+    windowSize: WindowWidthSizeClass,
+    viewModel: ReadingViewModel,
+    modifier: Modifier = Modifier
+) {
     val readingState by viewModel.readingUIState.collectAsState()
-    val configuration = LocalConfiguration.current
     Scaffold(
         topBar = {
             ReadingTopAppBar(
@@ -53,23 +57,25 @@ fun ReadingScreen(viewModel: ReadingViewModel, modifier: Modifier = Modifier) {
             )
         }
     ) {
-        when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> ErrorDisplayInColumn(
+        if (windowSize == WindowWidthSizeClass.Compact) {
+            ErrorDisplayWithIcon(
                 message = stringResource(id = R.string.msg_turn_portrait_mode),
-                callback = { viewModel.load() })
+                iconSource = R.drawable.screen_rotation_24px,
+                modifier = modifier
+                    .padding(it)
+            )
+        } else {
+            ReadingContent(
+                state = readingState,
+                isColorDisplay = viewModel.isColourDisplay,
+                onLoadCallback = { viewModel.load() },
+                modifier = modifier.padding(it)
+            )
 
-            else -> {
-                ReadingContent(
-                    state = readingState,
-                    isColorDisplay = viewModel.isColourDisplay,
-                    onLoadCallback = { viewModel.load() },
-                    modifier = Modifier.padding(it)
-                )
-
-            }
         }
     }
 }
+
 
 @Composable
 fun ReadingContent(

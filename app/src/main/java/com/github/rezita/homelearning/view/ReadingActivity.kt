@@ -2,6 +2,9 @@ package com.github.rezita.homelearning.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material3.Surface
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.ViewModelProvider
 import com.github.rezita.homelearning.databinding.ActivityReadingBinding
@@ -15,6 +18,7 @@ class ReadingActivity : AppCompatActivity() {
     private lateinit var viewModel: ReadingViewModel
     private var sheetAction: SheetAction = SheetAction.READ_READING_WORDS
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupSheetAction()
@@ -34,7 +38,15 @@ class ReadingActivity : AppCompatActivity() {
                 )
                 setContent {
                     HomeLearningTheme {
-                        ReadingScreen(viewModel)
+                        Surface {
+                            val windowSize =
+                                calculateWindowSizeClass(activity = this@ReadingActivity)
+                            ReadingScreen(
+                                windowSize = windowSize.widthSizeClass,
+                                viewModel = viewModel
+                            )
+
+                        }
                     }
                 }
             }
