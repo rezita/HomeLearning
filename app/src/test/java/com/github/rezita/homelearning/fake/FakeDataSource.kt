@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.fake
 
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.model.ApiFillInSentence
 import com.github.rezita.homelearning.model.ApiReadingWord
@@ -62,7 +61,7 @@ object FakeSpellingDataSource {
             items = listOf(spellingApi1, spellingApi2, spellingApi3, spellingApi4),
             message = ""
         )
-    val spellingWords = NormalRepositoryResult.Downloaded(
+    val spellingWords = RepositoryResult.Success(
         listOf(
             spellingApi1.asSpellingWord(),
             spellingApi2.asSpellingWord(),

@@ -10,32 +10,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
-import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun SpellingTopAppBar(
-    state: NormalRepositoryResult<SpellingWord>,
+    state: SpellingUiState,
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
         titleText = when (state) {
-            is NormalRepositoryResult.Downloaded -> stringResource(id = R.string.activity_spelling)
-            is NormalRepositoryResult.Downloading -> stringResource(id = R.string.app_bar_loading_title)
-            is NormalRepositoryResult.DownloadingError -> stringResource(id = R.string.app_bar_error_title)
-            is NormalRepositoryResult.Uploading -> stringResource(id = R.string.app_bar_uploading_title)
-            is NormalRepositoryResult.Uploaded -> stringResource(id = R.string.activity_spelling)
-            is NormalRepositoryResult.UploadError -> stringResource(id = R.string.app_bar_error_title)
+            is SpellingUiState.Loaded -> stringResource(id = R.string.activity_spelling)
+            is SpellingUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
+            is SpellingUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
+            is SpellingUiState.Saved -> stringResource(id = R.string.activity_spelling)
+            is SpellingUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
         },
 
         navigateUp = {},
 
         actions = {
-            if (state is NormalRepositoryResult.Downloaded || state is NormalRepositoryResult.UploadError) {
+            if (state.isSavable) {
                 IconButton(onClick = saveCallback) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
@@ -44,7 +41,7 @@ fun SpellingTopAppBar(
                     )
                 }
             }
-            if (state !is NormalRepositoryResult.Downloading && state !is NormalRepositoryResult.Uploading) {
+            if (state is SpellingUiState.Loaded || state is SpellingUiState.Saved) {
                 IconButton(onClick = { addNewCallback() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
@@ -64,7 +61,7 @@ fun SpellingTopAppBar(
 fun SpellingTopAppBar_loading() {
     HomeLearningTheme {
         SpellingTopAppBar(
-            state = NormalRepositoryResult.Downloading(),
+            state = SpellingUiState.Loading(isSavable = false),
             saveCallback = {},
             addNewCallback = {}
         )
@@ -77,7 +74,7 @@ fun SpellingTopAppBar_loading() {
 fun SpellingTopAppBar_downloaded_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
-            state = NormalRepositoryResult.Downloaded(emptyList()),
+            state = SpellingUiState.Loaded(words = emptyList(), isSavable = true),
             saveCallback = {},
             addNewCallback = {}
         )
@@ -90,20 +87,7 @@ fun SpellingTopAppBar_downloaded_success() {
 fun SpellingTopAppBar_download_error() {
     HomeLearningTheme {
         SpellingTopAppBar(
-            state = NormalRepositoryResult.DownloadingError(""),
-            saveCallback = {},
-            addNewCallback = {}
-        )
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SpellingTopAppBar_uploading() {
-    HomeLearningTheme {
-        SpellingTopAppBar(
-            state = NormalRepositoryResult.Uploading(emptyList()),
+            state = SpellingUiState.LoadingError(errorMessage = 12, isSavable = false),
             saveCallback = {},
             addNewCallback = {}
         )
@@ -116,20 +100,7 @@ fun SpellingTopAppBar_uploading() {
 fun SpellingTopAppBar_upload_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
-            state = NormalRepositoryResult.Uploaded(emptyList(), ""),
-            saveCallback = {},
-            addNewCallback = {}
-        )
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SpellingTopAppBar_uploadError() {
-    HomeLearningTheme {
-        SpellingTopAppBar(
-            state = NormalRepositoryResult.UploadError(emptyList(), ""),
+            state = SpellingUiState.Saved(words = emptyList(), isSavable = false),
             saveCallback = {},
             addNewCallback = {}
         )

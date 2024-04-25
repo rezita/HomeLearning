@@ -24,8 +24,8 @@ WordRepository {
     suspend fun getIrregularVerbs(): RepositoryResult<List<FillInSentence>>
     suspend fun getHomophones(): RepositoryResult<List<FillInSentence>>
 
-    suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord>
-    suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord>
+    suspend fun getErikSpellingWords(): RepositoryResult<List<SpellingWord>>
+    suspend fun getMarkSpellingWords(): RepositoryResult<List<SpellingWord>>
 
     suspend fun getErikCategories(): RepositoryResult<List<String>>
     suspend fun getMarkCategories(): RepositoryResult<List<String>>
@@ -33,8 +33,8 @@ WordRepository {
     suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String>
     suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String>
 
-    suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
-    suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord>
+    suspend fun updateErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
+    suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
     suspend fun saveErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
@@ -91,26 +91,26 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
 
     }
 
-    override suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord> =
+    override suspend fun getMarkSpellingWords(): RepositoryResult<List<SpellingWord>> =
         getSpellingWords(SheetAction.READ_MARK_SPELLING_WORDS)
 
-    override suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord> =
+    override suspend fun getErikSpellingWords(): RepositoryResult<List<SpellingWord>> =
         getSpellingWords(SheetAction.READ_ERIK_SPELLING_WORDS)
 
-    private suspend fun getSpellingWords(sheetAction: SheetAction): NormalRepositoryResult<SpellingWord> {
+    private suspend fun getSpellingWords(sheetAction: SheetAction): RepositoryResult<List<SpellingWord>> {
         wordsAPIService.getSpellingWords(action = sheetAction.value)
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
-                    NormalRepositoryResult.Downloaded(response.items.map { it.asSpellingWord() })
+                    RepositoryResult.Success(data = response.items.map { it.asSpellingWord() })
                 } else {
-                    NormalRepositoryResult.DownloadingError(response.message)
+                    RepositoryResult.Error(message = response.message)
                 }
             }
             .onFailure {
                 Log.e("onFailure", it.message.toString())
-                return NormalRepositoryResult.DownloadingError(it.message.toString())
+                return RepositoryResult.Error(message = it.message.toString())
             }
-        return NormalRepositoryResult.DownloadingError("Error")
+        return RepositoryResult.Error(message = "Error")
 
     }
 
@@ -151,14 +151,14 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             sentences = sentences
         )
 
-    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> {
+    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
         return updateSpellingWords(
             sheetAction = SheetAction.UPDATE_ERIK_SPELLING_WORDS,
             words = words
         )
     }
 
-    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> =
+    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String> =
         updateSpellingWords(
             sheetAction = SheetAction.UPDATE_MARK_SPELLING_WORDS,
             words = words
@@ -216,7 +216,7 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     private suspend fun updateSpellingWords(
         sheetAction: SheetAction,
         words: List<SpellingWord>
-    ): NormalRepositoryResult<SpellingWord> {
+    ): RepositoryResult<String> {
         val wordsParam = words
             .filter { it.status != WordStatus.UNCHECKED }
             .map { it.asAPISellingWord() }
@@ -232,21 +232,20 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             )
                 .onSuccess { response ->
                     return if (response.result.isNotEmpty()) {
-                        NormalRepositoryResult.Uploaded(data = words, message = response.result)
+                        RepositoryResult.Success(data = response.result)
                     } else {
-                        NormalRepositoryResult.UploadError(data = words, message = response.message)
+                        RepositoryResult.Error(message = response.message)
                     }
                 }
                 .onFailure {
                     Log.e("onFailure", it.message.toString())
-                    return NormalRepositoryResult.UploadError(
-                        data = words,
+                    return RepositoryResult.Error(
                         message = it.message.toString()
                     )
                 }
-            return NormalRepositoryResult.UploadError(data = words, message = "Error")
+            return RepositoryResult.Error(message = "Error")
         } else {
-            return NormalRepositoryResult.UploadError(data = words, message = "No data has given")
+            return RepositoryResult.Error(message = "No data has given")
         }
     }
 

@@ -1,6 +1,6 @@
 package com.github.rezita.homelearning.ui.viewmodel
 
-import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.fake.FakeNetworkWorkRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.network.SheetAction
@@ -11,7 +11,7 @@ import org.junit.Test
 class FillInSentenceViewModelTest {
     @Test
     fun updateAnswer_test_valid_data() {
-        runTest{
+        runTest {
             val sentence1 = FillInSentence(
                 sentence = "I have never been to Italy.",
                 suggestion = "be",
@@ -27,7 +27,7 @@ class FillInSentenceViewModelTest {
                 )
 
             val data = listOf(sentence1, sentence2)
-            val state: NormalRepositoryResult<FillInSentence> = NormalRepositoryResult.Downloaded(data)
+            val state = RepositoryResult.Success(data)
             val viewmodel = FillInSentenceViewModel(
                 wordRepository = FakeNetworkWorkRepository(),
                 sheetAction = SheetAction.READ_HOMOPHONES

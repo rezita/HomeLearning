@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.spelling
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
@@ -43,79 +41,94 @@ import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpellingScreen(
     viewModel: SpellingViewModel,
     modifier: Modifier = Modifier
 ) {
-    val spellingState by viewModel.spellingUIState.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val spellingUiState by viewModel.uiState.collectAsState()
+    val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             SpellingTopAppBar(
-                state = spellingState,
+                state = spellingUiState,
                 saveCallback = { viewModel.saveSpellingResults() }
             )
         }
     ) {
-        when (val state = spellingState) {
-            is NormalRepositoryResult.Downloading ->
-                LoadingProgressBar(modifier = Modifier.padding(it))
+        SpellingContent(
+            state = spellingUiState,
+            viewModel = viewModel,
+            scope = scope,
+            snackBarHostState = snackBarHostState,
+            modifier = Modifier.padding(it)
+        )
+    }
+}
 
-            is NormalRepositoryResult.Downloaded -> {
-                SpellingItems(
-                    words = state.data,
-                    onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
-                    modifier = Modifier.padding(it)
-                )
-            }
+@Composable
+fun SpellingContent(
+    state: SpellingUiState,
+    viewModel: SpellingViewModel,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier
+) {
+    when (state) {
+        is SpellingUiState.Loading ->
+            LoadingProgressBar(modifier = modifier)
 
-            is NormalRepositoryResult.DownloadingError -> {
-                LoadingErrorSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-                ErrorDisplayInColumn(
-                    message = state.message,
-                    callback = { viewModel.load() },
-                    modifier = Modifier.padding(it)
+        is SpellingUiState.Loaded -> {
+            SpellingItems(
+                words = state.words,
+                onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
+                modifier = modifier
+            )
+        }
+
+        is SpellingUiState.LoadingError -> {
+            LoadingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            ErrorDisplayInColumn(
+                message = stringResource(id = state.errorMessage),
+                callback = { viewModel.load() },
+                modifier = modifier
+            )
+        }
+
+        is SpellingUiState.Saved -> {
+            SavingSuccessSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            SpellingItems(
+                words = state.words,
+                onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
+                isEnabled = false,
+                modifier = modifier
+            )
+        }
+
+        is SpellingUiState.SavingError -> {
+            SavingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
+            ErrorDisplayWithContent(
+                message = stringResource(id = state.errorMessage),
+                callback = { viewModel.saveSpellingResults() },
+                content = {
+                    SpellingItems(
+                        words = state.words,
+                        onValueChange = { _, _ -> run {} },
+                        isEnabled = false,
                     )
-
-            }
-
-            is NormalRepositoryResult.Uploading ->
-                LoadingProgressBar()
-
-            is NormalRepositoryResult.Uploaded -> {
-                SavingSuccessSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-                SpellingItems(
-                    words = state.data,
-                    onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
-                    isEnabled = false,
-                    modifier = Modifier.padding(it)
-                )
-            }
-
-            is NormalRepositoryResult.UploadError -> {
-                SavingErrorSnackbar(scope = scope, snackbarHostState = snackbarHostState)
-                ErrorDisplayWithContent(
-                    message = state.message,
-                    callback = { viewModel.saveSpellingResults() },
-                    content = {
-                        SpellingItems(
-                            words = state.data,
-                            onValueChange = { index, status -> {} },
-                            isEnabled = false,
-                        )
-                    },
-                    modifier = Modifier.padding(it)
-                )
-            }
+                },
+                modifier = modifier
+            )
         }
     }
 }
+
 
 @Composable
 private fun SpellingItem(
@@ -184,12 +197,12 @@ private fun SpellingItems(
                     onItemSelected = { status -> onValueChange(index, status) },
                     isEnabled = isEnabled
                 )
-                Divider(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
+                HorizontalDivider(
                     modifier = Modifier
                         .height(1.dp)
                         .fillMaxHeight()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.surfaceVariant
                 )
             }
         }
@@ -216,7 +229,7 @@ private fun SpellingItemPreview() {
     HomeLearningTheme {
         SpellingItem(
             index = 17,
-            word = "kalacs",
+            word = "cucumber",
             wordStatus = WordStatus.CORRECT,
             onItemSelected = {})
     }
@@ -229,7 +242,7 @@ private fun SpellingItemDisabledPreview() {
     HomeLearningTheme {
         SpellingItem(
             index = 0,
-            word = "kalacs",
+            word = "cucumber",
             wordStatus = WordStatus.CORRECT,
             isEnabled = false,
             onItemSelected = {})
@@ -266,10 +279,10 @@ private fun SpellingItemsPreview() {
     )
     val words = listOf(spelling1, spelling2, spelling3, spelling4)
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             SpellingItems(
                 words = words,
-                onValueChange = { index, status -> {} },
+                onValueChange = { _, _ -> run {} },
                 modifier = Modifier.padding(it)
             )
         }

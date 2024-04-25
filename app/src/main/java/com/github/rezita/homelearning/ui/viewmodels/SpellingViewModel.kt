@@ -5,26 +5,41 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.HomeLearningApplication
-import com.github.rezita.homelearning.data.NormalRepositoryResult
+import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.ui.screens.spelling.SpellingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+enum class SpellingState {
+    LOADING, LOADED, LOAD_ERROR, SAVED, SAVING, SAVING_ERROR
+}
 
 class SpellingViewModel(
     private val wordRepository: WordRepository,
     private val sheetAction: SheetAction
 ) : ViewModel() {
 
-    private val _spellingUIState =
-        MutableStateFlow<NormalRepositoryResult<SpellingWord>>(NormalRepositoryResult.Downloading())
-    val spellingUIState: StateFlow<NormalRepositoryResult<SpellingWord>>
-        get() = _spellingUIState.asStateFlow()
+    private val viewModelState = MutableStateFlow(
+        SpellingViewModelState(state = SpellingState.LOADING)
+    )
+
+    // UI state exposed to the UI
+    val uiState = viewModelState
+        .map { viewModelState.value.toUiState() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            viewModelState.value.toUiState()
+        )
 
     init {
         load()
@@ -35,14 +50,26 @@ class SpellingViewModel(
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> getErikSpellingWords()
             SheetAction.READ_MARK_SPELLING_WORDS -> getMarkSpellingWords()
-            else -> _spellingUIState.update {
-                NormalRepositoryResult.DownloadingError("Wrong action provided")
+            else -> viewModelState.update {
+                it.copy(
+                    state = SpellingState.LOAD_ERROR,
+                    words = emptyList(),
+                    savingResponse = "",
+                    errorMessage = R.string.msg_wrong_action
+                )
             }
         }
     }
 
-    fun resetUiState() {
-        _spellingUIState.update { NormalRepositoryResult.Downloading() }
+    private fun resetUiState() {
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.LOADING,
+                words = emptyList(),
+                errorMessage = null,
+                savingResponse = ""
+            )
+        }
     }
 
     private fun getErikSpellingWords() = getSpellingWords { wordRepository.getErikSpellingWords() }
@@ -53,8 +80,13 @@ class SpellingViewModel(
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> saveErikSpellingResults()
             SheetAction.READ_MARK_SPELLING_WORDS -> saveMarkSpellingResults()
-            else -> _spellingUIState.update {
-                NormalRepositoryResult.UploadError(emptyList(), "Wrong action provided", )
+            else -> viewModelState.update {
+                it.copy(
+                    state = SpellingState.SAVING_ERROR,
+                    words = emptyList(),
+                    savingResponse = "",
+                    errorMessage = R.string.msg_wrong_action
+                )
             }
         }
     }
@@ -65,46 +97,67 @@ class SpellingViewModel(
     private fun saveMarkSpellingResults() =
         saveSpellingResults { wordRepository.updateMarkSpellingWords(it) }
 
-    private fun getSpellingWords(callback: suspend () -> NormalRepositoryResult<SpellingWord>) {
+    private fun getSpellingWords(callback: suspend () -> RepositoryResult<List<SpellingWord>>) {
+        resetUiState()
         viewModelScope.launch {
-            _spellingUIState.emit(callback())
+            val result = callback()
+            viewModelState.update {
+                when (result) {
+                    is RepositoryResult.Success -> it.copy(
+                        state = SpellingState.LOADED,
+                        words = result.data,
+                    )
+
+                    is RepositoryResult.Error -> it.copy(
+                        state = SpellingState.LOAD_ERROR,
+                        errorMessage = R.string.snackBar_error_loading,
+                    )
+                }
+            }
         }
     }
 
     fun updateWordStatus(index: Int, status: WordStatus) {
-        when (val state = _spellingUIState.value) {
-            is NormalRepositoryResult.Downloaded -> {
-                val updatedWords = state.data.toMutableList()
+        viewModelState.update {
+            it.copy(
+                words = it.words.toMutableList()
                     .apply { this[index] = this[index].copy(status = status) }
-                //_spellingUIState.update { NormalRepositoryResult.Downloaded(updatedWords) }
-                _spellingUIState.update { state.copy(data = updatedWords) }
-            }
-
-            else -> return
+            )
         }
     }
 
-    private fun saveSpellingResults(callback: suspend (List<SpellingWord>) -> NormalRepositoryResult<SpellingWord>) {
-        when (val state = _spellingUIState.value) {
-            is NormalRepositoryResult.Downloaded -> {
-                viewModelScope.launch {
-                    val data = state.data
-                    _spellingUIState.emit(NormalRepositoryResult.Uploading(data))
-                    _spellingUIState.emit(callback(data))
+    private fun saveSpellingResults(callback: suspend (List<SpellingWord>) -> RepositoryResult<String>) {
+        if (!viewModelState.value.isSavable()) {
+            return
+        }
+
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.SAVING,
+                savingResponse = "",
+                errorMessage = null,
+            )
+        }
+        viewModelScope.launch {
+            val result = callback(viewModelState.value.getSavableWords())
+            viewModelState.update {
+                when (result) {
+                    is RepositoryResult.Success -> it.copy(
+                        state = SpellingState.SAVED,
+                        savingResponse = result.data,
+                        errorMessage = null,
+                    )
+
+                    is RepositoryResult.Error -> it.copy(
+                        state = SpellingState.SAVING_ERROR,
+                        savingResponse = "",
+                        errorMessage = R.string.snackBar_save_error,
+                    )
                 }
             }
-
-            is NormalRepositoryResult.UploadError -> {
-                viewModelScope.launch {
-                    val data = state.data
-                    _spellingUIState.emit(NormalRepositoryResult.Uploading(data))
-                    _spellingUIState.emit(callback(data))
-                }
-            }
-
-            else -> return
         }
     }
+
 
     class SpellingViewModelFactory(
         private val sheetAction: SheetAction
@@ -120,4 +173,65 @@ class SpellingViewModel(
             ) as T
         }
     }
+}
+
+data class SpellingViewModelState(
+    val state: SpellingState,
+    val words: List<SpellingWord> = emptyList(),
+    val errorMessage: Int? = null,
+    val savingResponse: String = ""
+) {
+    fun isSavable(): Boolean {
+        return when (state) {
+            SpellingState.LOADED -> {
+                words.any { word -> word.status == WordStatus.UNCHECKED }
+            }
+
+            else -> false
+        }
+    }
+
+    fun getSavableWords(): List<SpellingWord> =
+        words.filter { it.status != WordStatus.UNCHECKED }
+
+    fun toUiState(): SpellingUiState =
+        when (state) {
+            SpellingState.LOADING ->
+                SpellingUiState.Loading(
+                    isSavable = isSavable()
+                )
+
+            SpellingState.SAVING ->
+                SpellingUiState.Loading(
+                    isSavable = isSavable()
+                )
+
+            SpellingState.LOADED ->
+                SpellingUiState.Loaded(
+                    isSavable = isSavable(),
+                    words = words
+                )
+
+            SpellingState.SAVED -> {
+                SpellingUiState.Saved(
+                    isSavable = isSavable(),
+                    words = words
+                )
+            }
+
+            SpellingState.LOAD_ERROR -> {
+                SpellingUiState.LoadingError(
+                    isSavable = isSavable(),
+                    errorMessage = errorMessage!!
+                )
+            }
+
+            SpellingState.SAVING_ERROR -> {
+                SpellingUiState.SavingError(
+                    isSavable = isSavable(),
+                    errorMessage = errorMessage!!,
+                    words = words
+                )
+            }
+        }
 }

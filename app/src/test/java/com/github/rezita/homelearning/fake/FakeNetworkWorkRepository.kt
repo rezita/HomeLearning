@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.fake
 
-import com.github.rezita.homelearning.data.NormalRepositoryResult
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
@@ -24,11 +23,11 @@ class FakeNetworkWorkRepository : WordRepository {
         return FakeSentenceDataSource.sentences
     }
 
-    override suspend fun getErikSpellingWords(): NormalRepositoryResult<SpellingWord> {
+    override suspend fun getErikSpellingWords(): RepositoryResult<List<SpellingWord>> {
         return FakeSpellingDataSource.spellingWords
     }
 
-    override suspend fun getMarkSpellingWords(): NormalRepositoryResult<SpellingWord> {
+    override suspend fun getMarkSpellingWords(): RepositoryResult<List<SpellingWord>> {
         return FakeSpellingDataSource.spellingWords
     }
 
@@ -48,11 +47,11 @@ class FakeNetworkWorkRepository : WordRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> {
+    override suspend fun updateErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): NormalRepositoryResult<SpellingWord> {
+    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
 
