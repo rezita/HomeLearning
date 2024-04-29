@@ -2,6 +2,7 @@ package com.github.rezita.homelearning.ui.screens.reading
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,9 +24,13 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -56,15 +61,27 @@ fun ReadingScreen(
     modifier: Modifier = Modifier
 ) {
     val readingState by viewModel.readingUIState.collectAsState()
+    var isTopAppBarShown by remember {
+        mutableStateOf(true)
+    }
     val configuration = LocalConfiguration.current
 
     Scaffold(
-        topBar = {
-            ReadingTopAppBar(
-                readingState,
-                { value -> viewModel.setColorDisplay(value) },
-                viewModel.isColourDisplay
+        modifier = modifier.pointerInput(Unit) {
+            detectTapGestures(
+                onDoubleTap = { _ ->
+                    isTopAppBarShown = !isTopAppBarShown
+                }
             )
+        },
+        topBar = {
+            if (isTopAppBarShown) {
+                ReadingTopAppBar(
+                    state = readingState,
+                    callback = { value -> viewModel.setColorDisplay(value) },
+                    isColorDisplay = viewModel.isColourDisplay
+                )
+            } else null
         }
     ) {
         when (configuration.orientation) {
@@ -378,6 +395,10 @@ fun ReadingWordItemsReview() {
     HomeLearningTheme {
         val configuration = LocalConfiguration.current
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-        ReadingWordItems(windowSize = WindowSizeClass.calculateFromSize(size), words, true)
+        ReadingWordItems(
+            windowSize = WindowSizeClass.calculateFromSize(size),
+            words,
+            isColorDisplay = true,
+        )
     }
 }
