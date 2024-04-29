@@ -127,7 +127,7 @@
     <string name="loading_fail_text">Loading words failed.</string>
 
     <!-- Reading words -->
-    <string name="msg_turn_portrait_mode">Please turn your device into portrait mode.</string>
+    <string name="msg_turn_landscape_mode">Please turn your device into landscape mode.</string>
 
 
     <!-- other-->

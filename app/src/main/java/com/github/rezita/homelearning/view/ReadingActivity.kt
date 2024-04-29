@@ -42,7 +42,7 @@ class ReadingActivity : AppCompatActivity() {
                             val windowSize =
                                 calculateWindowSizeClass(activity = this@ReadingActivity)
                             ReadingScreen(
-                                windowSize = windowSize.widthSizeClass,
+                                windowSize = windowSize,
                                 viewModel = viewModel
                             )
 
