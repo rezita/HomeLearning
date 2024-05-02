@@ -110,7 +110,7 @@ class PartiallyEditableTextVisualTransformation(
             getDisplayedText(prefix, suffix, text.toString(), minLength, baseTextColor)
         return TransformedText(
             text = transformedText,
-            offsetMapping = PatiallyEditableTextOffsetMapping(
+            offsetMapping = PartiallyEditableTextOffsetMapping(
                 prefix.length,
                 text.length
             )
@@ -160,7 +160,7 @@ fun String.extendWithSpace(nrOfSpaces: Int): String {
 }
 
 
-class PatiallyEditableTextOffsetMapping(
+class PartiallyEditableTextOffsetMapping(
     private val prefixLength: Int,
     private val textLength: Int
 ) : OffsetMapping {
@@ -187,7 +187,7 @@ class PatiallyEditableTextOffsetMapping(
 
 @Preview(showBackground = true)
 @Composable
-fun PatiallyTextPreview2_wo_value() {
+fun PartiallyTextPreview2_wo_value() {
     HomeLearningTheme {
         PartiallyEditableText(
             prefix = "Hel",
@@ -200,7 +200,7 @@ fun PatiallyTextPreview2_wo_value() {
 
 @Preview(showBackground = true)
 @Composable
-fun PatiallyTextPreview2_with_value() {
+fun PartiallyTextPreview2_with_value() {
     HomeLearningTheme {
         PartiallyEditableText(
             prefix = "Hel",
@@ -219,7 +219,7 @@ fun PatiallyTextPreview2_with_value() {
 
 @Preview(showBackground = true)
 @Composable
-fun PatiallyTextPreview2_with_value_begin() {
+fun PartiallyTextPreview2_with_value_begin() {
     HomeLearningTheme {
         PartiallyEditableText(
             prefix = "Helllo",
