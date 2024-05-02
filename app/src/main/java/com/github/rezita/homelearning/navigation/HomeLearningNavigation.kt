@@ -53,6 +53,7 @@ fun HomeLearningNavigation(
             SpellingScreen(
                 sheetAction = sheetAction,
                 navigateUp = { navController.navigateUp() },
+                addNewCallback = {navController.navigate("${Upload.route}/${getUploadSheetAction(sheetAction)}")},
                 modifier = modifier
             )
         }
@@ -119,4 +120,12 @@ private fun getSheetActionFromArgs(arguments: Bundle?, default: SheetAction): Sh
                 ?: SheetAction.SAVE_ERIK_WORDS) as SheetAction
         }
     return sheetAction
+}
+
+private fun getUploadSheetAction(currentSheetAction: SheetAction): SheetAction {
+    return when(currentSheetAction) {
+        SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.SAVE_ERIK_WORDS
+        SheetAction.READ_MARK_SPELLING_WORDS -> SheetAction.SAVE_MARK_WORDS
+        else -> SheetAction.SAVE_ERIK_WORDS
+    }
 }

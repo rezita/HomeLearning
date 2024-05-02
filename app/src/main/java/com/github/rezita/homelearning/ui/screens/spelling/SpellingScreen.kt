@@ -53,7 +53,8 @@ fun SpellingScreen(
             sheetAction
         )
     ),
-    navigateUp: ()->Unit,
+    navigateUp: () -> Unit,
+    addNewCallback: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
@@ -67,7 +68,8 @@ fun SpellingScreen(
             SpellingTopAppBar(
                 state = spellingUiState,
                 navigateUp = navigateUp,
-                saveCallback = { viewModel.saveSpellingResults() }
+                saveCallback = { viewModel.saveSpellingResults() },
+                addNewCallback = addNewCallback
             )
         }
     ) {
