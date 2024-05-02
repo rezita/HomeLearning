@@ -51,7 +51,7 @@ fun EditScreen(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.padding_big)),
+            .padding(dimensionResource(id = R.dimen.padding_extra_big)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

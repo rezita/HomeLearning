@@ -42,7 +42,7 @@ fun UploadWordsViewContent(
         modifier = modifier
             .fillMaxSize()
             .padding(
-                vertical = dimensionResource(id = R.dimen.padding_big),
+                vertical = dimensionResource(id = R.dimen.padding_extra_big),
                 horizontal = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {

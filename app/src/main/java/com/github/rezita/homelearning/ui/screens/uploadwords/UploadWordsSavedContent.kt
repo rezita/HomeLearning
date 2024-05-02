@@ -32,7 +32,7 @@ fun UploadWordsSavedContent(
         modifier = modifier
             .fillMaxSize()
             .padding(
-                vertical = dimensionResource(id = R.dimen.padding_big),
+                vertical = dimensionResource(id = R.dimen.padding_extra_big),
                 horizontal = dimensionResource(id = R.dimen.padding_medium)
             )
     ) {
@@ -84,6 +84,6 @@ private fun SavedItemDisplay(
 @Composable
 private fun UploadItemPreview() {
     HomeLearningTheme {
-        SavedItemDisplay(wordResult = Pair("appear", "Succes"))
+        SavedItemDisplay(wordResult = Pair("appear", "Success"))
     }
 }
