@@ -16,6 +16,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun SpellingTopAppBar(
     state: SpellingUiState,
+    navigateUp: ()->Unit = {},
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -29,7 +30,7 @@ fun SpellingTopAppBar(
             is SpellingUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
         },
 
-        navigateUp = {},
+        navigateUp = navigateUp,
 
         actions = {
             if (state.isSavable) {
@@ -101,6 +102,7 @@ fun SpellingTopAppBar_upload_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = SpellingUiState.Saved(words = emptyList(), isSavable = false),
+            navigateUp = {},
             saveCallback = {},
             addNewCallback = {}
         )

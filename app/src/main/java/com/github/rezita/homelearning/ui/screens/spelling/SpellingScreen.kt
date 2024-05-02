@@ -30,9 +30,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
@@ -45,7 +47,13 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpellingScreen(
-    viewModel: SpellingViewModel,
+    sheetAction: SheetAction,
+    viewModel: SpellingViewModel = viewModel(
+        factory = SpellingViewModel.SpellingViewModelFactory(
+            sheetAction
+        )
+    ),
+    navigateUp: ()->Unit,
     modifier: Modifier = Modifier
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
@@ -58,6 +66,7 @@ fun SpellingScreen(
         topBar = {
             SpellingTopAppBar(
                 state = spellingUiState,
+                navigateUp = navigateUp,
                 saveCallback = { viewModel.saveSpellingResults() }
             )
         }
@@ -288,4 +297,3 @@ private fun SpellingItemsPreview() {
         }
     }
 }
-

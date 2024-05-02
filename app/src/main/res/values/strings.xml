@@ -11,6 +11,18 @@
     <string name="start_mark_spelling">Mark spelling</string>
     <string name="upload_mark_words">Upload Mark words</string>
 
+    <!-- destination titles-->
+    <string name="spelling_title">Spelling</string>
+    <string name="reading_title">Reading</string>
+    <string name="homophones_title">Homophones</string>
+    <string name="verbs_title">Irregular verbs</string>
+    <string name="upload_title">Add words</string>
+    <!-- tabs -->
+    <string name="tab_Erik">Erik</string>
+    <string name="tab_Mark">Mark</string>
+    <!-- <string name="main_activity_tab3">Admin</string> -->
+
+
     <!-- ProgressBar loading messages-->
     <string name="loading">Loading. Ready soon.</string>
     <string name="uploading">Saving. Ready soon.</string>
@@ -40,13 +52,6 @@
     <string name="spelling_save">Save results</string>
     <string name="spelling_add_new_word">Add new word</string>
     <string name="sentences_check_and_save">Check and save</string>
-
-
-    <!-- Main Activity Tabs-->
-    <string name="main_activity_tab1">Erik</string>
-    <string name="main_activity_tab2">Mark</string>
-    <string name="main_activity_tab3">Admin</string>
-
 
     <!-- Action Bar Menu-->
     <string name="menu_save">Save</string>

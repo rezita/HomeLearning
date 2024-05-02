@@ -15,46 +15,14 @@
         android:theme="@style/Theme.SpellingWords"
         tools:targetApi="31">
         <activity
-            android:name=".view.MainActivity"
-            android:exported="true">
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.SpellingWords.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
         </activity>
-        <activity
-            android:name=".view.SpellingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SpellingWords.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
-        <activity
-            android:name=".view.UploadSpellingWordsActivity"
-            android:theme="@style/Theme.SpellingWords.NoActionBar"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
-        <activity
-            android:name=".view.FillInSentencesActivity"
-            android:theme="@style/Theme.SpellingWords.NoActionBar"
-            android:exported="false">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
-        <activity
-            android:name=".view.ReadingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SpellingWords.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".view.MainActivity" />
-        </activity>
     </application>
-
 </manifest>

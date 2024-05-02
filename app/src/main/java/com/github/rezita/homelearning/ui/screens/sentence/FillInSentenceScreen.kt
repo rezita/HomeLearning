@@ -27,9 +27,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
@@ -47,7 +49,13 @@ import kotlinx.coroutines.CoroutineScope
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FillInSentenceSentenceScreen(
-    viewModel: FillInSentenceViewModel,
+    sheetAction: SheetAction,
+    viewModel: FillInSentenceViewModel = viewModel(
+        factory = FillInSentenceViewModel.FillInSentenceViewModelFactory(
+            sheetAction
+        )
+    ),
+    navigateUp: ()->Unit,
     modifier: Modifier = Modifier
 ) {
     val sentenceUiState by viewModel.uiState.collectAsState()
@@ -60,6 +68,7 @@ fun FillInSentenceSentenceScreen(
         topBar = {
             SentenceTopAppBar(
                 state = sentenceUiState,
+                navigateUp = navigateUp,
                 callback = { viewModel.saveSentences() }
             )
         }

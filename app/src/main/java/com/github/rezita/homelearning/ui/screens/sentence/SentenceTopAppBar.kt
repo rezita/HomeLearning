@@ -16,6 +16,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun SentenceTopAppBar(
     state: SentenceUiState,
+    navigateUp: ()->Unit = {},
     callback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +29,7 @@ fun SentenceTopAppBar(
             is SentenceUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
         },
 
-        navigateUp = {},
+        navigateUp = navigateUp,
 
         actions = {
             if (state.isSavable) {

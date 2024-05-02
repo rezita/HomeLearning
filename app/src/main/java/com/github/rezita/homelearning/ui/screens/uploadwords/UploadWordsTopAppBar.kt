@@ -15,10 +15,9 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun UploadWordsTopAppBar(
     state: UploadUiState,
+    navigateUp: () -> Unit,
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit,
-    isSavable: Boolean,
-    isExtendable: Boolean,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -32,10 +31,10 @@ fun UploadWordsTopAppBar(
             else -> stringResource(id = R.string.activity_upload_words)
 
         },
-        navigateUp = {},
+        navigateUp = navigateUp,
 
         actions = {
-            if (isSavable) {
+            if (state.isSavable) {
                 IconButton(onClick = saveCallback) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
@@ -44,7 +43,7 @@ fun UploadWordsTopAppBar(
                     )
                 }
             }
-            if (isExtendable) {
+            if (state.isExpandable) {
                 IconButton(onClick = { addNewCallback() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
@@ -68,10 +67,9 @@ fun UploadWordsTopAppBar_downloaded() {
                 isExpandable = true,
                 isSavable = true
             ),
+            navigateUp = {},
             saveCallback = {},
-            addNewCallback = {},
-            isSavable = true,
-            isExtendable = true
+            addNewCallback = {}
         )
     }
 }

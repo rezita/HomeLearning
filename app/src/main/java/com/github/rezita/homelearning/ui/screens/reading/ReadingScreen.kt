@@ -40,9 +40,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithIcon
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
@@ -56,8 +58,14 @@ import com.github.rezita.homelearning.utils.getUndecorated
 
 @Composable
 fun ReadingScreen(
+    sheetAction: SheetAction,
+    viewModel: ReadingViewModel = viewModel(
+        factory = ReadingViewModel.ReadingWordViewModelFactory(
+            sheetAction
+        )
+    ),
+    navigateUp: () -> Unit,
     windowSize: WindowSizeClass,
-    viewModel: ReadingViewModel,
     modifier: Modifier = Modifier
 ) {
     val readingState by viewModel.readingUIState.collectAsState()
@@ -78,10 +86,11 @@ fun ReadingScreen(
             if (isTopAppBarShown) {
                 ReadingTopAppBar(
                     state = readingState,
+                    navigateUp = navigateUp,
                     callback = { value -> viewModel.setColorDisplay(value) },
                     isColorDisplay = viewModel.isColourDisplay
                 )
-            } else null
+            }
         }
     ) {
         when (configuration.orientation) {
@@ -255,8 +264,8 @@ fun TextDisplay(
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = true, widthDp = 720, heightDp = 1480)     //Z.
 @Preview(showBackground = true, widthDp = 1480, heightDp = 720)     //Z.
-@Preview(showBackground = true, widthDp = 2340, heightDp = 1080)  //T.
-@Preview(showBackground = true, widthDp = 1080, heightDp = 2340)  //T.
+@Preview(showBackground = true, widthDp = 2000, heightDp = 1080)  //T.
+@Preview(showBackground = true, widthDp = 1080, heightDp = 2000)  //T.
 @Preview(showBackground = true, widthDp = 1280, heightDp = 800)  //E.
 @Preview(showBackground = true, widthDp = 800, heightDp = 1280)  //E.
 @Preview(

@@ -14,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
@@ -27,7 +29,13 @@ import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun UploadWordsScreen(
-    viewModel: UploadWordViewModel,
+    sheetAction: SheetAction,
+    viewModel: UploadWordViewModel = viewModel(
+        factory = UploadWordViewModel.UploadWordViewModelFactory(
+            sheetAction
+        )
+    ),
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uploadUiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -40,10 +48,9 @@ fun UploadWordsScreen(
         topBar = {
             UploadWordsTopAppBar(
                 state = uploadUiState,
+                navigateUp = navigateUp,
                 saveCallback = { viewModel.saveSpellingWords() },
-                addNewCallback = { viewModel.setForEditing(null) },
-                isSavable = uploadUiState.isSavable,
-                isExtendable = uploadUiState.isExpandable
+                addNewCallback = { viewModel.setForEditing(null) }
             )
         }
     ) {

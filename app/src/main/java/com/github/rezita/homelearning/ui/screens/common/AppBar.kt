@@ -19,6 +19,7 @@ import com.github.rezita.homelearning.R
 fun LearningAppBar(
     titleText: String = "",
     navigateUp: () -> Unit = {},
+    isNavigateUp: Boolean = true,
     actions: @Composable RowScope.() -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -33,15 +34,16 @@ fun LearningAppBar(
         },
 
         navigationIcon = {
-            IconButton(onClick = navigateUp) {
-                Icon(
-                    painterResource(id = R.drawable.ic_navigation_back),
-                    contentDescription = stringResource(id = R.string.back_button),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+            if (isNavigateUp) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_navigation_back),
+                        contentDescription = stringResource(id = R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
             }
         },
         actions = actions
     )
 }
-

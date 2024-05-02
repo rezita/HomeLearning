@@ -16,6 +16,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun ReadingTopAppBar(
     state: ReadingUiState,
+    navigateUp: ()->Unit = {},
     callback: (Boolean) -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
@@ -27,7 +28,7 @@ fun ReadingTopAppBar(
             is ReadingUiState.Downloaded -> stringResource(id = R.string.activity_reading_title)
         },
 
-        navigateUp = {},
+        navigateUp = navigateUp,
 
         actions = {
             if (state is ReadingUiState.Downloaded) {
