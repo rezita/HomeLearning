@@ -3,7 +3,6 @@ package com.github.rezita.homelearning.ui.screens.sentence
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PartiallyEditableText(
     prefix: String,
@@ -58,7 +56,7 @@ fun PartiallyEditableText(
     colors: TextFieldColors = TextFieldDefaults.colors()
 
 ) {
-    var lastSelection by remember { mutableStateOf(TextRange(prefix.length + value.length)) }
+    val lastSelection by remember { mutableStateOf(TextRange(prefix.length + value.length)) }
 
     var textFieldValueState by remember {
         mutableStateOf(

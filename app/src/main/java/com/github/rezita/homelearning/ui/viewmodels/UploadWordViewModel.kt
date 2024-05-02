@@ -125,11 +125,11 @@ class UploadWordViewModel(
         }
     }
 
-    fun saveMarkSpellingWords() = saveSpellingWords { words ->
+    private fun saveMarkSpellingWords() = saveSpellingWords { words ->
         wordRepository.saveMarkSpellingWords(words)
     }
 
-    fun saveErikSpellingWords() = saveSpellingWords { words ->
+    private fun saveErikSpellingWords() = saveSpellingWords { words ->
         wordRepository.saveErikSpellingWords(words)
     }
 
@@ -158,7 +158,7 @@ class UploadWordViewModel(
     private fun parseResponse(response: String): List<Pair<String, String>> {
         Log.i("Response", response)
 
-        var result: ArrayList<Pair<String, String>> = ArrayList()
+        val result: ArrayList<Pair<String, String>> = ArrayList()
         val wordsList = response.toListBySeparator(RESPONSE_SEPARATOR)
         for (word in wordsList) {
             if (word.contains(RESPONSE_INNER_SEPARATOR)) {
@@ -257,18 +257,18 @@ class UploadWordViewModel(
         }
     }
 
-    fun validateWord(): Boolean {
+    private fun validateWord(): Boolean {
         val invalidFields = arrayListOf<Pair<String, Int>>()
-        val wordTovalidate = viewModelState.value.editState.word
-        if (!isValidText(wordTovalidate.word, wordPattern)) {
+        val wordToValidate = viewModelState.value.editState.word
+        if (!isValidText(wordToValidate.word, wordPattern)) {
             invalidFields.add(EditState.INPUT_WORD)
         }
-        if (wordTovalidate.comment.isNotEmpty() &&
-            !isValidText(wordTovalidate.comment, commentPattern)
+        if (wordToValidate.comment.isNotEmpty() &&
+            !isValidText(wordToValidate.comment, commentPattern)
         ) {
             invalidFields.add(EditState.INPUT_COMMENT)
         }
-        if (wordTovalidate.category.isEmpty()) {
+        if (wordToValidate.category.isEmpty()) {
             invalidFields.add(EditState.INPUT_CATEGORY)
         }
 
@@ -309,7 +309,7 @@ data class UploadViewModelState(
     private fun isSavable(): Boolean {
         return when (state) {
             UploadState.SAVING_ERROR -> true
-            UploadState.VIEWING -> !words.isEmpty()
+            UploadState.VIEWING -> words.isNotEmpty()
             else -> false
         }
     }

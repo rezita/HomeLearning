@@ -5,7 +5,7 @@ import com.github.rezita.homelearning.model.SpellingWord
 
 data class EditState(
     val word: SpellingWord = SpellingWord("", "", ""),
-    val invalidFields: List<Pair<String, Int>> = emptyList<Pair<String, Int>>()
+    val invalidFields: List<Pair<String, Int>> = emptyList()
 ) {
     fun getCategoryError() = invalidFields.find { it.first == INPUT_CATEGORY.first }?.second
     fun getWordError() = invalidFields.find { it.first == INPUT_WORD.first }?.second

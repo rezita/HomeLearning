@@ -20,16 +20,15 @@ class DefaultAppContainer : AppContainer {
         NetworkWordRepository(retrofitService)
     }
 
-    val logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
+    private val logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
-    val client: OkHttpClient = OkHttpClient.Builder()
+    private val client: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
         .readTimeout(60000, TimeUnit.MILLISECONDS)  //1 min
         .writeTimeout(120000, TimeUnit.MILLISECONDS)    //2 min
         .build()
 
-    private val baseUrl =
-        "https://script.google.com"
+    private val baseUrl = "https://script.google.com"
 
     private val json = Json { ignoreUnknownKeys = true }
     private val retrofit = Retrofit.Builder()
