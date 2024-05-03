@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -63,7 +65,7 @@ fun FillInSentenceSentenceScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.navigationBarsPadding(),
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             SentenceTopAppBar(
@@ -78,7 +80,7 @@ fun FillInSentenceSentenceScreen(
             viewModel = viewModel,
             scope = scope,
             snackBarHostState = snackBarHostState,
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it).imePadding()
         )
 
     }
