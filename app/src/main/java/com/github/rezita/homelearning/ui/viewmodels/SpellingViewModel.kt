@@ -184,7 +184,7 @@ data class SpellingViewModelState(
     fun isSavable(): Boolean {
         return when (state) {
             SpellingState.LOADED -> {
-                words.any { word -> word.status == WordStatus.UNCHECKED }
+                words.any { word -> word.status != WordStatus.UNCHECKED }
             }
 
             else -> false
