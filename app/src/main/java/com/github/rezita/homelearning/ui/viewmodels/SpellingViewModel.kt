@@ -126,6 +126,15 @@ class SpellingViewModel(
         }
     }
 
+    fun resetWordStatus(index: Int) {
+        viewModelState.update {
+            it.copy(
+                words = it.words.toMutableList()
+                    .apply { this[index] = this[index].copy(status = WordStatus.UNCHECKED) }
+            )
+        }
+    }
+
     private fun saveSpellingResults(callback: suspend (List<SpellingWord>) -> RepositoryResult<String>) {
         if (!viewModelState.value.isSavable()) {
             return

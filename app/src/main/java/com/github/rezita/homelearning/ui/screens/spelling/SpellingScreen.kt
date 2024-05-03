@@ -1,6 +1,7 @@
 package com.github.rezita.homelearning.ui.screens.spelling
 
 import android.content.res.Configuration
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -99,6 +101,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
+                onItemReset = { index -> viewModel.resetWordStatus(index) },
                 modifier = modifier
             )
         }
@@ -116,7 +119,7 @@ fun SpellingContent(
             SavingSuccessSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             SpellingItems(
                 words = state.words,
-                onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
+                onValueChange = { _, _ -> run {} },
                 isEnabled = false,
                 modifier = modifier
             )
@@ -146,8 +149,9 @@ private fun SpellingItem(
     index: Int,
     word: String,
     wordStatus: WordStatus,
-    isEnabled: Boolean = true,
     onItemSelected: (WordStatus) -> Unit,
+    onItemReset: () -> Unit,
+    isEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -167,7 +171,14 @@ private fun SpellingItem(
             text = word,
             Modifier
                 .padding(end = dimensionResource(id = R.dimen.padding_small))
-                .weight(1f),
+                .weight(1f)
+                .pointerInput(Unit) {
+                    if (isEnabled) {
+                        detectTapGestures(
+                            onDoubleTap = { onItemReset() }
+                        )
+                    }
+                },
         )
         SpellingRadioGroup(
             selected = wordStatus,
@@ -187,6 +198,7 @@ private fun getIndexPrefix(index: Int): String {
 private fun SpellingItems(
     words: List<SpellingWord>,
     onValueChange: (Int, WordStatus) -> Unit,
+    onItemReset: (Int) -> Unit = {},
     isEnabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
@@ -206,7 +218,8 @@ private fun SpellingItems(
                     word = item.word,
                     wordStatus = item.status,
                     onItemSelected = { status -> onValueChange(index, status) },
-                    isEnabled = isEnabled
+                    onItemReset = { onItemReset(index) },
+                    isEnabled = isEnabled,
                 )
                 HorizontalDivider(
                     modifier = Modifier
@@ -242,7 +255,8 @@ private fun SpellingItemPreview() {
             index = 17,
             word = "cucumber",
             wordStatus = WordStatus.CORRECT,
-            onItemSelected = {})
+            onItemSelected = {},
+            onItemReset = {})
     }
 }
 
@@ -255,8 +269,10 @@ private fun SpellingItemDisabledPreview() {
             index = 0,
             word = "cucumber",
             wordStatus = WordStatus.CORRECT,
-            isEnabled = false,
-            onItemSelected = {})
+            onItemSelected = {},
+            onItemReset = {},
+            isEnabled = false
+        )
     }
 }
 
@@ -294,6 +310,7 @@ private fun SpellingItemsPreview() {
             SpellingItems(
                 words = words,
                 onValueChange = { _, _ -> run {} },
+                onItemReset = {},
                 modifier = Modifier.padding(it)
             )
         }
