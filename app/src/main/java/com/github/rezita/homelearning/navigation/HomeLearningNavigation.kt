@@ -138,7 +138,7 @@ private fun getSheetActionFromArgs(arguments: Bundle?, default: SheetAction): Sh
 }
 
 private fun getUploadSheetAction(currentSheetAction: SheetAction): SheetAction {
-    return when(currentSheetAction) {
+    return when (currentSheetAction) {
         SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.SAVE_ERIK_WORDS
         SheetAction.READ_MARK_SPELLING_WORDS -> SheetAction.SAVE_MARK_WORDS
         else -> SheetAction.SAVE_ERIK_WORDS

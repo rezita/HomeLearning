@@ -37,7 +37,6 @@ fun PartiallyEditableText(
     modifier: Modifier = Modifier,
     editableMinLength: Int = 10,    //editable min length - for the underline part
     baseTextColor: Color = Color.Black,
-
     enabled: Boolean = true,
     readOnly: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,

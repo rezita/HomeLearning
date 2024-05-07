@@ -82,7 +82,9 @@ fun FillInSentenceSentenceScreen(
             viewModel = viewModel,
             scope = scope,
             snackBarHostState = snackBarHostState,
-            modifier = Modifier.padding(it).imePadding()
+            modifier = Modifier
+                .padding(it)
+                .imePadding()
         )
 
     }
@@ -269,7 +271,7 @@ fun SentenceItemsPreview() {
         )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        SentenceItems(sentences = sentences, onValueChange = {_, _ -> run {} })
+        SentenceItems(sentences = sentences, onValueChange = { _, _ -> run {} })
     }
 }
 
