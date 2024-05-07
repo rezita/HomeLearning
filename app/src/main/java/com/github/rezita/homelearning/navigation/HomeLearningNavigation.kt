@@ -28,6 +28,8 @@ fun HomeLearningNavigation(
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Home.route) {
             HomeScreen(
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
                 onClickErikSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
                 onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
                 onClickHomophones = { navController.navigate(route = Homophones.route) },
@@ -52,8 +54,17 @@ fun HomeLearningNavigation(
             )
             SpellingScreen(
                 sheetAction = sheetAction,
+                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
-                addNewCallback = {navController.navigate("${Upload.route}/${getUploadSheetAction(sheetAction)}")},
+                addNewCallback = {
+                    navController.navigate(
+                        "${Upload.route}/${
+                            getUploadSheetAction(
+                                sheetAction
+                            )
+                        }"
+                    )
+                },
                 modifier = modifier
             )
         }
@@ -68,6 +79,7 @@ fun HomeLearningNavigation(
             )
             ReadingScreen(
                 sheetAction = sheetAction,
+                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 windowSize = homeLearningAppState.windowSizeClass,
                 modifier = modifier
@@ -84,6 +96,7 @@ fun HomeLearningNavigation(
             )
             UploadWordsScreen(
                 sheetAction = sheetAction,
+                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
             )
@@ -92,6 +105,7 @@ fun HomeLearningNavigation(
         composable(route = Homophones.route) {
             FillInSentenceSentenceScreen(
                 sheetAction = SheetAction.READ_HOMOPHONES,
+                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
             )
@@ -100,6 +114,7 @@ fun HomeLearningNavigation(
         composable(route = IrregularVerbs.route) {
             FillInSentenceSentenceScreen(
                 sheetAction = SheetAction.READ_IRREGULAR_VERBS,
+                canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
             )

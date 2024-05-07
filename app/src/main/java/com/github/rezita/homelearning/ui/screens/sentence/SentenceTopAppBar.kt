@@ -16,7 +16,8 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun SentenceTopAppBar(
     state: SentenceUiState,
-    navigateUp: ()->Unit = {},
+    canNavigateBack: Boolean,
+    navigateUp: ()->Unit,
     callback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -28,7 +29,7 @@ fun SentenceTopAppBar(
             is SentenceUiState.Saved -> stringResource(id = R.string.activity_sentences)
             is SentenceUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
         },
-
+        canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 
         actions = {
@@ -54,6 +55,8 @@ fun SentenceTopAppBar_success_notAllAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
             state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = false),
+            canNavigateBack = true,
+            navigateUp = {},
             callback = {},
         )
     }
@@ -66,6 +69,8 @@ fun SentenceTopAppBar_success_allAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
             state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = true),
+            canNavigateBack = false,
+            navigateUp = {},
             callback = {}
         )
     }
@@ -78,6 +83,8 @@ fun SentenceTopAppBar_loading() {
     HomeLearningTheme {
         SentenceTopAppBar(
             state = SentenceUiState.Loading(false),
+            canNavigateBack = false,
+            navigateUp = {},
             callback = {}
         )
     }
@@ -90,6 +97,8 @@ fun SentenceTopAppBar_error() {
     HomeLearningTheme {
         SentenceTopAppBar(
             state = SentenceUiState.LoadingError(isSavable = false, errorMessage = 12),
+            canNavigateBack = false,
+            navigateUp = {},
             callback = {},
         )
     }

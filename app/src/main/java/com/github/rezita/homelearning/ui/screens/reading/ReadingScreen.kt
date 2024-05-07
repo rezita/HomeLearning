@@ -64,6 +64,7 @@ fun ReadingScreen(
             sheetAction
         )
     ),
+    canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     windowSize: WindowSizeClass,
     modifier: Modifier = Modifier
@@ -86,6 +87,7 @@ fun ReadingScreen(
             if (isTopAppBarShown) {
                 ReadingTopAppBar(
                     state = readingState,
+                    canNavigateBack = canNavigateBack,
                     navigateUp = navigateUp,
                     callback = { value -> viewModel.setColorDisplay(value) },
                     isColorDisplay = viewModel.isColourDisplay

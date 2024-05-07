@@ -57,7 +57,8 @@ fun FillInSentenceSentenceScreen(
             sheetAction
         )
     ),
-    navigateUp: ()->Unit,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val sentenceUiState by viewModel.uiState.collectAsState()
@@ -70,6 +71,7 @@ fun FillInSentenceSentenceScreen(
         topBar = {
             SentenceTopAppBar(
                 state = sentenceUiState,
+                canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 callback = { viewModel.saveSentences() }
             )

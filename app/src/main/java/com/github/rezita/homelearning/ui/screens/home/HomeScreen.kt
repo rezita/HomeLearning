@@ -39,6 +39,8 @@ data class TabButton(
 
 @Composable
 fun HomeScreen(
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
     onClickErikSpelling: () -> Unit = {},
     onClickIrregularVerbs: () -> Unit = {},
     onClickHomophones: () -> Unit = {},
@@ -55,7 +57,8 @@ fun HomeScreen(
         topBar = {
             LearningAppBar(
                 titleText = stringResource(id = R.string.app_name),
-                isNavigateUp = false
+                canNavigateBack = canNavigateBack,
+                navigateUp = navigateUp
             )
         }
     ) {
@@ -197,7 +200,7 @@ private fun HomeLearningTabButton(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun MainTabsPreview() {
     HomeLearningTheme {
-        HomeScreen()
+        HomeScreen(canNavigateBack = false, navigateUp = {})
     }
 }
 

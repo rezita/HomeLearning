@@ -16,7 +16,8 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun ReadingTopAppBar(
     state: ReadingUiState,
-    navigateUp: ()->Unit = {},
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
     callback: (Boolean) -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
@@ -27,7 +28,7 @@ fun ReadingTopAppBar(
             is ReadingUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
             is ReadingUiState.Downloaded -> stringResource(id = R.string.activity_reading_title)
         },
-
+        canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 
         actions = {
@@ -64,6 +65,8 @@ fun ReadingTopAppBarBlackPreview_success() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.Downloaded(emptyList()),
+            canNavigateBack = true,
+            navigateUp = {},
             callback = {},
             isColorDisplay = false
         )
@@ -77,6 +80,8 @@ fun ReadingTopAppBarColorPreview_loading() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.Loading,
+            canNavigateBack = false,
+            navigateUp = {},
             callback = {},
             isColorDisplay = true
         )
@@ -90,6 +95,8 @@ fun ReadingTopAppBarColorPreview_error() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.LoadingError(12),
+            canNavigateBack = false,
+            navigateUp = {},
             callback = {},
             isColorDisplay = true
         )

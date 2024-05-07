@@ -35,6 +35,7 @@ fun UploadWordsScreen(
             sheetAction
         )
     ),
+    canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -48,6 +49,7 @@ fun UploadWordsScreen(
         topBar = {
             UploadWordsTopAppBar(
                 state = uploadUiState,
+                canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 saveCallback = { viewModel.saveSpellingWords() },
                 addNewCallback = { viewModel.setForEditing(null) }

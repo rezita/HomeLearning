@@ -15,6 +15,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 @Composable
 fun UploadWordsTopAppBar(
     state: UploadUiState,
+    canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit,
@@ -31,6 +32,7 @@ fun UploadWordsTopAppBar(
             else -> stringResource(id = R.string.activity_upload_words)
 
         },
+        canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 
         actions = {
@@ -67,6 +69,7 @@ fun UploadWordsTopAppBar_downloaded() {
                 isExpandable = true,
                 isSavable = true
             ),
+            canNavigateBack = true,
             navigateUp = {},
             saveCallback = {},
             addNewCallback = {}

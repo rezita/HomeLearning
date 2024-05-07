@@ -55,6 +55,7 @@ fun SpellingScreen(
             sheetAction
         )
     ),
+    canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     addNewCallback: () -> Unit = {},
     modifier: Modifier = Modifier
@@ -69,6 +70,7 @@ fun SpellingScreen(
         topBar = {
             SpellingTopAppBar(
                 state = spellingUiState,
+                canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 saveCallback = { viewModel.saveSpellingResults() },
                 addNewCallback = addNewCallback
