@@ -1,6 +1,7 @@
 package com.github.rezita.homelearning.ui.screens.sentence
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +16,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun SentenceTopAppBar(
+    @StringRes titleId: Int,
     state: SentenceUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
@@ -22,13 +24,7 @@ fun SentenceTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = when (state) {
-            is SentenceUiState.Loaded -> stringResource(id = R.string.activity_sentences)
-            is SentenceUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
-            is SentenceUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
-            is SentenceUiState.Saved -> stringResource(id = R.string.activity_sentences)
-            is SentenceUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
-        },
+        titleText = stringResource(id = titleId),
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 
@@ -54,6 +50,7 @@ fun SentenceTopAppBar(
 fun SentenceTopAppBar_success_notAllAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
+            titleId = R.string.activity_homophones,
             state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = false),
             canNavigateBack = true,
             navigateUp = {},
@@ -68,6 +65,7 @@ fun SentenceTopAppBar_success_notAllAnswered() {
 fun SentenceTopAppBar_success_allAnswered() {
     HomeLearningTheme {
         SentenceTopAppBar(
+            titleId = R.string.activity_homophones,
             state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = true),
             canNavigateBack = false,
             navigateUp = {},
@@ -82,6 +80,7 @@ fun SentenceTopAppBar_success_allAnswered() {
 fun SentenceTopAppBar_loading() {
     HomeLearningTheme {
         SentenceTopAppBar(
+            titleId = R.string.activity_homophones,
             state = SentenceUiState.Loading(false),
             canNavigateBack = false,
             navigateUp = {},
@@ -96,6 +95,7 @@ fun SentenceTopAppBar_loading() {
 fun SentenceTopAppBar_error() {
     HomeLearningTheme {
         SentenceTopAppBar(
+            titleId = R.string.activity_homophones,
             state = SentenceUiState.LoadingError(isSavable = false, errorMessage = 12),
             canNavigateBack = false,
             navigateUp = {},

@@ -2,6 +2,7 @@ package com.github.rezita.homelearning.ui.screens.sentence
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,6 +66,7 @@ fun FillInSentenceSentenceScreen(
             sheetAction
         )
     ),
+    @StringRes titleId: Int,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -78,6 +80,7 @@ fun FillInSentenceSentenceScreen(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             SentenceTopAppBar(
+                titleId = titleId,
                 state = sentenceUiState,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,

@@ -105,6 +105,7 @@ fun HomeLearningNavigation(
         composable(route = Homophones.route) {
             FillInSentenceSentenceScreen(
                 sheetAction = SheetAction.READ_HOMOPHONES,
+                titleId = R.string.homophones_title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
@@ -114,6 +115,7 @@ fun HomeLearningNavigation(
         composable(route = IrregularVerbs.route) {
             FillInSentenceSentenceScreen(
                 sheetAction = SheetAction.READ_IRREGULAR_VERBS,
+                titleId = R.string.verbs_title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier

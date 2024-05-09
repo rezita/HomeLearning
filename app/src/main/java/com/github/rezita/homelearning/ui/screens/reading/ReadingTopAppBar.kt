@@ -23,11 +23,7 @@ fun ReadingTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = when (state) {
-            is ReadingUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
-            is ReadingUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
-            is ReadingUiState.Downloaded -> stringResource(id = R.string.activity_reading_title)
-        },
+        titleText = stringResource(id = R.string.activity_reading_title),
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 

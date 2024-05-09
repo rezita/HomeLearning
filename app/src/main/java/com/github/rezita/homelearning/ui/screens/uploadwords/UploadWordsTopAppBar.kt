@@ -24,10 +24,6 @@ fun UploadWordsTopAppBar(
     LearningAppBar(
         titleText =
         when (state) {
-            is UploadUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
-            is UploadUiState.Saving -> stringResource(id = R.string.app_bar_uploading_title)
-            is UploadUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
-            is UploadUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
             is UploadUiState.Editing -> ("")
             else -> stringResource(id = R.string.activity_upload_words)
 

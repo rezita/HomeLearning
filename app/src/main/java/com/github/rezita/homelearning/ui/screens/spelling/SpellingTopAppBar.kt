@@ -17,19 +17,13 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 fun SpellingTopAppBar(
     state: SpellingUiState,
     canNavigateBack: Boolean,
-    navigateUp: ()->Unit,
+    navigateUp: () -> Unit,
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = when (state) {
-            is SpellingUiState.Loaded -> stringResource(id = R.string.activity_spelling)
-            is SpellingUiState.Loading -> stringResource(id = R.string.app_bar_loading_title)
-            is SpellingUiState.LoadingError -> stringResource(id = R.string.app_bar_error_title)
-            is SpellingUiState.Saved -> stringResource(id = R.string.activity_spelling)
-            is SpellingUiState.SavingError -> stringResource(id = R.string.app_bar_error_title)
-        },
+        titleText = stringResource(id = R.string.activity_spelling),
 
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
@@ -80,21 +74,6 @@ fun SpellingTopAppBar_downloaded_success() {
     HomeLearningTheme {
         SpellingTopAppBar(
             state = SpellingUiState.Loaded(words = emptyList(), isSavable = true),
-            canNavigateBack = false,
-            navigateUp = {},
-            saveCallback = {},
-            addNewCallback = {}
-        )
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SpellingTopAppBar_download_error() {
-    HomeLearningTheme {
-        SpellingTopAppBar(
-            state = SpellingUiState.LoadingError(errorMessage = 12, isSavable = false),
             canNavigateBack = false,
             navigateUp = {},
             saveCallback = {},
