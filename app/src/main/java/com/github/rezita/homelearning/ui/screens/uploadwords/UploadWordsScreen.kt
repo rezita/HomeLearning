@@ -101,8 +101,7 @@ private fun UploadContent(
                 callback = { viewModel.saveSpellingWords() },
                 content = {
                     UploadWordsSaveErrorContent(
-                        state = state,
-                        modifier = modifier
+                        state = state
                     )
                 },
                 modifier = modifier
