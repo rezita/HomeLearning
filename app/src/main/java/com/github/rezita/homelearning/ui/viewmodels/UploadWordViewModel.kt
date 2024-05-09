@@ -155,20 +155,27 @@ class UploadWordViewModel(
         }
     }
 
-    private fun parseResponse(response: String): List<Pair<String, String>> {
+    private fun parseResponse(response: String): List<Pair<SpellingWord, String>> {
         Log.i("Response", response)
 
-        val result: ArrayList<Pair<String, String>> = ArrayList()
+        val result: ArrayList<Pair<SpellingWord, String>> = ArrayList()
         val wordsList = response.toListBySeparator(RESPONSE_SEPARATOR)
         for (word in wordsList) {
             if (word.contains(RESPONSE_INNER_SEPARATOR)) {
                 val pair =
-                    word.split(RESPONSE_INNER_SEPARATOR).let { Pair(it[0], it.getOrNull(1) ?: "") }
-                result.add(pair)
+                    word.split(RESPONSE_INNER_SEPARATOR)
+                        .let { Pair(findWordInList(it[0]), it.getOrNull(1) ?: "") }
+                if (pair.first != null) {
+                    result.add(pair as Pair<SpellingWord, String>)
+                }
             }
         }
         Log.i("Result", result.toString())
         return result
+    }
+
+    private fun findWordInList(word: String): SpellingWord? {
+        return viewModelState.value.words.find { it.word == word }
     }
 
     fun setForEditing(index: Int? = null) {
@@ -304,7 +311,7 @@ data class UploadViewModelState(
     val words: List<SpellingWord> = emptyList(),
     val selectedIndex: Int? = null,
     val errorMessage: Int? = null,
-    val savingResponse: List<Pair<String, String>> = emptyList()
+    val savingResponse: List<Pair<SpellingWord, String>> = emptyList()
 ) {
     private fun isSavable(): Boolean {
         return when (state) {

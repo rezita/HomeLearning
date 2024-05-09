@@ -2,7 +2,6 @@ package com.github.rezita.homelearning.ui.screens.uploadwords
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,18 +10,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,7 +85,6 @@ private fun UploadItemDisplay(
                     openConfirmDialog.value = false
                 },
             )
-
     }
     Row(
         modifier = modifier
@@ -93,29 +93,11 @@ private fun UploadItemDisplay(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = word.word,
-                Modifier
-                    .padding(end = dimensionResource(id = R.dimen.padding_small)),
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Text(
-                text = getCategoryWithComment(word),
-                Modifier
-                    .padding(end = dimensionResource(id = R.dimen.padding_small)),
-                style = MaterialTheme.typography.labelSmall,
-            )
-        }
+        UploadWordItemDisplay(word = word, modifier = Modifier.weight(1f))
         WordManipulationIcons(
             onDeleteCallback = { openConfirmDialog.value = true },
             onEditCallback = { onEditCallback() })
     }
-}
-
-private fun getCategoryWithComment(word: SpellingWord): String {
-    val comment = if (word.comment != "") word.comment else "-"
-    return word.category + " / " + comment
 }
 
 @Composable
@@ -129,18 +111,54 @@ private fun WordManipulationIcons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        IconButton(onClick = onDeleteCallback) {
-            Icon(
-                painterResource(id = R.drawable.ic_delete),
-                contentDescription = stringResource(id = R.string.upload_delete_word),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
-            )
-        }
         IconButton(onClick = onEditCallback) {
             Icon(
-                painterResource(id = R.drawable.ic_edit),
+                imageVector = Icons.Outlined.Create,
                 contentDescription = stringResource(id = R.string.upload_edit_word),
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+        IconButton(onClick = onDeleteCallback) {
+            Icon(
+                imageVector = Icons.Outlined.Delete,
+                contentDescription = stringResource(id = R.string.upload_delete_word),
+                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+private fun SavedWordsPreview() {
+    val spellingWord1 = SpellingWord(
+        word = "appear",
+        category = "school",
+        comment = "Y3Y4",
+        status = WordStatus.CORRECT
+    )
+    val spellingWord2 = SpellingWord(
+        word = "disappear",
+        category = "home",
+        comment = "opposite",
+        status = WordStatus.CORRECT
+    )
+
+    val state = UploadUiState.HasWords(
+        words = listOf(spellingWord1, spellingWord2),
+        isExpandable = false,
+        categories = listOf("home", "school"),
+        isSavable = true
+    )
+    HomeLearningTheme {
+        Scaffold {
+            UploadWordsViewContent(
+                state = state,
+                onWordEdit = {},
+                onWordDelete = {},
+                modifier = Modifier.padding(it)
             )
         }
     }
@@ -157,10 +175,13 @@ private fun UploadItemPreview() {
         status = WordStatus.CORRECT
     )
     HomeLearningTheme {
-        UploadItemDisplay(
-            word = spellingWord,
-            onDeleteCallback = {},
-            onEditCallback = {}
-        )
+        Scaffold {
+            UploadItemDisplay(
+                word = spellingWord,
+                onDeleteCallback = {},
+                onEditCallback = {},
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }

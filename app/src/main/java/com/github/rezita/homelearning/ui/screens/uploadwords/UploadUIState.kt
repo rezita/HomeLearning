@@ -37,7 +37,7 @@ sealed interface UploadUiState {
 
     data class Saved(
         val words: List<SpellingWord>,
-        val savingResult: List<Pair<String, String>> = emptyList(),
+        val savingResult: List<Pair<SpellingWord, String>> = emptyList(),
         override val isExpandable: Boolean,
         override val categories: List<String>,
         override val isSavable: Boolean

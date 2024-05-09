@@ -1,6 +1,8 @@
 package com.github.rezita.homelearning.ui.screens.uploadwords
 
 import android.content.res.Configuration
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,7 +22,7 @@ fun DeleteConfirmDialog(
     AlertDialog(
         icon = {
             Icon(
-                painterResource(id = R.drawable.ic_delete),
+                imageVector = Icons.Outlined.Delete,
                 contentDescription = stringResource(id = R.string.confirm_remove_title)
             )
         },
