@@ -89,7 +89,7 @@ private fun UploadItemDisplay(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+            .padding(start = dimensionResource(id = R.dimen.padding_medium)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -125,7 +125,6 @@ private fun WordManipulationIcons(
                 tint = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
-
     }
 }
 
