@@ -195,6 +195,10 @@ data class SpellingViewModelState(
                 words.any { word -> word.status != WordStatus.UNCHECKED }
             }
 
+            SpellingState.SAVING_ERROR -> {
+                words.any { word -> word.status != WordStatus.UNCHECKED }
+            }
+
             else -> false
         }
     }
