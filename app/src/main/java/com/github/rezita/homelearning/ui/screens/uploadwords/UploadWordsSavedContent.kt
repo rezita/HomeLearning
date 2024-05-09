@@ -82,7 +82,7 @@ private fun SavedItemDisplay(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun UploadItemPreview() {
+private fun SavedItemPreview() {
     HomeLearningTheme {
         SavedItemDisplay(wordResult = Pair("appear", "Success"))
     }

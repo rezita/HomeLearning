@@ -188,7 +188,6 @@ private fun SpellingItem(
             setSelected = onItemSelected,
             isEnabled = isEnabled,
         )
-
     }
 }
 

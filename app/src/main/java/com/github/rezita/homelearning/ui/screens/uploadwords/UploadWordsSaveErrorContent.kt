@@ -86,7 +86,7 @@ private fun getCategoryWithComment(word: SpellingWord): String {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun UploadItemPreview() {
+private fun UploadErrorItemPreview() {
     val spellingWord = SpellingWord(
         word = "appear",
         category = "school",

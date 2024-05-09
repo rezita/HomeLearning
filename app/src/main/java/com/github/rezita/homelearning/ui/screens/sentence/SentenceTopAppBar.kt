@@ -17,7 +17,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 fun SentenceTopAppBar(
     state: SentenceUiState,
     canNavigateBack: Boolean,
-    navigateUp: ()->Unit,
+    navigateUp: () -> Unit,
     callback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
