@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,9 +37,12 @@ fun LoadingProgressBar(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium)),
+            .padding(dimensionResource(id = R.dimen.padding_extra_big)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_big),
+            Alignment.CenterVertically
+        )
     ) {
         Text(text = loadingMessage)
         CircularProgressIndicator(
@@ -53,6 +57,8 @@ fun LoadingProgressBar(modifier: Modifier = Modifier) {
 @Composable
 fun LoadingProgressBarPreview() {
     HomeLearningTheme {
-        LoadingProgressBar()
+        Scaffold() {
+            LoadingProgressBar(modifier = Modifier.padding(it))
+        }
     }
 }
