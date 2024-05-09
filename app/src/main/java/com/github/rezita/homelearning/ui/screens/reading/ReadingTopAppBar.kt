@@ -39,7 +39,7 @@ fun ReadingTopAppBar(
                         Icon(
                             painterResource(id = R.drawable.ic_menu_black),
                             contentDescription = stringResource(id = R.string.reading_black_display),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 } else {
@@ -47,7 +47,7 @@ fun ReadingTopAppBar(
                         Icon(
                             painterResource(id = R.drawable.ic_menu_colors),
                             contentDescription = stringResource(id = R.string.reading_colour_display),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }

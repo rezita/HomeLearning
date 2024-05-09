@@ -38,7 +38,7 @@ fun SentenceTopAppBar(
                     Icon(
                         painterResource(id = R.drawable.ic_menu_check),
                         contentDescription = stringResource(id = R.string.sentences_check_and_save),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

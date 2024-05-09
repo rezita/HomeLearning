@@ -40,7 +40,7 @@ fun SpellingTopAppBar(
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
                         contentDescription = stringResource(id = R.string.spelling_save),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -49,7 +49,7 @@ fun SpellingTopAppBar(
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
                         contentDescription = stringResource(id = R.string.spelling_add_new_word),
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
