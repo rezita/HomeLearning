@@ -33,14 +33,16 @@ fun ErrorDisplayInColumn(message: String, callback: () -> Unit, modifier: Modifi
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium)),
+            .padding(dimensionResource(id = R.dimen.padding_extra_big)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_medium),
+            Alignment.CenterVertically
+        )
     ) {
         TextWithButton(
             message = message,
             callback = callback,
-            textModifier = Modifier.padding(bottom = 16.dp)
         )
     }
 }
@@ -50,15 +52,16 @@ fun ErrorDisplayWithIcon(message: String, iconSource: Int, modifier: Modifier = 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium)),
+            .padding(dimensionResource(id = R.dimen.padding_extra_big)),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_medium),
+            Alignment.CenterVertically
+        )
     ) {
         TextWithIcon(
             message = message,
-            iconSource = iconSource,
-            textModifier = Modifier
-                .padding(end = 16.dp)
+            iconSource = iconSource
         )
     }
 }
@@ -66,16 +69,33 @@ fun ErrorDisplayWithIcon(message: String, iconSource: Int, modifier: Modifier = 
 
 @Composable
 fun ErrorDisplayInRow(message: String, callback: () -> Unit, modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        TextWithButton(
-            message = message,
-            callback = callback,
-            textModifier = Modifier
-                .padding(end = 16.dp)
-                .weight(1f)
+    Column(
+        modifier
+            .fillMaxWidth()
+    )
+    {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                dimensionResource(id = R.dimen.padding_medium)
+            )
+        ) {
+            TextWithButton(
+                message = message,
+                callback = callback,
+                textModifier = Modifier
+                    .weight(1f)
+            )
+        }
+        HorizontalDivider(
+            color = Color.LightGray,
+            modifier = Modifier
+                .height(1.dp)
+                .fillMaxHeight()
+                .fillMaxWidth()
         )
     }
 }
@@ -89,18 +109,13 @@ fun ErrorDisplayWithContent(
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.padding_medium)
+        )
     ) {
         ErrorDisplayInRow(
             message = message,
             callback = callback,
-        )
-        HorizontalDivider(
-            color = Color.LightGray,
-            modifier = Modifier
-                .padding(vertical = dimensionResource(id = R.dimen.padding_medium))
-                .height(1.dp)
-                .fillMaxHeight()
-                .fillMaxWidth()
         )
         content()
     }
@@ -127,7 +142,6 @@ fun TextWithIcon(
     iconModifier: Modifier = Modifier
 ) {
     Text(text = message, modifier = textModifier)
-    Spacer(modifier = Modifier.height(32.dp))
     Icon(
         painter = painterResource(id = iconSource), contentDescription = null,
         modifier = iconModifier.size(64.dp)
@@ -141,7 +155,7 @@ fun ErrorDisplayPreviewColumn() {
     HomeLearningTheme {
         Scaffold {
             ErrorDisplayInColumn(
-                message = "This is a long long long long long long long long the error message",
+                message = "This is a long long long long long long long long long error message",
                 callback = {},
                 modifier = Modifier.padding(it)
             )

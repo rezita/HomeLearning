@@ -32,9 +32,9 @@
     <string name="msg_wrong_action">Wrong action provided.</string>
 
     <!--SnackBar messages-->
-    <string name="snackBar_error_loading">A problem occurred during loading your data.\nPlease try again.</string>
+    <string name="snackBar_error_loading">A problem occurred during loading your data.</string>
     <string name="snackBar_save_success">All done!\nResults were saved successfully.</string>
-    <string name="snackBar_save_error">A problem happened while saving the results.\nPlease try again.</string>
+    <string name="snackBar_save_error">A problem happened while saving the results.</string>
 
     <!-- Action Bar Titles-->
     <string name="back_button">Back</string>
