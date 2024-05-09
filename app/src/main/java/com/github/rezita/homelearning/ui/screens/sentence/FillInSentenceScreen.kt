@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -22,11 +24,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,9 +92,7 @@ fun FillInSentenceSentenceScreen(
             snackBarHostState = snackBarHostState,
             modifier = Modifier
                 .padding(it)
-                .imePadding()
         )
-
     }
 }
 
@@ -99,14 +105,17 @@ fun SentenceContent(
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        is SentenceUiState.Loading ->
+        is SentenceUiState.Loading -> {
             LoadingProgressBar(modifier = modifier)
+        }
 
         is SentenceUiState.Loaded ->
             SentenceItems(
                 sentences = state.sentences,
+                isAllAnswered = state.isSavable,
                 onValueChange = { index, value -> viewModel.updateAnswer(index, value) },
-                modifier = modifier
+                onDoneCallback = { viewModel.saveSentences() },
+                modifier = modifier.imePadding()
             )
 
         is SentenceUiState.LoadingError -> {
@@ -116,7 +125,6 @@ fun SentenceContent(
                 callback = { viewModel.load() },
                 modifier = modifier
             )
-
         }
 
         is SentenceUiState.Saved -> {
@@ -141,9 +149,13 @@ fun SentenceContent(
 @Composable
 fun SentenceItems(
     sentences: List<FillInSentence>,
+    isAllAnswered: Boolean,
     onValueChange: (Int, String) -> Unit,
+    onDoneCallback: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
+    val kc = LocalSoftwareKeyboardController.current
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
             val (prefix, suffix) = item.splitBySparatorWithSuggestion()
@@ -155,6 +167,23 @@ fun SentenceItems(
                 onValueChange = { value -> onValueChange(index, value) },
                 baseTextColor = MaterialTheme.colorScheme.onSurface,
                 label = null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrect = false,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = if (isAllAnswered) ImeAction.Done else ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        // Pressing Ime button would move the text indicator's focus to the next field (or the first textField)
+                        focusManager.moveFocus(FocusDirection.Next)
+                    },
+                    // Pressing Ime button would call the onDoneCallback
+                    onDone = {
+                        kc?.hide()
+                        onDoneCallback()
+                    }
+                ),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -271,7 +300,11 @@ fun SentenceItemsPreview() {
         )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        SentenceItems(sentences = sentences, onValueChange = { _, _ -> run {} })
+        SentenceItems(
+            sentences = sentences,
+            isAllAnswered = false,
+            onValueChange = { _, _ -> run {} },
+            onDoneCallback = {})
     }
 }
 
