@@ -27,7 +27,6 @@ val progressBarMessages = listOf(
     "Wash your teeth before go to bed.",
     "I'll finish when pigs fly.",
     "The lights are on, but nobody's home."
-
 )
 
 @Composable

@@ -38,7 +38,6 @@ class ReadingViewModel(
     }
 
     fun load() {
-        resetUiState()
         when (sheetAction) {
             SheetAction.READ_READING_CEW -> getCEWWords()
             SheetAction.READ_READING_WORDS -> getReadingWords()
@@ -65,7 +64,7 @@ class ReadingViewModel(
     private fun getWords(callback: suspend () -> RepositoryResult<List<ReadingWord>>) {
         if (_readingUIState.value is ReadingUiState.Downloaded) return
 
-        _readingUIState.update { ReadingUiState.Loading }
+        resetUiState()
 
         viewModelScope.launch {
             val result = callback()

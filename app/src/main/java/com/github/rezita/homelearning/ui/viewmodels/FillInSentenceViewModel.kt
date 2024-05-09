@@ -46,7 +46,6 @@ class FillInSentenceViewModel(
     }
 
     fun load() {
-        resetUiState()
         when (sheetAction) {
             SheetAction.READ_IRREGULAR_VERBS -> getIrregularVerbs()
             SheetAction.READ_HOMOPHONES -> getHomophones()

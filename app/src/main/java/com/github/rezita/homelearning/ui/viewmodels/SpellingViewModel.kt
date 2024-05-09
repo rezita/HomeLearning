@@ -46,7 +46,6 @@ class SpellingViewModel(
     }
 
     fun load() {
-        resetUiState()
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> getErikSpellingWords()
             SheetAction.READ_MARK_SPELLING_WORDS -> getMarkSpellingWords()

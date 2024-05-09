@@ -96,8 +96,9 @@ fun SpellingContent(
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        is SpellingUiState.Loading ->
+        is SpellingUiState.Loading -> {
             LoadingProgressBar(modifier = modifier)
+        }
 
         is SpellingUiState.Loaded -> {
             SpellingItems(
