@@ -80,8 +80,10 @@
     <string name="loading_data_text">Loading words&#8230;</string>
     <string name="data_saving_text">Saving&#8230;</string>
     <string name="erik_spelling_save">Save</string>
-    <string name="erik_spelling_correct">corr.</string>
-    <string name="erik_spelling_incorrect">incorr.</string>
+    <string name="spelling_correct">corr.</string>
+    <string name="spelling_incorrect">incorr.</string>
+    <string name="spelling_correct_short">C</string>
+    <string name="spelling_incorrect_short">IC</string>
     <string name="spelling_result">Result: %1$d/%2$d (%3$d\%%) </string>
     <string name="message_after_update_spelling_words">Spelling words results are saved.</string>
 

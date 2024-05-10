@@ -67,5 +67,8 @@ val md_theme_dark_scrim = Color(0xFF000000)
 //for fillInSentence result display
 val sentence_correct = Color(0xFF00930a)
 val sentence_incorrect = Color(0xFF93000a)
+//for spelling radio buttons
+val spelling_correct = Color(0xFF00930a)
+val spelling_incorrect = Color(0xFF93000a)
 
 val seed = Color(0xFF2B42BC)

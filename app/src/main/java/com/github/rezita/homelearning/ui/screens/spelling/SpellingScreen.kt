@@ -19,6 +19,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,11 +29,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
@@ -58,11 +64,14 @@ fun SpellingScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     addNewCallback: () -> Unit = {},
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    val rbContentType = getRadioButtonType(windowSize)
 
     Scaffold(
         modifier = modifier,
@@ -82,6 +91,7 @@ fun SpellingScreen(
             viewModel = viewModel,
             scope = scope,
             snackBarHostState = snackBarHostState,
+            rbContentType = rbContentType,
             modifier = Modifier.padding(it)
         )
     }
@@ -93,6 +103,7 @@ fun SpellingContent(
     viewModel: SpellingViewModel,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
+    rbContentType: RadioButtonContentType,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -105,6 +116,7 @@ fun SpellingContent(
                 words = state.words,
                 onValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
                 onItemReset = { index -> viewModel.resetWordStatus(index) },
+                rbContentType = rbContentType,
                 modifier = modifier
             )
         }
@@ -123,6 +135,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 onValueChange = { _, _ -> run {} },
+                rbContentType = rbContentType,
                 isEnabled = false,
                 modifier = modifier
             )
@@ -137,6 +150,7 @@ fun SpellingContent(
                     SpellingItems(
                         words = state.words,
                         onValueChange = { _, _ -> run {} },
+                        rbContentType = rbContentType,
                         isEnabled = false,
                     )
                 },
@@ -154,9 +168,11 @@ private fun SpellingItem(
     wordStatus: WordStatus,
     onItemSelected: (WordStatus) -> Unit,
     onItemReset: () -> Unit,
+    rbContentType: RadioButtonContentType,
     isEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val alpha = if (isEnabled) 1f else 0.38f
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -169,6 +185,7 @@ private fun SpellingItem(
             Modifier
                 .padding(end = dimensionResource(id = R.dimen.padding_small))
                 .width(28.dp)
+                .alpha(alpha)
         )
         Text(
             text = word,
@@ -181,11 +198,13 @@ private fun SpellingItem(
                             onDoubleTap = { onItemReset() }
                         )
                     }
-                },
+                }
+                .alpha(alpha),
         )
         SpellingRadioGroup(
             selected = wordStatus,
             setSelected = onItemSelected,
+            rbContentType = rbContentType,
             isEnabled = isEnabled,
         )
     }
@@ -201,6 +220,7 @@ private fun SpellingItems(
     words: List<SpellingWord>,
     onValueChange: (Int, WordStatus) -> Unit,
     onItemReset: (Int) -> Unit = {},
+    rbContentType: RadioButtonContentType,
     isEnabled: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
@@ -221,6 +241,7 @@ private fun SpellingItems(
                     wordStatus = item.status,
                     onItemSelected = { status -> onValueChange(index, status) },
                     onItemReset = { onItemReset(index) },
+                    rbContentType = rbContentType,
                     isEnabled = isEnabled,
                 )
                 HorizontalDivider(
@@ -248,17 +269,36 @@ private fun getScores(words: List<SpellingWord>): String {
     )
 }
 
-@Preview(showBackground = true)
+private fun getRadioButtonType(windowSize: WindowWidthSizeClass): RadioButtonContentType {
+    return when (windowSize) {
+        WindowWidthSizeClass.Compact -> RadioButtonContentType.BUTTONS_ONLY
+        WindowWidthSizeClass.Medium -> RadioButtonContentType.BUTTONS_AND_SHORT
+        else -> RadioButtonContentType.BUTTONS_AND_LONG
+    }
+}
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Preview(showBackground = true, widthDp = 720, heightDp = 1480)  //Z.
+@Preview(showBackground = true, widthDp = 1080, heightDp = 2000) //T.
+@Preview(showBackground = true, widthDp = 800, heightDp = 1280)  //E.
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun SpellingItemPreview() {
+    val configuration = LocalConfiguration.current
+    val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
+    val rbContentType = getRadioButtonType(WindowSizeClass.calculateFromSize(size).widthSizeClass)
     HomeLearningTheme {
-        SpellingItem(
-            index = 17,
-            word = "cucumber",
-            wordStatus = WordStatus.CORRECT,
-            onItemSelected = {},
-            onItemReset = {})
+        Scaffold {
+            SpellingItem(
+                index = 17,
+                word = "successfully",
+                wordStatus = WordStatus.CORRECT,
+                onItemSelected = {},
+                rbContentType = rbContentType,
+                onItemReset = {},
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
 
@@ -267,14 +307,18 @@ private fun SpellingItemPreview() {
 @Composable
 private fun SpellingItemDisabledPreview() {
     HomeLearningTheme {
-        SpellingItem(
-            index = 0,
-            word = "cucumber",
-            wordStatus = WordStatus.CORRECT,
-            onItemSelected = {},
-            onItemReset = {},
-            isEnabled = false
-        )
+        Scaffold {
+            SpellingItem(
+                index = 0,
+                word = "successfully",
+                wordStatus = WordStatus.CORRECT,
+                onItemSelected = {},
+                onItemReset = {},
+                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
+                isEnabled = false,
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
 
@@ -283,7 +327,7 @@ private fun SpellingItemDisabledPreview() {
 @Composable
 private fun SpellingItemsPreview() {
     val spelling1 = SpellingWord(
-        word = "appear",
+        word = "successfully",
         category = "school",
         comment = "Y3Y4",
         status = WordStatus.CORRECT
@@ -313,6 +357,7 @@ private fun SpellingItemsPreview() {
                 words = words,
                 onValueChange = { _, _ -> run {} },
                 onItemReset = {},
+                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 modifier = Modifier.padding(it)
             )
         }
