@@ -6,6 +6,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,7 +29,7 @@ fun ReadingTopAppBar(
         navigateUp = navigateUp,
 
         actions = {
-            if (state is ReadingUiState.Downloaded) {
+            if (state is ReadingUiState.Downloaded && LocalConfiguration.current.orientation != Configuration.ORIENTATION_PORTRAIT) {
                 // Change how to display the words (simple black / colorful)
                 if (isColorDisplay) {
                     IconButton(onClick = { callback(false) }) {
