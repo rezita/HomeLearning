@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="material_input_text_to_prefix_suffix_padding">0dp</dimen>
-    <dimen name="padding_exter_small">4dp</dimen>
+    <dimen name="padding_extra_small">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_big">24dp</dimen>

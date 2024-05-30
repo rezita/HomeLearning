@@ -4,24 +4,27 @@ import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonColors
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.spelling_correct
 import com.github.rezita.homelearning.ui.theme.spelling_incorrect
 
+const val DISABLED_ALPHA = 0.38f
+
 enum class RadioButtonContentType {
-    BUTTONS_ONLY, BUTTONS_AND_SHORT, BUTTONS_AND_LONG
+    BUTTONS_SECOND_LINE, BUTTONS_ONLY, BUTTONS_AND_SHORT, BUTTONS_AND_LONG
 }
 
 data class RadioButtonStatus(
@@ -40,8 +43,8 @@ val SpellingRadioItems = listOf(
         colors = RadioButtonColors(
             selectedColor = spelling_correct,
             unselectedColor = spelling_correct,
-            disabledSelectedColor = spelling_correct.copy(alpha = 0.38f),
-            disabledUnselectedColor = spelling_correct.copy(alpha = 0.38f)
+            disabledSelectedColor = spelling_correct.copy(alpha = DISABLED_ALPHA),
+            disabledUnselectedColor = spelling_correct.copy(alpha = DISABLED_ALPHA)
         )
     ),
     RadioButtonStatus(
@@ -75,7 +78,7 @@ fun SpellingRadioGroup(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 when (rbContentType) {
-                    RadioButtonContentType.BUTTONS_ONLY ->
+                    RadioButtonContentType.BUTTONS_ONLY, RadioButtonContentType.BUTTONS_SECOND_LINE ->
                         SpellingRadioButtonOnly(
                             rbStatus = item,
                             isSelected = item.status == selected,
@@ -132,6 +135,7 @@ fun SpellingRadioButtonWithShort(
     isEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val alpha = if (isEnabled) 1f else DISABLED_ALPHA
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -142,10 +146,11 @@ fun SpellingRadioButtonWithShort(
                 setSelected(rbStatus.status)
             },
             enabled = isEnabled,
-            //colors = rbStatus.colors
+            colors = rbStatus.colors
         )
         Text(
             text = stringResource(id = rbStatus.shortName),
+            modifier = Modifier.alpha(alpha)
         )
     }
 }
@@ -158,6 +163,7 @@ fun SpellingRadioButtonWithLong(
     isEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val alpha = if (isEnabled) 1f else DISABLED_ALPHA
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -168,10 +174,11 @@ fun SpellingRadioButtonWithLong(
                 setSelected(rbStatus.status)
             },
             enabled = isEnabled,
-            //colors = rbStatus.colors
+            colors = rbStatus.colors
         )
         Text(
             text = stringResource(id = rbStatus.longName),
+            modifier = Modifier.alpha(alpha)
         )
     }
 }
@@ -180,14 +187,15 @@ fun SpellingRadioButtonWithLong(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SpellingRadioNoSelectionButtonsOnlyPreview() {
+private fun SpellingRadioButtonsUnchecked(
+    @PreviewParameter(RadioButtonTypeProvider::class) rbType: RadioButtonContentType
+) {
     HomeLearningTheme {
-        Scaffold {
+        Surface {
             SpellingRadioGroup(
                 selected = WordStatus.UNCHECKED,
                 setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_ONLY,
-                modifier = Modifier.padding(it)
+                rbContentType = rbType,
             )
         }
     }
@@ -196,46 +204,15 @@ private fun SpellingRadioNoSelectionButtonsOnlyPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SpellingRadioNoSelectionButtonsAndShortPreview() {
+private fun SpellingRadioButtonsSelected(
+    @PreviewParameter(RadioButtonTypeProvider::class) rbType: RadioButtonContentType
+) {
     HomeLearningTheme {
-        Scaffold {
-            SpellingRadioGroup(
-                selected = WordStatus.UNCHECKED,
-                setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_AND_SHORT,
-                modifier = Modifier.padding(it)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun SpellingRadioNoSelectionButtonsAndLongPreview() {
-    HomeLearningTheme {
-        Scaffold {
-            SpellingRadioGroup(
-                selected = WordStatus.UNCHECKED,
-                setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
-                modifier = Modifier.padding(it)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun SpellingRadioCorrectButtonsOnlyPreview() {
-    HomeLearningTheme {
-        Scaffold {
+        Surface {
             SpellingRadioGroup(
                 selected = WordStatus.CORRECT,
                 setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_ONLY,
-                modifier = Modifier.padding(it)
+                rbContentType = rbType,
             )
         }
     }
@@ -244,48 +221,16 @@ private fun SpellingRadioCorrectButtonsOnlyPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SpellingRadioCorrectLongPreview() {
+private fun SpellingRadioButtonsDisabled(
+    @PreviewParameter(RadioButtonTypeProvider::class) rbType: RadioButtonContentType
+) {
     HomeLearningTheme {
-        Scaffold {
+        Surface {
             SpellingRadioGroup(
-                selected = WordStatus.CORRECT,
+                selected = WordStatus.INCORRECT,
                 setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
-                modifier = Modifier.padding(it)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun SpellingRadioCorrectButtonsDisabledPreview() {
-    HomeLearningTheme {
-        Scaffold {
-            SpellingRadioGroup(
-                selected = WordStatus.CORRECT,
-                setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_ONLY,
-                isEnabled = false,
-                modifier = Modifier.padding(it)
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun SpellingRadioCorrectLongDisabledPreview() {
-    HomeLearningTheme {
-        Scaffold {
-            SpellingRadioGroup(
-                selected = WordStatus.CORRECT,
-                setSelected = {},
-                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
-                isEnabled = false,
-                modifier = Modifier.padding(it)
+                rbContentType = rbType,
+                isEnabled = false
             )
         }
     }

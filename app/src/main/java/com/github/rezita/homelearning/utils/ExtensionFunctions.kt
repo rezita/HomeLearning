@@ -1,5 +1,9 @@
 package com.github.rezita.homelearning.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.TextUnit
+
 fun List<String>.joinWithSeparator(separator: String): String {
     return joinToString(separator = separator)
 }
@@ -18,3 +22,6 @@ fun String.toListBySeparator(separator: String): List<String> {
     }
     return this.split(separator).map { it.trim() }
 }
+
+@Composable
+fun TextUnit.toDp() = with(LocalDensity.current) { toDp() }

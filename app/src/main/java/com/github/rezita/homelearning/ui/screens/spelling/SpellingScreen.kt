@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.spelling
 
-import android.content.res.Configuration
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,10 +17,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,13 +28,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
@@ -49,8 +49,11 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
+import com.github.rezita.homelearning.ui.size.HomeLearningWidthClass
+import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
+import com.github.rezita.homelearning.utils.toDp
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -64,15 +67,14 @@ fun SpellingScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     addNewCallback: () -> Unit = {},
-    windowSize: WindowWidthSizeClass,
+    windowSize: HomeLearningWindowSizeClass,
     modifier: Modifier = Modifier
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    val rbContentType = getRadioButtonType(windowSize)
-
+    val rbContentType = getRadioButtonType(windowSize.widthClassType1)
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackBarHostState) },
@@ -160,61 +162,6 @@ fun SpellingContent(
     }
 }
 
-
-@Composable
-private fun SpellingItem(
-    index: Int,
-    word: String,
-    wordStatus: WordStatus,
-    onItemSelected: (WordStatus) -> Unit,
-    onItemReset: () -> Unit,
-    rbContentType: RadioButtonContentType,
-    isEnabled: Boolean = true,
-    modifier: Modifier = Modifier
-) {
-    val alpha = if (isEnabled) 1f else 0.38f
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        Text(
-            text = getIndexPrefix(index),
-            Modifier
-                .padding(end = dimensionResource(id = R.dimen.padding_small))
-                .width(28.dp)
-                .alpha(alpha)
-        )
-        Text(
-            text = word,
-            Modifier
-                .padding(end = dimensionResource(id = R.dimen.padding_small))
-                .weight(1f)
-                .pointerInput(Unit) {
-                    if (isEnabled) {
-                        detectTapGestures(
-                            onDoubleTap = { onItemReset() }
-                        )
-                    }
-                }
-                .alpha(alpha),
-        )
-        SpellingRadioGroup(
-            selected = wordStatus,
-            setSelected = onItemSelected,
-            rbContentType = rbContentType,
-            isEnabled = isEnabled,
-        )
-    }
-}
-
-private fun getIndexPrefix(index: Int): String {
-    return "${index + 1}".padStart(1, ' ') + "."
-}
-
-
 @Composable
 private fun SpellingItems(
     words: List<SpellingWord>,
@@ -256,6 +203,118 @@ private fun SpellingItems(
     }
 }
 
+
+@Composable
+private fun SpellingItem(
+    index: Int,
+    word: String,
+    wordStatus: WordStatus,
+    onItemSelected: (WordStatus) -> Unit,
+    onItemReset: () -> Unit,
+    rbContentType: RadioButtonContentType,
+    isEnabled: Boolean = true,
+    modifier: Modifier = Modifier
+) {
+    if (rbContentType == RadioButtonContentType.BUTTONS_SECOND_LINE) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                SpellingTextWithNumber(
+                    index = index,
+                    word = word,
+                    onItemReset = onItemReset,
+                    isEnabled = isEnabled,
+                    textModifier = Modifier.weight(1f)
+                )
+            }
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = dimensionResource(id = R.dimen.padding_extra_big)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                SpellingRadioGroup(
+                    selected = wordStatus,
+                    setSelected = onItemSelected,
+                    rbContentType = rbContentType,
+                    isEnabled = isEnabled,
+                )
+            }
+        }
+    } else {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            SpellingTextWithNumber(
+                index = index,
+                word = word,
+                onItemReset = onItemReset,
+                isEnabled = isEnabled,
+                textModifier = Modifier.weight(1f)
+            )
+            SpellingRadioGroup(
+                selected = wordStatus,
+                setSelected = onItemSelected,
+                rbContentType = rbContentType,
+                isEnabled = isEnabled,
+            )
+        }
+    }
+}
+
+@Composable
+fun SpellingTextWithNumber(
+    index: Int,
+    word: String,
+    onItemReset: () -> Unit,
+    isEnabled: Boolean = true,
+    textModifier: Modifier = Modifier
+) {
+    val alpha = if (isEnabled) 1f else 0.38f
+    val fontScale = LocalDensity.current.fontScale
+    val ordinalNumberWidth = (28.sp * fontScale)
+    Text(
+        text = getIndexPrefix(index),
+        modifier = Modifier
+            .width(ordinalNumberWidth.toDp())
+            .alpha(alpha),
+    )
+    Text(
+        text = word,
+        modifier = textModifier
+            .padding(end = dimensionResource(id = R.dimen.padding_small))
+            .pointerInput(Unit) {
+                if (isEnabled) {
+                    detectTapGestures(
+                        onDoubleTap = { onItemReset() }
+                    )
+                }
+            }
+            .alpha(alpha),
+    )
+}
+
+private fun getIndexPrefix(index: Int): String {
+    return "${index + 1}".padStart(1, ' ') + "."
+}
+
+
 @Composable
 private fun getScores(words: List<SpellingWord>): String {
     val nrOfQuestions = words.filter { it.status != WordStatus.UNCHECKED }.size
@@ -269,45 +328,73 @@ private fun getScores(words: List<SpellingWord>): String {
     )
 }
 
-private fun getRadioButtonType(windowSize: WindowWidthSizeClass): RadioButtonContentType {
+@Composable
+private fun getRadioButtonType(windowSize: HomeLearningWidthClass): RadioButtonContentType {
+    val fontScale = LocalDensity.current.fontScale
     return when (windowSize) {
-        WindowWidthSizeClass.Compact -> RadioButtonContentType.BUTTONS_ONLY
-        WindowWidthSizeClass.Medium -> RadioButtonContentType.BUTTONS_AND_SHORT
-        else -> RadioButtonContentType.BUTTONS_AND_LONG
+        HomeLearningWidthClass.XSMALL -> RadioButtonContentType.BUTTONS_SECOND_LINE
+        HomeLearningWidthClass.SMALL ->
+            if (fontScale <= 1.3f) RadioButtonContentType.BUTTONS_ONLY
+            else RadioButtonContentType.BUTTONS_SECOND_LINE
+
+        HomeLearningWidthClass.MEDIUM ->
+            if (fontScale <= 1.3f) RadioButtonContentType.BUTTONS_AND_SHORT
+            else if (fontScale <= 1.8f) RadioButtonContentType.BUTTONS_ONLY
+            else RadioButtonContentType.BUTTONS_SECOND_LINE
+
+        else ->
+            if (fontScale < 1.3f) RadioButtonContentType.BUTTONS_AND_LONG
+            else if (fontScale <= 1.5f) RadioButtonContentType.BUTTONS_AND_SHORT
+            else RadioButtonContentType.BUTTONS_ONLY
     }
 }
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-@Preview(showBackground = true, widthDp = 720, heightDp = 1480)  //Z.
-@Preview(showBackground = true, widthDp = 1080, heightDp = 2000) //T.
-@Preview(showBackground = true, widthDp = 800, heightDp = 1280)  //E.
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+
+@PreviewFontScale
 @Composable
-private fun SpellingItemPreview() {
-    val configuration = LocalConfiguration.current
-    val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-    val rbContentType = getRadioButtonType(WindowSizeClass.calculateFromSize(size).widthSizeClass)
+private fun SpellingItemSizePreview(
+    @PreviewParameter(SpellingScreenSizeParameterProvider::class) screenSize: Pair<Int, Int>
+) {
+    val size = DpSize(
+        screenSize.first.dp,
+        screenSize.second.dp
+    )
+
+    val rbContentType =
+        getRadioButtonType(
+            HomeLearningWindowSizeClass.calculateFromSize(
+                size
+            ).widthClassType1
+        )
     HomeLearningTheme {
-        Scaffold {
-            SpellingItem(
-                index = 17,
-                word = "successfully",
-                wordStatus = WordStatus.CORRECT,
-                onItemSelected = {},
-                rbContentType = rbContentType,
-                onItemReset = {},
-                modifier = Modifier.padding(it)
-            )
+        Scaffold(
+            modifier = Modifier
+                .width(screenSize.first.dp)
+                .height(screenSize.second.dp)
+        ) {
+            Column {
+                SpellingItem(
+                    index = 17,
+                    word = "anticlockwise",
+                    wordStatus = WordStatus.CORRECT,
+                    onItemSelected = {},
+                    rbContentType = rbContentType,
+                    onItemReset = {},
+                    modifier = Modifier.padding(it)
+                )
+            }
         }
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+
+@PreviewLightDark
 @Composable
-private fun SpellingItemDisabledPreview() {
+private fun SpellingItemEnablePreview(
+    @PreviewParameter(SpellingEnableParameterProvider::class) isEnabled: Boolean
+) {
     HomeLearningTheme {
-        Scaffold {
+        Surface {
             SpellingItem(
                 index = 0,
                 word = "successfully",
@@ -315,17 +402,17 @@ private fun SpellingItemDisabledPreview() {
                 onItemSelected = {},
                 onItemReset = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
-                isEnabled = false,
-                modifier = Modifier.padding(it)
+                isEnabled = isEnabled,
             )
         }
     }
 }
 
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@PreviewLightDark
 @Composable
-private fun SpellingItemsPreview() {
+private fun SpellingItemsPreview(
+    @PreviewParameter(SpellingEnableParameterProvider::class) isEnabled: Boolean
+) {
     val spelling1 = SpellingWord(
         word = "successfully",
         category = "school",
@@ -339,7 +426,7 @@ private fun SpellingItemsPreview() {
         status = WordStatus.CORRECT
     )
     val spelling3 = SpellingWord(
-        word = "boutique",
+        word = "anticlockwise",
         category = "school",
         comment = "Y3Y4",
         status = WordStatus.INCORRECT
@@ -350,13 +437,31 @@ private fun SpellingItemsPreview() {
         comment = "Y3Y4",
         status = WordStatus.UNCHECKED
     )
-    val words = listOf(spelling1, spelling2, spelling3, spelling4)
+    val spelling5 = SpellingWord(
+        word = "this",
+        category = "school",
+        comment = "Y3Y4",
+        status = WordStatus.CORRECT
+    )
+    val words = listOf(
+        spelling1,
+        spelling2,
+        spelling3,
+        spelling4,
+        spelling5,
+        spelling4,
+        spelling4,
+        spelling4,
+        spelling4, spelling4,
+        spelling4
+    )
     HomeLearningTheme {
         Scaffold {
             SpellingItems(
                 words = words,
                 onValueChange = { _, _ -> run {} },
                 onItemReset = {},
+                isEnabled = isEnabled,
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 modifier = Modifier.padding(it)
             )

@@ -53,11 +53,11 @@ fun ReadingWord.getDecorated(baseColor: Color): AnnotatedString {
     return annotated
 }
 
-fun ReadingWord.getOutlineText(): AnnotatedString = buildAnnotatedString {
+fun ReadingWord.getOutlineText(color: Color): AnnotatedString = buildAnnotatedString {
     append(word)
     addStyle(
         style = SpanStyle(
-            color = Color.Black,
+            color = color,
             drawStyle = Stroke(
                 width = 3f,
                 join = StrokeJoin.Round

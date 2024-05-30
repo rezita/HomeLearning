@@ -65,7 +65,7 @@ fun HomeLearningNavigation(
                         }"
                     )
                 },
-                windowSize = homeLearningAppState.windowSizeClass.widthSizeClass,
+                windowSize = homeLearningAppState.windowSizeClass,
                 modifier = modifier
             )
         }
