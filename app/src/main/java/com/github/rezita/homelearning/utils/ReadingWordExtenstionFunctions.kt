@@ -7,7 +7,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
+import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.model.consonants
+import com.github.rezita.homelearning.model.specialChars
 
 
 fun ReadingWord.getUndecorated(baseColor: Color): AnnotatedString {
@@ -66,4 +69,19 @@ fun ReadingWord.getOutlineText(color: Color): AnnotatedString = buildAnnotatedSt
         start = 0,
         end = word.length,
     )
+}
+
+fun ReadingRule.patternToRegex(): Regex {
+    val specChar = specialChars.find { pattern.contains(it) }.toString()
+    return pattern.replace(specChar, consonants).toRegex()
+}
+
+fun getPatternIndex(word: String, rule: ReadingRule): Int {
+    return word.indexOf(rule.patternToRegex())
+}
+
+fun CharSequence.indexOf(pattern: Regex, startIndex: Int = 0): Int {
+    val matchResult = pattern.find(this, startIndex)
+    return matchResult?.range?.first ?: -1
+
 }

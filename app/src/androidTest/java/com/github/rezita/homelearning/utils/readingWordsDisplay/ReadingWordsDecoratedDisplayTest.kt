@@ -30,7 +30,7 @@ class ReadingWordsDecoratedDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "day", subWord = "ay", ruleName = "red")
+                ReadingRule(word = "day", pattern = "ay", ruleName = "red")
             )
         )
         val result = word.getDecorated(Color.Black)
@@ -49,7 +49,7 @@ class ReadingWordsDecoratedDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "have", subWord = "e", ruleName = "silente")
+                ReadingRule(word = "have", pattern = "e", ruleName = "silente")
             )
         )
         val result = word.getDecorated(Color.Black)
@@ -68,7 +68,7 @@ class ReadingWordsDecoratedDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "that", subWord = "th", ruleName = "ul")
+                ReadingRule(word = "that", pattern = "th", ruleName = "ul")
             )
         )
         val result = word.getDecorated(Color.Black)
@@ -87,8 +87,8 @@ class ReadingWordsDecoratedDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
-                ReadingRule(word = "she", subWord = "e", ruleName = "green")
+                ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
+                ReadingRule(word = "she", pattern = "e", ruleName = "green")
             )
         )
         val result = word.getDecorated(Color.Black)
@@ -104,5 +104,91 @@ class ReadingWordsDecoratedDisplayTest {
         Assert.assertEquals(span2.start, 2)
         Assert.assertEquals(span2.end, 3)
         Assert.assertEquals(span2.item.color, Color(android.graphics.Color.GREEN))
+    }
+
+    @Test
+    fun readingWord_more_rules_color_display_with_split_digraph() {
+        val word = ReadingWord(
+            word = "anticlockwise",
+            category = "CEW1",
+            comment = "tricky words",
+            rules = arrayListOf(
+                ReadingRule(word = "anticlockwise", pattern = "ck", ruleName = "ul"),
+                ReadingRule(word = "anticlockwise", pattern = "i-e", ruleName = "yellow")
+            )
+        )
+        val result = word.getDecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[1]
+        val span2 = spanStyles[2]
+        val span3 = spanStyles[3]
+        Assert.assertEquals(spanStyles.size, 4)
+
+        Assert.assertEquals(span1.start, 7)
+        Assert.assertEquals(span1.end, 9)
+        Assert.assertEquals(span1.item.textDecoration, TextDecoration.Underline)
+
+        Assert.assertEquals(span2.start, 10)
+        Assert.assertEquals(span2.end, 11)
+        Assert.assertEquals(span2.item.color, Color(android.graphics.Color.YELLOW))
+
+        Assert.assertEquals(span3.start, 12)
+        Assert.assertEquals(span3.end, 13)
+        Assert.assertEquals(span3.item.color, Color(android.graphics.Color.YELLOW))
+    }
+
+    @Test
+    fun readingWord_one_rule_color_display_split_digraph() {
+        val word = ReadingWord(
+            word = "make",
+            category = "CEW1",
+            comment = "tricky words",
+            rules = arrayListOf(
+                ReadingRule(word = "make", pattern = "a-e", ruleName = "red")
+            )
+        )
+        val result = word.getDecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        val span1 = spanStyles[1]
+        val span2 = spanStyles[2]
+        Assert.assertEquals(spanStyles.size, 3)
+
+        Assert.assertEquals(span1.start, 1)
+        Assert.assertEquals(span1.end, 2)
+        Assert.assertEquals(span2.item.color, Color(android.graphics.Color.RED))
+
+        Assert.assertEquals(span2.start, 3)
+        Assert.assertEquals(span2.end, 4)
+        Assert.assertEquals(span2.item.color, Color(android.graphics.Color.RED))
+    }
+
+    @Test
+    fun readingWord_one_rule_color_display_split_digraph_wrong_setting() {
+        val word = ReadingWord(
+            word = "make",
+            category = "CEW1",
+            comment = "tricky words",
+            rules = arrayListOf(
+                ReadingRule(word = "make", pattern = "a#e", ruleName = "red")
+            )
+        )
+        val result = word.getDecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        Assert.assertEquals(spanStyles.size, 1)
+    }
+
+    @Test
+    fun readingWord_one_rule_color_display_split_digraph_no_match() {
+        val word = ReadingWord(
+            word = "make",
+            category = "CEW1",
+            comment = "tricky words",
+            rules = arrayListOf(
+                ReadingRule(word = "make", pattern = "e-a", ruleName = "red")
+            )
+        )
+        val result = word.getDecorated(Color.Black)
+        val spanStyles = result.spanStyles
+        Assert.assertEquals(spanStyles.size, 1)
     }
 }

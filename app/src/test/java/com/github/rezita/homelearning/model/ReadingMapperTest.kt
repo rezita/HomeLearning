@@ -24,8 +24,8 @@ class ReadingMapperTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
-                ReadingRule(word = "she", subWord = "e", ruleName = "green")
+                ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
+                ReadingRule(word = "she", pattern = "e", ruleName = "green")
             )
         )
         Assert.assertTrue(expectedWord.equals(apiWord.asReadingWord()))

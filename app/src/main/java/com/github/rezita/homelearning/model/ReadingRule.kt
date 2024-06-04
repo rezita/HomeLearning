@@ -4,8 +4,10 @@ import android.graphics.Color
 
 private const val SILENT_END_E: String = "silente"
 private const val UNDERLINE = "ul"
+val specialChars = listOf('_', '-', '@', '?')
+const val consonants = "[b-df-hj-np-tv-z]"
 
-data class ReadingRule(val word: String, val subWord: String, private val ruleName: String) {
+data class ReadingRule(val word: String, val pattern: String, private val ruleName: String) {
 
     fun getRuleColor(): Int {
         return when (ruleName) {
@@ -40,5 +42,9 @@ data class ReadingRule(val word: String, val subWord: String, private val ruleNa
 
     fun isUnderline(): Boolean {
         return ruleName == UNDERLINE
+    }
+
+    fun isSplitDigraph(): Boolean {
+        return specialChars.any { pattern.contains(it) }
     }
 }

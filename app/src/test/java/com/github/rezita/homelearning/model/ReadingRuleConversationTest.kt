@@ -19,7 +19,7 @@ class ReadingRuleConversationTest {
         val word = "you"
         val rule = "blue ou"
         val expectedReadingRule =
-            arrayListOf(ReadingRule(word = "you", subWord = "ou", ruleName = "blue"))
+            arrayListOf(ReadingRule(word = "you", pattern = "ou", ruleName = "blue"))
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)
     }
@@ -29,8 +29,8 @@ class ReadingRuleConversationTest {
         val word = "she"
         val rule = "ul sh; green e"
         val expectedReadingRule = arrayListOf(
-            ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
-            ReadingRule(word = "she", subWord = "e", ruleName = "green")
+            ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
+            ReadingRule(word = "she", pattern = "e", ruleName = "green")
         )
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)
@@ -41,7 +41,7 @@ class ReadingRuleConversationTest {
         val word = "look book"
         val rule = "look gold oo"
         val expectedReadingRule = arrayListOf(
-            ReadingRule(word = "look", subWord = "oo", ruleName = "gold")
+            ReadingRule(word = "look", pattern = "oo", ruleName = "gold")
         )
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)
@@ -52,8 +52,8 @@ class ReadingRuleConversationTest {
         val word = "she"
         val rule = "ul sh;green e"
         val expectedReadingRule = arrayListOf(
-            ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
-            ReadingRule(word = "she", subWord = "e", ruleName = "green")
+            ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
+            ReadingRule(word = "she", pattern = "e", ruleName = "green")
         )
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)
@@ -65,8 +65,8 @@ class ReadingRuleConversationTest {
         val word = ""
         val rule = "ul sh;green e"
         val expectedReadingRule = arrayListOf<ReadingRule>(
-            ReadingRule(word = "", subWord = "sh", ruleName = "ul"),
-            ReadingRule(word = "", subWord = "e", ruleName = "green")
+            ReadingRule(word = "", pattern = "sh", ruleName = "ul"),
+            ReadingRule(word = "", pattern = "e", ruleName = "green")
         )
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)
@@ -111,7 +111,7 @@ class ReadingRuleConversationTest {
         val word = "she"
         val rule = "ul sh;"
         val expectedReadingRule = arrayListOf(
-            ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
+            ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
         )
         val readingRule = getRules(word, rule)
         assertEquals(expectedReadingRule, readingRule)

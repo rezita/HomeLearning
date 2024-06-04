@@ -33,7 +33,7 @@ class ReadingWordsSimpleDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "now", subWord = "ow", ruleName = "brown")
+                ReadingRule(word = "now", pattern = "ow", ruleName = "brown")
             )
         )
         val result = word.getUndecorated(Color.Black)
@@ -53,7 +53,7 @@ class ReadingWordsSimpleDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "have", subWord = "e", ruleName = "silente")
+                ReadingRule(word = "have", pattern = "e", ruleName = "silente")
             )
         )
         val result = word.getUndecorated(Color.Black)
@@ -72,7 +72,7 @@ class ReadingWordsSimpleDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "that", subWord = "th", ruleName = "ul")
+                ReadingRule(word = "that", pattern = "th", ruleName = "ul")
             )
         )
         val result = word.getUndecorated(Color.Black)
@@ -92,8 +92,8 @@ class ReadingWordsSimpleDisplayTest {
             category = "CEW1",
             comment = "tricky words",
             rules = arrayListOf(
-                ReadingRule(word = "she", subWord = "sh", ruleName = "ul"),
-                ReadingRule(word = "she", subWord = "e", ruleName = "green")
+                ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
+                ReadingRule(word = "she", pattern = "e", ruleName = "green")
             )
         )
         val result = word.getUndecorated(Color.Black)

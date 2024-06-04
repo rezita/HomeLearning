@@ -357,8 +357,8 @@ fun ReadingWordItemDisplayLongWord(
 fun ReadingWordItemDisplay(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
-    val rule1 = ReadingRule(word = "she", subWord = "sh", ruleName = "ul")
-    val rule2 = ReadingRule(word = "she", subWord = "e", ruleName = "green")
+    val rule1 = ReadingRule(word = "she", pattern = "sh", ruleName = "ul")
+    val rule2 = ReadingRule(word = "she", pattern = "e", ruleName = "green")
     val readingWord = ReadingWord(
         word = "she",
         comment = "tricky words",
@@ -389,13 +389,13 @@ fun ReadingWordItemDisplay(
 fun ReadingWordItemDisplayManyRules(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
-    val rule1 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "a", ruleName = "ul")
-    val rule2 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "g", ruleName = "white")
-    val rule3 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "I", ruleName = "yellow")
-    val rule4 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "kv", ruleName = "red")
-    val rule5 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "wi", ruleName = "blue")
-    val rule6 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "tl", ruleName = "pink")
-    val rule7 = ReadingRule(word = "agIfkvwitlhnmrube", subWord = "hn", ruleName = "green")
+    val rule1 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "a", ruleName = "ul")
+    val rule2 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "g", ruleName = "white")
+    val rule3 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "I", ruleName = "yellow")
+    val rule4 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "kv", ruleName = "red")
+    val rule5 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "wi", ruleName = "blue")
+    val rule6 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "tl", ruleName = "pink")
+    val rule7 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "hn", ruleName = "green")
     val readingWord = ReadingWord(
         word = "agIfkvwitlhnmrube",
         comment = "tricky words",
@@ -421,8 +421,8 @@ fun ReadingWordItemDisplayManyRules(
 fun ReadingWordItemsReview(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
-    val rule1 = ReadingRule(word = "she", subWord = "sh", ruleName = "ul")
-    val rule2 = ReadingRule(word = "she", subWord = "e", ruleName = "green")
+    val rule1 = ReadingRule(word = "she", pattern = "sh", ruleName = "ul")
+    val rule2 = ReadingRule(word = "she", pattern = "e", ruleName = "green")
     val readingWord1 = ReadingWord(
         word = "she",
         comment = "tricky words",
@@ -437,7 +437,7 @@ fun ReadingWordItemsReview(
         category = "phase3"
     )
 
-    val rule3 = ReadingRule(word = "you", subWord = "ou", ruleName = "blue")
+    val rule3 = ReadingRule(word = "you", pattern = "ou", ruleName = "blue")
     val readingWord3 = ReadingWord(
         word = "you",
         comment = "tricky",
@@ -445,7 +445,7 @@ fun ReadingWordItemsReview(
         category = "phase2"
     )
 
-    val rule4 = ReadingRule(word = "I", subWord = "I", ruleName = "yellow")
+    val rule4 = ReadingRule(word = "I", pattern = "I", ruleName = "yellow")
     val readingWord4 = ReadingWord(
         word = "I",
         comment = "tricky",
