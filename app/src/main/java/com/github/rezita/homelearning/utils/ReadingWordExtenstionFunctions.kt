@@ -33,22 +33,38 @@ fun ReadingWord.getDecorated(baseColor: Color): AnnotatedString {
                         end = word.length
                     )
                 }
-            } else {
-                val startIndex = word.indexOf(rule.subWord, 0, false)
+            } else if (!rule.isSplitDigraph()) {
+                val startIndex = word.indexOf(rule.pattern, 0, false)
                 if (startIndex != -1) {
                     if (rule.isUnderline()) {
                         addStyle(
                             style = SpanStyle(textDecoration = TextDecoration.Underline),
                             start = startIndex,
-                            end = startIndex + rule.subWord.length
+                            end = startIndex + rule.pattern.length
                         )
                     } else {
                         addStyle(
                             style = SpanStyle(color = Color(rule.getRuleColor())),
                             start = startIndex,
-                            end = startIndex + rule.subWord.length
+                            end = startIndex + rule.pattern.length
                         )
                     }
+                }
+            } else {
+                //split digraph eg. i-e at the end of anticlockwise
+                val startIndex = getPatternIndex(word, rule)
+                if (startIndex != -1) {
+                    val color = Color(rule.getRuleColor())
+                    addStyle(
+                        style = SpanStyle(color = color),
+                        start = startIndex,
+                        end = startIndex + 1
+                    )
+                    addStyle(
+                        style = SpanStyle(color = color),
+                        start = startIndex + 2,
+                        end = startIndex + 3
+                    )
                 }
             }
         }
