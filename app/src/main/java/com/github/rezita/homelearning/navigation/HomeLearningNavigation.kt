@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.github.rezita.homelearning.R
@@ -20,32 +22,50 @@ import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentence
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingScreen
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsScreen
 
-data class Tab(
+data class TabValue(
     val name: String,
-    val screen: @Composable () -> Unit
+    val screen: @Composable () -> Unit,
+    val onSelected: () -> Unit
 )
+
+val start_destination = Erik.route
+
+/**Navigates back to the start destination with emptying the backstack
+ * No navigationBack / navigationUp */
+fun NavHostController.navigateStartDestinationWithoutBack() =
+    this.navigate(start_destination) {
+        popUpTo(
+            this@navigateStartDestinationWithoutBack.graph.findStartDestination().id
+        ) {
+            inclusive = false
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+
 
 @Composable
 fun HomeLearningNavigation(
     homeLearningAppState: HomeLearningAppState,
-    startDestination: String = Home.route,
+    startDestination: String = start_destination,
     modifier: Modifier = Modifier
 ) {
     val navController = homeLearningAppState.navController
 
-    val tabs = listOf(
-        Tab(
-            name = "Erik",
-            screen = {
-                ErikTab(
-                    onClickSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
-                    onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
-                    onClickHomophones = { navController.navigate(route = Homophones.route) },
-                    onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
-                )
-            }
-        ),
-        Tab(
+    val erikTabValues = TabValue(
+        name = "Erik",
+        screen = {
+            ErikTab(
+                onClickSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
+                onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
+                onClickHomophones = { navController.navigate(route = Homophones.route) },
+                onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
+            )
+        },
+        onSelected = { navController.navigateStartDestinationWithoutBack() }
+    )
+    val markTabValues =
+        TabValue(
             name = "Mark",
             screen = {
                 MarkTab(
@@ -54,22 +74,14 @@ fun HomeLearningNavigation(
                     onClickSpelling = { navController.navigate("${Spelling.route}/${SheetAction.READ_MARK_SPELLING_WORDS}") },
                     onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") },
                 )
-            }
+            },
+            onSelected = { navController.navigate(route = Mark.route) }
         )
-    )
+
+    val tabs = listOf(erikTabValues, markTabValues)
+
 
     NavHost(navController = navController, startDestination = startDestination) {
-
-        composable(route = Home.route) {
-            HomeScreen(
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() },
-                allTabs = tabs,
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_big))
-            )
-        }
 
         composable(
             route = Spelling.routeWithArgs,
@@ -147,6 +159,30 @@ fun HomeLearningNavigation(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
+            )
+        }
+
+        composable(route = Erik.route) {
+            HomeScreen(
+                canNavigateBack = false,
+                navigateUp = {},
+                allTabs = tabs,
+                selectedTab = tabs.indexOf(erikTabValues),
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.padding_big))
+            )
+        }
+
+        composable(route = Mark.route) {
+            HomeScreen(
+                canNavigateBack = false,
+                navigateUp = {},
+                allTabs = tabs,
+                selectedTab = tabs.indexOf(markTabValues),
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.padding_big))
             )
         }
     }

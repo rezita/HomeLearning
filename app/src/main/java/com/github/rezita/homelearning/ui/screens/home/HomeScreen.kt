@@ -14,17 +14,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.navigation.Tab
+import com.github.rezita.homelearning.navigation.TabValue
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
@@ -37,11 +33,10 @@ data class TabButton(
 fun HomeScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    allTabs: List<Tab>,
+    allTabs: List<TabValue>,
+    selectedTab: Int,
     modifier: Modifier = Modifier
 ) {
-    var currentTabIndex by remember { mutableStateOf(0) }
-
     Scaffold(
         topBar = {
             Column {
@@ -51,13 +46,13 @@ fun HomeScreen(
                     navigateUp = navigateUp
                 )
                 TabRow(
-                    selectedTabIndex = currentTabIndex,
+                    selectedTabIndex = selectedTab,
                 ) {
                     allTabs.forEachIndexed { index, it ->
                         Tab(
                             text = { Text(text = it.name) },
-                            selected = currentTabIndex == index,
-                            onClick = { currentTabIndex = index },
+                            selected = selectedTab == index,
+                            onClick = { it.onSelected() },
                         )
                     }
                 }
@@ -69,7 +64,7 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxWidth()
         ) {
-            allTabs[currentTabIndex].screen()
+            allTabs[selectedTab].screen()
         }
     }
 }
@@ -178,7 +173,11 @@ fun MainTabsPreview() {
         HomeScreen(
             canNavigateBack = false,
             navigateUp = {},
-            allTabs = listOf(Tab("Erik") { ErikTab() }, Tab("Mark") { MarkTab() }),
+            allTabs = listOf(
+                TabValue(name = "Erik", screen = { ErikTab() }, onSelected = {}),
+                TabValue(name = "Mark", screen = { MarkTab() }, onSelected = {})
+            ),
+            selectedTab = 0
         )
     }
 }

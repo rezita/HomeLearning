@@ -47,3 +47,13 @@ object Upload : HomeLearningDestination {
         navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
     )
 }
+
+object Erik : HomeLearningDestination {
+    override val route = "erik_tab"
+}
+
+object Mark : HomeLearningDestination {
+    override val route = "mark_tab"
+}
+
+val tabDestinations = listOf(Erik, Mark)
