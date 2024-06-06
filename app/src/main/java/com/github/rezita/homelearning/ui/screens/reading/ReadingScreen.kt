@@ -186,7 +186,6 @@ fun ReadingWordItem(
     modifier: Modifier = Modifier
 ) {
     Card(
-        //elevation = CardDefaults.cardElevation(12.dp),
         shape = MaterialTheme.shapes.small,
         border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),

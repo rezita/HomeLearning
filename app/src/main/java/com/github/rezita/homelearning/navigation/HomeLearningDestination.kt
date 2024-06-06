@@ -27,7 +27,7 @@ object Homophones : HomeLearningDestination {
 }
 
 object IrregularVerbs : HomeLearningDestination {
-    override val route = "irregular_verba"
+    override val route = "irregular_verbs"
 }
 
 object Reading : HomeLearningDestination {
@@ -47,4 +47,3 @@ object Upload : HomeLearningDestination {
         navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
     )
 }
-
