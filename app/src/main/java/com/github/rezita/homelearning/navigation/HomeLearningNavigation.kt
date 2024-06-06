@@ -12,11 +12,18 @@ import androidx.navigation.compose.composable
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.HomeLearningAppState
+import com.github.rezita.homelearning.ui.screens.home.ErikTab
 import com.github.rezita.homelearning.ui.screens.home.HomeScreen
+import com.github.rezita.homelearning.ui.screens.home.MarkTab
 import com.github.rezita.homelearning.ui.screens.reading.ReadingScreen
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceScreen
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingScreen
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsScreen
+
+data class Tab(
+    val name: String,
+    val screen: @Composable () -> Unit
+)
 
 @Composable
 fun HomeLearningNavigation(
@@ -25,19 +32,39 @@ fun HomeLearningNavigation(
     modifier: Modifier = Modifier
 ) {
     val navController = homeLearningAppState.navController
+
+    val tabs = listOf(
+        Tab(
+            name = "Erik",
+            screen = {
+                ErikTab(
+                    onClickSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
+                    onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
+                    onClickHomophones = { navController.navigate(route = Homophones.route) },
+                    onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
+                )
+            }
+        ),
+        Tab(
+            name = "Mark",
+            screen = {
+                MarkTab(
+                    onClickReading = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_WORDS}") },
+                    onClickReadingCEW = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_CEW}") },
+                    onClickSpelling = { navController.navigate("${Spelling.route}/${SheetAction.READ_MARK_SPELLING_WORDS}") },
+                    onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") },
+                )
+            }
+        )
+    )
+
     NavHost(navController = navController, startDestination = startDestination) {
+
         composable(route = Home.route) {
             HomeScreen(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
-                onClickErikSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
-                onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
-                onClickHomophones = { navController.navigate(route = Homophones.route) },
-                onClickErikUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
-                onClickReading = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_WORDS}") },
-                onClickReadingCEW = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_CEW}") },
-                onClickMarkSpelling = { navController.navigate("${Spelling.route}/${SheetAction.READ_MARK_SPELLING_WORDS}") },
-                onClickMarkUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") },
+                allTabs = tabs,
                 modifier = modifier
                     .fillMaxSize()
                     .padding(dimensionResource(id = R.dimen.padding_big))

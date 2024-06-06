@@ -24,13 +24,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.navigation.Tab
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-
-sealed class Tabs(val tabName: String) {
-    data object ErikTab : Tabs("Erik")
-    data object MarkTab : Tabs("Mark")
-}
 
 data class TabButton(
     val titleId: Int,
@@ -41,60 +37,39 @@ data class TabButton(
 fun HomeScreen(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    onClickErikSpelling: () -> Unit = {},
-    onClickIrregularVerbs: () -> Unit = {},
-    onClickHomophones: () -> Unit = {},
-    onClickErikUpload: () -> Unit = {},
-    onClickReading: () -> Unit = {},
-    onClickReadingCEW: () -> Unit = {},
-    onClickMarkSpelling: () -> Unit = {},
-    onClickMarkUpload: () -> Unit = {},
+    allTabs: List<Tab>,
     modifier: Modifier = Modifier
 ) {
-    val tabItems = listOf(Tabs.ErikTab, Tabs.MarkTab)
-    var selectedTab by remember { mutableStateOf(0) }
+    var currentTabIndex by remember { mutableStateOf(0) }
+
     Scaffold(
         topBar = {
-            LearningAppBar(
-                titleText = stringResource(id = R.string.app_name),
-                canNavigateBack = canNavigateBack,
-                navigateUp = navigateUp
-            )
+            Column {
+                LearningAppBar(
+                    titleText = stringResource(id = R.string.app_name),
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateUp
+                )
+                TabRow(
+                    selectedTabIndex = currentTabIndex,
+                ) {
+                    allTabs.forEachIndexed { index, it ->
+                        Tab(
+                            text = { Text(text = it.name) },
+                            selected = currentTabIndex == index,
+                            onClick = { currentTabIndex = index },
+                        )
+                    }
+                }
+            }
         }
     ) {
         Column(
             modifier = modifier
                 .padding(it)
                 .fillMaxWidth()
-        )
-        {
-            TabRow(
-                selectedTabIndex = selectedTab,
-
-                ) {
-                tabItems.forEachIndexed { index, it ->
-                    Tab(
-                        text = { Text(text = it.tabName) },
-                        selected = selectedTab == index,
-                        onClick = { selectedTab = index },
-                    )
-                }
-            }
-            when (selectedTab) {
-                0 -> ErikTab(
-                    onClickSpelling = onClickErikSpelling,
-                    onClickIrregularVerbs = onClickIrregularVerbs,
-                    onClickHomophones = onClickHomophones,
-                    onClickUpload = onClickErikUpload,
-                )
-
-                1 -> MarkTab(
-                    onClickReading = onClickReading,
-                    onClickReadingCEW = onClickReadingCEW,
-                    onClickSpelling = onClickMarkSpelling,
-                    onClickUpload = onClickMarkUpload,
-                )
-            }
+        ) {
+            allTabs[currentTabIndex].screen()
         }
     }
 }
@@ -200,7 +175,11 @@ private fun HomeLearningTabButton(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun MainTabsPreview() {
     HomeLearningTheme {
-        HomeScreen(canNavigateBack = false, navigateUp = {})
+        HomeScreen(
+            canNavigateBack = false,
+            navigateUp = {},
+            allTabs = listOf(Tab("Erik") { ErikTab() }, Tab("Mark") { MarkTab() }),
+        )
     }
 }
 
