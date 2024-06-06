@@ -59,7 +59,7 @@ private fun SavedItemDisplay(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+            .padding(horizontal = dimensionResource(id = R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {

@@ -30,7 +30,7 @@ fun UploadWordsSaveErrorContent(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.padding_medium))
+            .padding(dimensionResource(id = R.dimen.padding_small))
     ) {
         items(state.words) { item ->
             UploadWordItemDisplay(word = item)

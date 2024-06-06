@@ -89,7 +89,7 @@ private fun UploadItemDisplay(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = dimensionResource(id = R.dimen.padding_medium)),
+            .padding(start = dimensionResource(id = R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {

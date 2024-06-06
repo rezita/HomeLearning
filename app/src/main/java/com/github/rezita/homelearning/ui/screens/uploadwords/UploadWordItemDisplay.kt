@@ -20,14 +20,17 @@ fun UploadWordItemDisplay(word: SpellingWord, modifier: Modifier = Modifier) {
         Text(
             text = word.word,
             Modifier
-                .padding(end = dimensionResource(id = R.dimen.padding_small)),
+                .padding(
+                    end = dimensionResource(id = R.dimen.padding_small),
+                    top = dimensionResource(id = R.dimen.padding_small)
+                ),
             style = MaterialTheme.typography.headlineSmall
         )
         Text(
             text = getCategoryWithComment(word),
             Modifier
                 .padding(end = dimensionResource(id = R.dimen.padding_small)),
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
