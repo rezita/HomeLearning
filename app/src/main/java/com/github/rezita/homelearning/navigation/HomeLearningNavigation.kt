@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,21 +27,21 @@ data class TabValue(
     val onSelected: () -> Unit
 )
 
-val start_destination = Erik.route
+//val start_destination = Erik.route
+val start_destination = "${Home.route}/0"
 
 /**Navigates back to the start destination with emptying the backstack
  * No navigationBack / navigationUp */
-fun NavHostController.navigateStartDestinationWithoutBack() =
+fun NavHostController.navigateStartDestinationWithoutBack() {
     this.navigate(start_destination) {
         popUpTo(
-            this@navigateStartDestinationWithoutBack.graph.findStartDestination().id
+            this@navigateStartDestinationWithoutBack.graph.id
         ) {
-            inclusive = false
+            saveState = true
+            inclusive = true
         }
-        launchSingleTop = true
-        restoreState = true
     }
-
+}
 
 @Composable
 fun HomeLearningNavigation(
@@ -62,7 +61,9 @@ fun HomeLearningNavigation(
                 onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
             )
         },
-        onSelected = { navController.navigateStartDestinationWithoutBack() }
+        onSelected = {
+            navController.navigateStartDestinationWithoutBack()
+        }
     )
     val markTabValues =
         TabValue(
@@ -75,13 +76,27 @@ fun HomeLearningNavigation(
                     onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") },
                 )
             },
-            onSelected = { navController.navigate(route = Mark.route) }
+            onSelected = { navController.navigate(route = "${Home.route}/1") }
         )
 
     val tabs = listOf(erikTabValues, markTabValues)
 
 
     NavHost(navController = navController, startDestination = startDestination) {
+
+        composable(
+            route = Home.routeWithArgs,
+            arguments = Home.arguments
+        ) { navBackStackEntry ->
+            val tabArg = navBackStackEntry.arguments?.getInt("selectedTab") ?: 0
+            HomeScreen(
+                allTabs = tabs,
+                selectedTab = tabArg,
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.padding_big))
+            )
+        }
 
         composable(
             route = Spelling.routeWithArgs,
@@ -159,30 +174,6 @@ fun HomeLearningNavigation(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
-            )
-        }
-
-        composable(route = Erik.route) {
-            HomeScreen(
-                canNavigateBack = false,
-                navigateUp = {},
-                allTabs = tabs,
-                selectedTab = tabs.indexOf(erikTabValues),
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_big))
-            )
-        }
-
-        composable(route = Mark.route) {
-            HomeScreen(
-                canNavigateBack = false,
-                navigateUp = {},
-                allTabs = tabs,
-                selectedTab = tabs.indexOf(markTabValues),
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_big))
             )
         }
     }

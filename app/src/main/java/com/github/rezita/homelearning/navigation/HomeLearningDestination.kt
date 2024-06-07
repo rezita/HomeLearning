@@ -11,6 +11,11 @@ interface HomeLearningDestination {
 
 object Home : HomeLearningDestination {
     override val route = "Home"
+    private const val tabArg = "selectedTab"
+    val routeWithArgs = "${route}/{${tabArg}}"
+    val arguments = listOf(
+        navArgument(tabArg) { type = NavType.IntType }
+    )
 }
 
 object Spelling : HomeLearningDestination {
@@ -47,13 +52,3 @@ object Upload : HomeLearningDestination {
         navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
     )
 }
-
-object Erik : HomeLearningDestination {
-    override val route = "erik_tab"
-}
-
-object Mark : HomeLearningDestination {
-    override val route = "mark_tab"
-}
-
-val tabDestinations = listOf(Erik, Mark)

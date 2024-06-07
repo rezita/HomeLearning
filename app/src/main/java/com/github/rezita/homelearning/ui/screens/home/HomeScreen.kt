@@ -31,8 +31,6 @@ data class TabButton(
 
 @Composable
 fun HomeScreen(
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
     allTabs: List<TabValue>,
     selectedTab: Int,
     modifier: Modifier = Modifier
@@ -42,8 +40,8 @@ fun HomeScreen(
             Column {
                 LearningAppBar(
                     titleText = stringResource(id = R.string.app_name),
-                    canNavigateBack = canNavigateBack,
-                    navigateUp = navigateUp
+                    canNavigateBack = false,
+                    navigateUp = { }
                 )
                 TabRow(
                     selectedTabIndex = selectedTab,
@@ -171,8 +169,6 @@ private fun HomeLearningTabButton(
 fun MainTabsPreview() {
     HomeLearningTheme {
         HomeScreen(
-            canNavigateBack = false,
-            navigateUp = {},
             allTabs = listOf(
                 TabValue(name = "Erik", screen = { ErikTab() }, onSelected = {}),
                 TabValue(name = "Mark", screen = { MarkTab() }, onSelected = {})
