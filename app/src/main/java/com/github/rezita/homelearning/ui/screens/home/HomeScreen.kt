@@ -20,9 +20,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.navigation.TabValue
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
+
+data class HomeLearningTabItem(
+    val name: String,
+    val content: @Composable () -> Unit,
+    val onSelected: () -> Unit
+)
 
 data class TabButton(
     val titleId: Int,
@@ -31,9 +36,9 @@ data class TabButton(
 
 @Composable
 fun HomeScreen(
-    allTabs: List<TabValue>,
-    selectedTab: Int,
-    modifier: Modifier = Modifier
+    allTabs: List<HomeLearningTabItem>,
+    modifier: Modifier = Modifier,
+    selectedTab: Int = 0
 ) {
     Scaffold(
         topBar = {
@@ -62,71 +67,13 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxWidth()
         ) {
-            allTabs[selectedTab].screen()
+            allTabs[selectedTab].content()
         }
     }
 }
 
 @Composable
-fun ErikTab(
-    onClickSpelling: () -> Unit = {},
-    onClickIrregularVerbs: () -> Unit = {},
-    onClickHomophones: () -> Unit = {},
-    onClickUpload: () -> Unit = {},
-    modifier: Modifier = Modifier
-) {
-    val erikButtons = listOf(
-        TabButton(
-            titleId = R.string.start_erik_spelling,
-            onClick = onClickSpelling
-        ),
-        TabButton(
-            titleId = R.string.start_irregularVerbs,
-            onClick = onClickIrregularVerbs
-        ),
-        TabButton(
-            titleId = R.string.start_homophones,
-            onClick = onClickHomophones
-        ),
-        TabButton(
-            titleId = R.string.upload_erik_words,
-            onClick = onClickUpload
-        )
-    )
-    TabWithButtons(erikButtons, modifier)
-}
-
-@Composable
-fun MarkTab(
-    onClickReading: () -> Unit = {},
-    onClickReadingCEW: () -> Unit = {},
-    onClickSpelling: () -> Unit = {},
-    onClickUpload: () -> Unit = {},
-    modifier: Modifier = Modifier
-) {
-    val markButtons = listOf(
-        TabButton(
-            titleId = R.string.start_reading,
-            onClick = onClickReading
-        ),
-        TabButton(
-            titleId = R.string.reading_cew,
-            onClick = onClickReadingCEW
-        ),
-        TabButton(
-            titleId = R.string.start_mark_spelling,
-            onClick = onClickSpelling
-        ),
-        TabButton(
-            titleId = R.string.upload_mark_words,
-            onClick = onClickUpload
-        )
-    )
-    TabWithButtons(markButtons, modifier)
-}
-
-@Composable
-private fun TabWithButtons(buttons: List<TabButton>, modifier: Modifier = Modifier) {
+fun TabWithButtons(buttons: List<TabButton>, modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -168,30 +115,35 @@ private fun HomeLearningTabButton(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun MainTabsPreview() {
     HomeLearningTheme {
+        val tabWithButtons = listOf(
+            TabButton(
+                titleId = R.string.start_erik_spelling,
+                onClick = { }
+            ),
+            TabButton(
+                titleId = R.string.start_irregularVerbs,
+                onClick = { }
+            ),
+            TabButton(
+                titleId = R.string.start_homophones,
+                onClick = { }
+            ),
+            TabButton(
+                titleId = R.string.upload_erik_words,
+                onClick = { }
+            ))
         HomeScreen(
             allTabs = listOf(
-                TabValue(name = "Erik", screen = { ErikTab() }, onSelected = {}),
-                TabValue(name = "Mark", screen = { MarkTab() }, onSelected = {})
+                HomeLearningTabItem(
+                    name = "Erik",
+                    content = { TabWithButtons(tabWithButtons) },
+                    onSelected = {}),
+                HomeLearningTabItem(
+                    name = "Mark",
+                    content = { TabWithButtons(tabWithButtons) },
+                    onSelected = {})
             ),
             selectedTab = 0
         )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-fun ErikTabPreview() {
-    HomeLearningTheme {
-        ErikTab()
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-fun MarkTabPreview() {
-    HomeLearningTheme {
-        MarkTab()
     }
 }

@@ -13,21 +13,15 @@ import androidx.navigation.compose.composable
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.HomeLearningAppState
-import com.github.rezita.homelearning.ui.screens.home.ErikTab
+import com.github.rezita.homelearning.ui.screens.home.HomeLearningTabItem
 import com.github.rezita.homelearning.ui.screens.home.HomeScreen
-import com.github.rezita.homelearning.ui.screens.home.MarkTab
+import com.github.rezita.homelearning.ui.screens.home.TabButton
+import com.github.rezita.homelearning.ui.screens.home.TabWithButtons
 import com.github.rezita.homelearning.ui.screens.reading.ReadingScreen
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceScreen
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingScreen
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsScreen
 
-data class TabValue(
-    val name: String,
-    val screen: @Composable () -> Unit,
-    val onSelected: () -> Unit
-)
-
-//val start_destination = Erik.route
 val start_destination = "${Home.route}/0"
 
 /**Navigates back to the start destination with emptying the backstack
@@ -51,30 +45,54 @@ fun HomeLearningNavigation(
 ) {
     val navController = homeLearningAppState.navController
 
-    val erikTabValues = TabValue(
+    val erikTabButtons = listOf(
+        TabButton(
+            titleId = R.string.start_erik_spelling,
+            onClick = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") }
+        ),
+        TabButton(
+            titleId = R.string.start_irregularVerbs,
+            onClick = { navController.navigate(route = IrregularVerbs.route) }
+        ),
+        TabButton(
+            titleId = R.string.start_homophones,
+            onClick = { navController.navigate(route = Homophones.route) }
+        ),
+        TabButton(
+            titleId = R.string.upload_erik_words,
+            onClick = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") }
+        ))
+
+    val markTabButtons = listOf(
+        TabButton(
+            titleId = R.string.start_reading,
+            onClick = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_WORDS}") }
+        ),
+        TabButton(
+            titleId = R.string.reading_cew,
+            onClick = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_CEW}") }
+        ),
+        TabButton(
+            titleId = R.string.start_mark_spelling,
+            onClick = { navController.navigate("${Spelling.route}/${SheetAction.READ_MARK_SPELLING_WORDS}") }
+        ),
+        TabButton(
+            titleId = R.string.upload_mark_words,
+            onClick = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") }
+        ))
+
+    val erikTabValues = HomeLearningTabItem(
         name = "Erik",
-        screen = {
-            ErikTab(
-                onClickSpelling = { navController.navigate(route = "${Spelling.route}/${SheetAction.READ_ERIK_SPELLING_WORDS}") },
-                onClickIrregularVerbs = { navController.navigate(route = IrregularVerbs.route) },
-                onClickHomophones = { navController.navigate(route = Homophones.route) },
-                onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") },
-            )
-        },
+        content = { TabWithButtons(erikTabButtons) },
         onSelected = {
             navController.navigateStartDestinationWithoutBack()
         }
     )
     val markTabValues =
-        TabValue(
+        HomeLearningTabItem(
             name = "Mark",
-            screen = {
-                MarkTab(
-                    onClickReading = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_WORDS}") },
-                    onClickReadingCEW = { navController.navigate("${Reading.route}/${SheetAction.READ_READING_CEW}") },
-                    onClickSpelling = { navController.navigate("${Spelling.route}/${SheetAction.READ_MARK_SPELLING_WORDS}") },
-                    onClickUpload = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") },
-                )
+            content = {
+                TabWithButtons(markTabButtons)
             },
             onSelected = { navController.navigate(route = "${Home.route}/1") }
         )
