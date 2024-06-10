@@ -8,7 +8,7 @@ class ReadingMapperTest {
     fun api_reading_word_to_reading_word_empty_word() {
         val apiWord = ApiReadingWord(word = "", category = "", comment = "", rule = "")
         val expectedWord = ReadingWord(word = "", category = "", comment = "", rules = emptyList())
-        Assert.assertTrue(expectedWord.equals(apiWord.asReadingWord()))
+        Assert.assertEquals(expectedWord, apiWord.asReadingWord())
     }
 
     @Test
@@ -21,13 +21,13 @@ class ReadingMapperTest {
         )
         val expectedWord = ReadingWord(
             word = "she",
-            category = "CEW1",
+            category = "phase2",
             comment = "tricky words",
             rules = arrayListOf(
                 ReadingRule(word = "she", pattern = "sh", ruleName = "ul"),
                 ReadingRule(word = "she", pattern = "e", ruleName = "green")
             )
         )
-        Assert.assertTrue(expectedWord.equals(apiWord.asReadingWord()))
+        Assert.assertEquals(expectedWord, apiWord.asReadingWord())
     }
 }
