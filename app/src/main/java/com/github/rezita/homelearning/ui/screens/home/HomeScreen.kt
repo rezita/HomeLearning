@@ -1,6 +1,7 @@
 package com.github.rezita.homelearning.ui.screens.home
 
 import android.content.res.Configuration
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,16 +31,19 @@ data class HomeLearningTabItem(
 )
 
 data class TabButton(
-    val titleId: Int,
+    @StringRes val titleId: Int,
     val onClick: () -> Unit
 )
 
 @Composable
 fun HomeScreen(
-    allTabs: List<HomeLearningTabItem>,
+    tabs: List<HomeLearningTabItem>,
     modifier: Modifier = Modifier,
     selectedTab: Int = 0
 ) {
+    require(tabs.isNotEmpty()) { "Tabs cannot be empty" }
+    require(selectedTab in tabs.indices) { "Invalid tab index" }
+
     Scaffold(
         topBar = {
             Column {
@@ -51,7 +55,7 @@ fun HomeScreen(
                 TabRow(
                     selectedTabIndex = selectedTab,
                 ) {
-                    allTabs.forEachIndexed { index, it ->
+                    tabs.forEachIndexed { index, it ->
                         Tab(
                             text = { Text(text = it.name) },
                             selected = selectedTab == index,
@@ -67,7 +71,7 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxWidth()
         ) {
-            allTabs[selectedTab].content()
+            tabs[selectedTab].content()
         }
     }
 }
@@ -83,8 +87,7 @@ fun TabWithButtons(buttons: List<TabButton>, modifier: Modifier = Modifier) {
     ) {
         items(buttons) { button ->
             HomeLearningTabButton(
-                title = stringResource(id = button.titleId),
-                onClick = button.onClick
+                button = button
             )
         }
     }
@@ -93,12 +96,11 @@ fun TabWithButtons(buttons: List<TabButton>, modifier: Modifier = Modifier) {
 
 @Composable
 private fun HomeLearningTabButton(
-    title: String,
-    onClick: () -> Unit,
+    button: TabButton,
     modifier: Modifier = Modifier
 ) {
     Button(
-        onClick = onClick, modifier = modifier
+        onClick = button.onClick, modifier = modifier
             .fillMaxWidth(0.75f)
             .padding(
                 top = dimensionResource(
@@ -106,7 +108,7 @@ private fun HomeLearningTabButton(
                 )
             )
     ) {
-        Text(text = title)
+        Text(text = stringResource(id = button.titleId))
     }
 }
 
@@ -133,7 +135,7 @@ fun MainTabsPreview() {
                 onClick = { }
             ))
         HomeScreen(
-            allTabs = listOf(
+            tabs = listOf(
                 HomeLearningTabItem(
                     name = "Erik",
                     content = { TabWithButtons(tabWithButtons) },

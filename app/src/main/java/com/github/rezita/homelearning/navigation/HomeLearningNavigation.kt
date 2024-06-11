@@ -108,7 +108,7 @@ fun HomeLearningNavigation(
         ) { navBackStackEntry ->
             val tabArg = navBackStackEntry.arguments?.getInt("selectedTab") ?: 0
             HomeScreen(
-                allTabs = tabs,
+                tabs = tabs,
                 selectedTab = tabArg,
                 modifier = modifier
                     .fillMaxSize()
