@@ -140,7 +140,8 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test:1.6.7"
     //testing StringBuilder, Test rules and transitive dependencies
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.7"
-    //Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>()
+    //Needed for createComposeRule(), testing composable function in isolation
+    //but not for createAndroidComposeRule<YourActivity>()
     debugImplementation "androidx.compose.ui:ui-test-manifest:1.6.7"
 
     //for unit tests
