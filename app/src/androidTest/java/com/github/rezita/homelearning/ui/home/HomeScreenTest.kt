@@ -9,11 +9,10 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
 import com.github.rezita.homelearning.ui.screens.home.HomeLearningTabItem
 import com.github.rezita.homelearning.ui.screens.home.HomeScreen
+import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +26,7 @@ class HomeScreenTest {
      * Exp. result: The first tab is selected
      */
     @Test
-    fun HomeTabRow_init_without_selected_tab_test() {
+    fun homeScreen_init_without_selected_tab_test() {
 
         val tab1 = HomeLearningTabItem(
             name = "Erik",
@@ -42,7 +41,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
-            HomeScreen(tabs = testTabs)
+            HomeLearningTheme {
+                HomeScreen(tabs = testTabs)
+            }
         }
 
         composeTestRule.onNodeWithText("Home Learning").assertIsDisplayed()
@@ -57,7 +58,7 @@ class HomeScreenTest {
      * Exp. result: The first tab is selected
      */
     @Test
-    fun HomeTabRow_init_first_tab_selected_test() {
+    fun homeScreen_init_first_tab_selected_test() {
 
         val tab1 = HomeLearningTabItem(
             name = "Erik",
@@ -72,7 +73,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
-            HomeScreen(tabs = testTabs, selectedTab = 0)
+            HomeLearningTheme {
+                HomeScreen(tabs = testTabs, selectedTab = 0)
+            }
         }
 //        composeTestRule.onRoot(useUnmergedTree = true).printToLog("tree")
 
@@ -89,7 +92,7 @@ class HomeScreenTest {
      * Exp. result: The second tab is selected
      */
     @Test
-    fun HomeTabRow_init_without_second_tab_selected_test() {
+    fun homeScreen_init_without_second_tab_selected_test() {
 
         val tab1 = HomeLearningTabItem(
             name = "Erik",
@@ -104,7 +107,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
-            HomeScreen(tabs = testTabs, selectedTab = 1)
+            HomeLearningTheme {
+                HomeScreen(tabs = testTabs, selectedTab = 1)
+            }
         }
 
         composeTestRule.onNodeWithText("Home Learning").assertIsDisplayed()
@@ -122,7 +127,7 @@ class HomeScreenTest {
      * (the onSelected callback is called and invoked, recomposition happens)
      */
     @Test
-    fun HomeTabRow_select_tab_test() {
+    fun homeScreen_select_tab_test() {
         composeTestRule.setContent {
             var selectedTab by remember { mutableStateOf(0) }
             val tab1 = HomeLearningTabItem(
@@ -138,8 +143,9 @@ class HomeScreenTest {
 
             val testTabs = listOf(tab1, tab2)
 
-
-            HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+            HomeLearningTheme {
+                HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+            }
         }
         composeTestRule.onNodeWithText("Home Learning").assertIsDisplayed()
         composeTestRule.onNodeWithText("Erik Tab").assertIsDisplayed()
@@ -162,7 +168,7 @@ class HomeScreenTest {
      * Result: First tab's content appears
      */
     @Test
-    fun HomeTabRow_select_tab_back_test() {
+    fun homeScreen_select_tab_back_test() {
         composeTestRule.setContent {
             var selectedTab by remember { mutableStateOf(0) }
             val tab1 = HomeLearningTabItem(
@@ -176,8 +182,9 @@ class HomeScreenTest {
                 onSelected = { selectedTab = 1 }
             )
             val testTabs = listOf(tab1, tab2)
-
-            HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+            HomeLearningTheme {
+                HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+            }
         }
 
         composeTestRule.onNodeWithText("Mark").performClick()
@@ -194,21 +201,23 @@ class HomeScreenTest {
      * Exp. result: throws IllegalArgumentException
      */
     @Test
-    fun HomeTabRow_empty_tabs_tab_test() {
+    fun homeScreen_empty_tabs_tab_test() {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
-                HomeScreen(tabs = emptyList())
+                HomeLearningTheme {
+                    HomeScreen(tabs = emptyList())
+                }
             }
         }
     }
 
     /**
-     * 1. Start HomeScreen with invalid selecetd index (out of bound)
+     * 1. Start HomeScreen with invalid selected index (out of bound)
      * Exp. result: throws IllegalArgumentException
      */
     @Test
-    fun HomeTabRow_invalid_tabindex_test() {
+    fun homeScreen_invalid_selected_tab_test() {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
@@ -223,17 +232,19 @@ class HomeScreenTest {
                     onSelected = { }
                 )
                 val testTabs = listOf(tab1, tab2)
-                HomeScreen(tabs = testTabs, selectedTab = 2)
+                HomeLearningTheme {
+                    HomeScreen(tabs = testTabs, selectedTab = 2)
+                }
             }
         }
     }
 
     /**
-     * 1. Start HomeScreen with invalid selecetd index (out of bound)
+     * 1. Start HomeScreen with invalid selected index (out of bound)
      * Exp. result: throws IllegalArgumentException
      */
     @Test
-    fun HomeTabRow_negative_tabindex_test() {
+    fun homeScreen_negative_selected_tab_test() {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
@@ -248,7 +259,9 @@ class HomeScreenTest {
                     onSelected = { }
                 )
                 val testTabs = listOf(tab1, tab2)
-                HomeScreen(tabs = testTabs, selectedTab = -1)
+                HomeLearningTheme {
+                    HomeScreen(tabs = testTabs, selectedTab = -1)
+                }
             }
         }
     }

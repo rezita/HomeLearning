@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.screens.home.TabButton
 import com.github.rezita.homelearning.ui.screens.home.TabWithButtons
+import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.util.properButton
 import com.github.rezita.homelearning.ui.util.withRole
 import org.junit.Rule
@@ -19,14 +20,14 @@ class TabWithButtonsTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-    val context: Context = InstrumentationRegistry.getInstrumentation().getTargetContext()
+    private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     /**
      * Descr: Two buttons
      * Exp. result: The two buttons displayed correctly
      */
     @Test
-    fun HomeTabRow_init_without_selected_tab_test() {
+    fun tabWithButtons_init_without_selected_tab_test() {
         val button1TitleId = R.string.spelling_title
         val button1Title = context.getString(button1TitleId)
 
@@ -42,8 +43,9 @@ class TabWithButtonsTest {
                 onClick = {}
             )
             val buttons = listOf(button1, button2)
-
-            TabWithButtons(buttons = buttons)
+            HomeLearningTheme {
+                TabWithButtons(buttons = buttons)
+            }
         }
         //There are 2 buttons
         composeTestRule
@@ -65,9 +67,11 @@ class TabWithButtonsTest {
      * Exp. result:
      */
     @Test
-    fun HomeTabRow_no_buttons_test() {
+    fun tabWithButtons_no_buttons_test() {
         composeTestRule.setContent {
-            TabWithButtons(buttons = emptyList())
+            HomeLearningTheme {
+                TabWithButtons(buttons = emptyList())
+            }
         }
         //there is not any buttons
         composeTestRule

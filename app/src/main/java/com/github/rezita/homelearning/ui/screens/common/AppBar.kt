@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.ui.screens.common
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
