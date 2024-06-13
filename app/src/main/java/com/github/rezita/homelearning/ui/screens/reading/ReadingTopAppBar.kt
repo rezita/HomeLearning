@@ -24,7 +24,7 @@ fun ReadingTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = stringResource(id = R.string.activity_reading_title),
+        title = stringResource(id = R.string.activity_reading_title),
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 

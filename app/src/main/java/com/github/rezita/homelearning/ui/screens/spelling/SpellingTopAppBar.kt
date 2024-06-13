@@ -23,7 +23,7 @@ fun SpellingTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = stringResource(id = R.string.activity_spelling),
+        title = stringResource(id = R.string.activity_spelling),
 
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,

@@ -48,7 +48,7 @@ fun HomeScreen(
         topBar = {
             Column {
                 LearningAppBar(
-                    titleText = stringResource(id = R.string.app_name),
+                    title = stringResource(id = R.string.app_name),
                     canNavigateBack = false,
                     navigateUp = { }
                 )

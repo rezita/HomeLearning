@@ -22,7 +22,7 @@ fun UploadWordsTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText =
+        title =
         when (state) {
             is UploadUiState.Editing -> ("")
             else -> stringResource(id = R.string.activity_upload_words)

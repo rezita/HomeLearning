@@ -24,7 +24,7 @@ fun SentenceTopAppBar(
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        titleText = stringResource(id = titleId),
+        title = stringResource(id = titleId),
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
 
