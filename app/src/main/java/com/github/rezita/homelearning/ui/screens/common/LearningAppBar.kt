@@ -58,7 +58,7 @@ fun LearningAppBar(
 @Composable
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-fun AppBarPreview(
+private fun AppBarPreview(
     @PreviewParameter(BooleanParameterProvider::class) canNavigateBack: Boolean
 ) {
     HomeLearningTheme {
@@ -75,7 +75,7 @@ fun AppBarPreview(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun AppBarPreviewWithActions(
+private fun AppBarPreviewWithActions(
     @PreviewParameter(BooleanParameterProvider::class) canNavigateBack: Boolean
 ) {
     HomeLearningTheme {

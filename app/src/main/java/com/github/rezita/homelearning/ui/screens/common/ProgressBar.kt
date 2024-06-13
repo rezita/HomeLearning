@@ -55,7 +55,7 @@ fun LoadingProgressBar(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun LoadingProgressBarPreview() {
+private fun LoadingProgressBarPreview() {
     HomeLearningTheme {
         Scaffold() {
             LoadingProgressBar(modifier = Modifier.padding(it))

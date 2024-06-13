@@ -43,7 +43,7 @@ fun SavingSuccessSnackbar(
 }
 
 @Composable
-fun HomeLearningSnackbar(
+private fun HomeLearningSnackbar(
     scope: CoroutineScope, snackbarHostState: SnackbarHostState,
     message: String, duration: SnackbarDuration = SnackbarDuration.Short
 ) {

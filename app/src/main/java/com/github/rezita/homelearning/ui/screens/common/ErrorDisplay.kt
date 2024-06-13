@@ -121,7 +121,7 @@ fun ErrorDisplayWithContent(
 }
 
 @Composable
-fun TextWithButton(
+private fun TextWithButton(
     message: String,
     callback: () -> Unit,
     textModifier: Modifier = Modifier,
@@ -134,7 +134,7 @@ fun TextWithButton(
 }
 
 @Composable
-fun TextWithIcon(
+private fun TextWithIcon(
     message: String,
     iconSource: Int,
     textModifier: Modifier = Modifier,
@@ -150,7 +150,7 @@ fun TextWithIcon(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun ErrorDisplayPreviewColumn() {
+private fun ErrorDisplayPreviewColumn() {
     HomeLearningTheme {
         Scaffold {
             ErrorDisplayInColumn(
@@ -165,7 +165,7 @@ fun ErrorDisplayPreviewColumn() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun ErrorDisplayPreviewRow() {
+private fun ErrorDisplayPreviewRow() {
     HomeLearningTheme {
         Scaffold {
             ErrorDisplayInRow(
