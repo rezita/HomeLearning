@@ -1,7 +1,7 @@
 package com.github.rezita.homelearning.ui.size
 
 interface SizedValue<T> {
-    operator fun invoke(size: HomeLearningWidthClass): T
+    operator fun invoke(sizeClass: HomeLearningWidthClass): T
 }
 
 class WidthSizeBasedValue<T>(
