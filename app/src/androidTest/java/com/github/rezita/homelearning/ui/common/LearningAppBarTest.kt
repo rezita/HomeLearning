@@ -9,16 +9,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToLog
+import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
+import com.github.rezita.homelearning.ui.util.buttonWithImageAndDescription
 import com.github.rezita.homelearning.ui.util.withRole
 import org.junit.Rule
 import org.junit.Test
@@ -32,6 +33,7 @@ class LearningAppBarTest {
     /** Learning App Bar test
      *  Only the title is set, no navBack or actions/
      * */
+    @SmallTest
     @Test
     fun appBar_no_actions_no_navBack_test() {
         val title = "App Bar"
@@ -60,6 +62,7 @@ class LearningAppBarTest {
     /** Learning App Bar test
      * navBack, no actions
      * */
+    @SmallTest
     @Test
     fun appBar_no_actions_navBack_test() {
         val title = "App Bar"
@@ -76,9 +79,7 @@ class LearningAppBarTest {
         //NavBack button exists
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription("Back")),
+                buttonWithImageAndDescription("Back"),
                 useUnmergedTree = true
             ).assertExists()
         //ActionButtons - no more buttons (aka only one button is on the screen and it is the na)
@@ -91,6 +92,7 @@ class LearningAppBarTest {
     /** Learning App Bar test
      * navBack, one action
      * */
+    @SmallTest
     @Test
     fun appBar_with_one_action_with_navBack_test() {
         val title = "App Bar"
@@ -124,24 +126,21 @@ class LearningAppBarTest {
         //NavBack button exists
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription("Back")),
+                buttonWithImageAndDescription("Back"),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
         //ActionButtons
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription(iconDescrText)),
+                buttonWithImageAndDescription(iconDescrText),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
     }
 
     /** Learning App Bar test
      * navBack, two actions
      * */
+    @SmallTest
     @Test
     fun appBar_with_two_actions_with_navBack_test() {
         val title = "App Bar"
@@ -184,31 +183,27 @@ class LearningAppBarTest {
         //NavBack button exists
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and hasAnyChild(withRole(Role.Image) and hasContentDescription("Back")),
+                buttonWithImageAndDescription("Back"),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
         //ActionButtons
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription(iconDescrText1)),
+                buttonWithImageAndDescription(iconDescrText1),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
 
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription(iconDescrText2)),
+                buttonWithImageAndDescription(iconDescrText2),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
     }
 
     /** Learning App Bar test
      * no navBack, one action
      * */
+    @SmallTest
     @Test
     fun appBar_with_one_action_no_navBack_test() {
         val title = "App Bar"
@@ -250,13 +245,9 @@ class LearningAppBarTest {
         //action button
         composeTestRule
             .onNode(
-                withRole(Role.Button)
-                        and
-                        hasAnyChild(withRole(Role.Image) and hasContentDescription(iconDescrText)),
+                buttonWithImageAndDescription(iconDescrText),
                 useUnmergedTree = true
-            ).assertExists()
+            ).assertIsDisplayed()
     }
-
-
 }
 
