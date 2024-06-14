@@ -4,10 +4,10 @@ import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 
 sealed interface SentenceUiState {
-    //val isSavable: Boolean
+    /** for the action icon on the topAppBar */
     fun isSavable(): Boolean
 
-    //after kotlin v1.9 this can be data object instead of object
+    /** from Kotlin 1.9 the cna be data object instead of object */
     data object Loading : SentenceUiState {
         override fun isSavable() = false
     }

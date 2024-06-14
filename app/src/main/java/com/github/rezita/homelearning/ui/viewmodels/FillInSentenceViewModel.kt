@@ -182,6 +182,9 @@ data class SentenceViewModelState(
             SentenceState.LOADED -> {
                 sentences.none { word -> word.status == WordStatus.UNCHECKED }
             }
+            SentenceState.SAVING_ERROR -> {
+                sentences.none { word -> word.status == WordStatus.UNCHECKED }
+            }
 
             else -> false
         }
