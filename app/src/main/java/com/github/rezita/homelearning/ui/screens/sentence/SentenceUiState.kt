@@ -29,6 +29,6 @@ sealed interface SentenceUiState {
         val errorMessage: Int,
         val sentences: List<FillInSentence>,
     ) : SentenceUiState {
-        override fun isSavable() = sentences.isNotEmpty()
+        override fun isSavable() = false
     }
 }
