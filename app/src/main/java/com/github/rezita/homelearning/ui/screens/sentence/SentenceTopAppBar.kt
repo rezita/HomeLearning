@@ -75,7 +75,7 @@ private fun SentenceTopAppBar_success_notSavable(
                 sentence = "I have never been to Italy.",
                 suggestion = "be",
                 solutions = listOf("been"),
-                answer = ""
+                answer = "was"
             )
         )
         SentenceTopAppBar(

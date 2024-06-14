@@ -14,7 +14,7 @@ sealed interface SentenceUiState {
 
     data class Loaded(val sentences: List<FillInSentence>) : SentenceUiState {
         override fun isSavable() =
-            sentences.none { word -> word.status == WordStatus.UNCHECKED }
+            sentences.isNotEmpty() && sentences.none { word -> word.status == WordStatus.UNCHECKED }
     }
 
     data class LoadingError(val errorMessage: Int) : SentenceUiState {
