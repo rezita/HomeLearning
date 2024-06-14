@@ -98,7 +98,7 @@ fun ReadingScreen(
                     state = readingState,
                     canNavigateBack = canNavigateBack,
                     navigateUp = navigateUp,
-                    callback = { value -> viewModel.setColorDisplay(value) },
+                    colorDisplayCallback = { value -> viewModel.setColorDisplay(value) },
                     isColorDisplay = viewModel.isColourDisplay
                 )
             }

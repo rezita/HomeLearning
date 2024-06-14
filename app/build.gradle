@@ -68,6 +68,13 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    //for testing device screen changes
+
+    testOptions {
+        emulatorControl {
+            enable = true
+        }
+    }
 }
 
 dependencies {
@@ -142,6 +149,10 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.6.7"
     //Needed for createComposeRule(), testing composable function in isolation
     //but not for createAndroidComposeRule<YourActivity>()
+    //for device orientation testing - eg. reading screen
+    androidTestImplementation"androidx.test.espresso:espresso-device:1.0.0-rc01"
+    implementation "androidx.tracing:tracing:1.2.0"
+
     debugImplementation "androidx.compose.ui:ui-test-manifest:1.6.7"
 
     //for unit tests

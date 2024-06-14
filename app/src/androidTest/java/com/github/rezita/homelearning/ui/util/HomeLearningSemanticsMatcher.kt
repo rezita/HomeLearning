@@ -16,6 +16,8 @@ fun withRole(role: Role) = SemanticsMatcher.expectValue(
 fun properButton(title: String) =
     hasText(title).and(withRole(Role.Button)).and(isEnabled()).and(hasClickAction())
 
+/**Semantics for Button with image and description(aka IconButton)
+ * Warning: Don't forget to set #useUnmergedTree = true# */
 fun buttonWithImageAndDescription(description: String) =
     withRole(Role.Button).and(hasAnyChild(withRole(Role.Image) and hasContentDescription(description)))
 

@@ -19,7 +19,7 @@ fun ReadingTopAppBar(
     state: ReadingUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    callback: (Boolean) -> Unit,
+    colorDisplayCallback: (Boolean) -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -32,7 +32,7 @@ fun ReadingTopAppBar(
             if (state is ReadingUiState.Downloaded && LocalConfiguration.current.orientation != Configuration.ORIENTATION_PORTRAIT) {
                 // Change how to display the words (simple black / colorful)
                 if (isColorDisplay) {
-                    IconButton(onClick = { callback(false) }) {
+                    IconButton(onClick = { colorDisplayCallback(false) }) {
                         Icon(
                             painterResource(id = R.drawable.ic_menu_black),
                             contentDescription = stringResource(id = R.string.reading_black_display),
@@ -40,7 +40,7 @@ fun ReadingTopAppBar(
                         )
                     }
                 } else {
-                    IconButton(onClick = { callback(true) }) {
+                    IconButton(onClick = { colorDisplayCallback(true) }) {
                         Icon(
                             painterResource(id = R.drawable.ic_menu_colors),
                             contentDescription = stringResource(id = R.string.reading_colour_display),
@@ -58,13 +58,13 @@ fun ReadingTopAppBar(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReadingTopAppBarBlackPreview_success() {
+private fun ReadingTopAppBarBlackPreview_success() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.Downloaded(emptyList()),
             canNavigateBack = true,
             navigateUp = {},
-            callback = {},
+            colorDisplayCallback = {},
             isColorDisplay = false
         )
     }
@@ -73,13 +73,13 @@ fun ReadingTopAppBarBlackPreview_success() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReadingTopAppBarColorPreview_loading() {
+private fun ReadingTopAppBarColorPreview_loading() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.Loading,
             canNavigateBack = false,
             navigateUp = {},
-            callback = {},
+            colorDisplayCallback = {},
             isColorDisplay = true
         )
     }
@@ -88,13 +88,13 @@ fun ReadingTopAppBarColorPreview_loading() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ReadingTopAppBarColorPreview_error() {
+private fun ReadingTopAppBarColorPreview_error() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.LoadingError(12),
             canNavigateBack = false,
             navigateUp = {},
-            callback = {},
+            colorDisplayCallback = {},
             isColorDisplay = true
         )
     }
