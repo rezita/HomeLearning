@@ -143,12 +143,18 @@ class SentenceTopAppBarTest {
             ).assertDoesNotExist()
     }
 
-    /**Loaded state with no navBack and savable
+    /**Loaded state with no navBack and savable (all answered)
      * Back button doesn't show, title: Homophones, action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_savable_state_test() {
         val sentences = listOf(
+            FillInSentence(
+                sentence = "I have never been to Italy.",
+                suggestion = "be",
+                solutions = listOf("been"),
+                answer = "was"
+            ),
             FillInSentence(
                 sentence = "I have never been to Italy.",
                 suggestion = "be",
@@ -190,12 +196,18 @@ class SentenceTopAppBarTest {
             ).assertIsDisplayed()
     }
 
-    /**Loaded state with navBack and savable
+    /**Loaded state with navBack and savable (all answered)
      * Back button shows, title: Homophones, action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_savable_navBack_state_test() {
         val sentences = listOf(
+            FillInSentence(
+                sentence = "I have never been to Italy.",
+                suggestion = "be",
+                solutions = listOf("been"),
+                answer = "was"
+            ),
             FillInSentence(
                 sentence = "I have never been to Italy.",
                 suggestion = "be",
@@ -248,6 +260,12 @@ class SentenceTopAppBarTest {
                 suggestion = "be",
                 solutions = listOf("been"),
                 answer = ""
+            ),
+            FillInSentence(
+                sentence = "I have never been to Italy.",
+                suggestion = "be",
+                solutions = listOf("been"),
+                answer = "was"
             )
         )
         val state = SentenceUiState.Loaded(sentences)
@@ -295,6 +313,12 @@ class SentenceTopAppBarTest {
                 suggestion = "be",
                 solutions = listOf("been"),
                 answer = ""
+            ),
+            FillInSentence(
+                sentence = "I have never been to Italy.",
+                suggestion = "be",
+                solutions = listOf("been"),
+                answer = "was"
             )
         )
         val state = SentenceUiState.Loaded(sentences)
