@@ -54,7 +54,7 @@ private fun SentenceTopAppBar_success_can_navBack(
 ) {
     HomeLearningTheme {
         SentenceTopAppBar(
-            titleId = R.string.activity_homophones,
+            titleId = R.string.activity_irregular_verbs,
             state = SentenceUiState.Loaded(sentences = emptyList()),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
