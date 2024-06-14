@@ -115,7 +115,7 @@ fun SentenceContent(
         is SentenceUiState.Loaded ->
             SentenceItems(
                 sentences = state.sentences,
-                isAllAnswered = state.isSavable,
+                isAllAnswered = state.isSavable(),
                 onValueChange = { index, value -> viewModel.updateAnswer(index, value) },
                 onDoneCallback = { viewModel.saveSentences() },
                 modifier = modifier.imePadding()

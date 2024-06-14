@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
@@ -29,7 +31,7 @@ fun SentenceTopAppBar(
         navigateUp = navigateUp,
 
         actions = {
-            if (state.isSavable) {
+            if (state.isSavable()) {
                 IconButton(onClick = { callback() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_check),
@@ -47,12 +49,14 @@ fun SentenceTopAppBar(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_success_notAllAnswered() {
+private fun SentenceTopAppBar_success_can_navBack(
+    @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
+) {
     HomeLearningTheme {
         SentenceTopAppBar(
             titleId = R.string.activity_homophones,
-            state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = false),
-            canNavigateBack = true,
+            state = SentenceUiState.Loaded(sentences = emptyList()),
+            canNavigateBack = canNavigateBack,
             navigateUp = {},
             callback = {},
         )
@@ -62,12 +66,39 @@ fun SentenceTopAppBar_success_notAllAnswered() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_success_allAnswered() {
+private fun SentenceTopAppBar_success_notSavable(
+    @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
+) {
+    HomeLearningTheme {
+        val sentences = listOf(
+            FillInSentence(
+                sentence = "I have never been to Italy.",
+                suggestion = "be",
+                solutions = listOf("been"),
+                answer = ""
+            )
+        )
+        SentenceTopAppBar(
+            titleId = R.string.activity_irregular_verbs,
+            state = SentenceUiState.Loaded(sentences = sentences),
+            canNavigateBack = canNavigateBack,
+            navigateUp = {},
+            callback = {},
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SentenceTopAppBar_loading(
+    @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
+) {
     HomeLearningTheme {
         SentenceTopAppBar(
             titleId = R.string.activity_homophones,
-            state = SentenceUiState.Loaded(sentences = emptyList(), isSavable = true),
-            canNavigateBack = false,
+            state = SentenceUiState.Loading,
+            canNavigateBack = canNavigateBack,
             navigateUp = {},
             callback = {}
         )
@@ -77,27 +108,14 @@ fun SentenceTopAppBar_success_allAnswered() {
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun SentenceTopAppBar_loading() {
+private fun SentenceTopAppBar_error(
+    @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
+) {
     HomeLearningTheme {
         SentenceTopAppBar(
             titleId = R.string.activity_homophones,
-            state = SentenceUiState.Loading(false),
-            canNavigateBack = false,
-            navigateUp = {},
-            callback = {}
-        )
-    }
-}
-
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun SentenceTopAppBar_error() {
-    HomeLearningTheme {
-        SentenceTopAppBar(
-            titleId = R.string.activity_homophones,
-            state = SentenceUiState.LoadingError(isSavable = false, errorMessage = 12),
-            canNavigateBack = false,
+            state = SentenceUiState.LoadingError(errorMessage = 12),
+            canNavigateBack = canNavigateBack,
             navigateUp = {},
             callback = {},
         )

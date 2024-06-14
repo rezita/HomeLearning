@@ -1,32 +1,34 @@
 package com.github.rezita.homelearning.ui.screens.sentence
 
 import com.github.rezita.homelearning.model.FillInSentence
+import com.github.rezita.homelearning.model.WordStatus
 
 sealed interface SentenceUiState {
-    val isSavable: Boolean
+    //val isSavable: Boolean
+    fun isSavable(): Boolean
 
-    data class Loading(
-        override val isSavable: Boolean
-    ) : SentenceUiState
+    //after kotlin v1.9 this can be data object instead of object
+    data object Loading : SentenceUiState {
+        override fun isSavable() = false
+    }
 
-    data class Loaded(
-        val sentences: List<FillInSentence>,
-        override val isSavable: Boolean
-    ) : SentenceUiState
+    data class Loaded(val sentences: List<FillInSentence>) : SentenceUiState {
+        override fun isSavable() =
+            sentences.none { word -> word.status == WordStatus.UNCHECKED }
+    }
 
-    data class LoadingError(
-        val errorMessage: Int,
-        override val isSavable: Boolean
-    ) : SentenceUiState
+    data class LoadingError(val errorMessage: Int) : SentenceUiState {
+        override fun isSavable() = false
+    }
 
-    data class Saved(
-        val sentences: List<FillInSentence>,
-        override val isSavable: Boolean
-    ) : SentenceUiState
+    data class Saved(val sentences: List<FillInSentence>) : SentenceUiState {
+        override fun isSavable() = false
+    }
 
     data class SavingError(
         val errorMessage: Int,
         val sentences: List<FillInSentence>,
-        override val isSavable: Boolean
-    ) : SentenceUiState
+    ) : SentenceUiState {
+        override fun isSavable() = true
+    }
 }

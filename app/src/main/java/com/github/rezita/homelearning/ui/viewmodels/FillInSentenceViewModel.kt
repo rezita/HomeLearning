@@ -190,38 +190,24 @@ data class SentenceViewModelState(
     fun toUiState(): SentenceUiState =
         when (state) {
             SentenceState.LOADING ->
-                SentenceUiState.Loading(
-                    isSavable = isAllAnswered()
-                )
+                SentenceUiState.Loading
 
             SentenceState.SAVING ->
-                SentenceUiState.Loading(
-                    isSavable = isAllAnswered()
-                )
+                SentenceUiState.Loading
 
             SentenceState.LOADED ->
-                SentenceUiState.Loaded(
-                    isSavable = isAllAnswered(),
-                    sentences = sentences
-                )
+                SentenceUiState.Loaded(sentences = sentences)
 
             SentenceState.SAVED -> {
-                SentenceUiState.Saved(
-                    isSavable = isAllAnswered(),
-                    sentences = sentences
-                )
+                SentenceUiState.Saved(sentences = sentences)
             }
 
             SentenceState.LOAD_ERROR -> {
-                SentenceUiState.LoadingError(
-                    isSavable = isAllAnswered(),
-                    errorMessage = errorMessage!!
-                )
+                SentenceUiState.LoadingError(errorMessage = errorMessage!!)
             }
 
             SentenceState.SAVING_ERROR -> {
                 SentenceUiState.SavingError(
-                    isSavable = isAllAnswered(),
                     errorMessage = errorMessage!!,
                     sentences = sentences
                 )
