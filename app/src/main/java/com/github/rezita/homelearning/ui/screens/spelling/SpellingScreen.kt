@@ -391,7 +391,7 @@ private fun SpellingItemSizePreview(
 @PreviewLightDark
 @Composable
 private fun SpellingItemEnablePreview(
-    @PreviewParameter(SpellingEnableParameterProvider::class) isEnabled: Boolean
+    @PreviewParameter(BooleanPreviewProvider::class) isEnabled: Boolean
 ) {
     HomeLearningTheme {
         Surface {
@@ -411,7 +411,7 @@ private fun SpellingItemEnablePreview(
 @PreviewLightDark
 @Composable
 private fun SpellingItemsPreview(
-    @PreviewParameter(SpellingEnableParameterProvider::class) isEnabled: Boolean
+    @PreviewParameter(BooleanPreviewProvider::class) isEnabled: Boolean
 ) {
     val spelling1 = SpellingWord(
         word = "successfully",

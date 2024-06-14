@@ -30,7 +30,7 @@ class SpellingScreenSizeParameterProvider : PreviewParameterProvider<Pair<Int, I
         )
 }
 
-class SpellingEnableParameterProvider : PreviewParameterProvider<Boolean> {
+class BooleanPreviewProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean>
         get() = sequenceOf(true, false)
 }
