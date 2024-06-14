@@ -127,7 +127,7 @@ fun ReadingScreen(
 
 
 @Composable
-fun ReadingContent(
+private fun ReadingContent(
     windowSize: HomeLearningWindowSizeClass,
     state: ReadingUiState,
     isColorDisplay: Boolean = false,
@@ -153,7 +153,7 @@ fun ReadingContent(
 }
 
 @Composable
-fun ReadingWordItems(
+private fun ReadingWordItems(
     windowSize: HomeLearningWindowSizeClass,
     words: List<ReadingWord>,
     isColorDisplay: Boolean,
@@ -177,7 +177,7 @@ fun ReadingWordItems(
 }
 
 @Composable
-fun ReadingWordItem(
+private fun ReadingWordItem(
     windowSize: HomeLearningWindowSizeClass,
     word: ReadingWord,
     isColorDisplay: Boolean,
@@ -225,7 +225,7 @@ fun ReadingWordItem(
 }
 
 @Composable
-fun TextDisplay(
+private fun TextDisplay(
     windowSize: HomeLearningWindowSizeClass,
     word: ReadingWord,
     isDecorated: Boolean,
@@ -279,7 +279,7 @@ fun TextDisplay(
 }
 
 @Composable
-fun getFontSize(
+private fun getFontSize(
     text: String,
     textMeasurer: TextMeasurer,
     textStyle: TextStyle,
@@ -319,7 +319,7 @@ fun getFontSize(
     showSystemUi = false
 )
 @Composable
-fun ReadingWordItemDisplayLongWord(
+private fun ReadingWordItemDisplayLongWord(
 ) {
     val configuration = LocalConfiguration.current
     val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
@@ -353,7 +353,7 @@ fun ReadingWordItemDisplayLongWord(
     heightDp = 390
 )
 @Composable
-fun ReadingWordItemDisplay(
+private fun ReadingWordItemDisplay(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
     val rule1 = ReadingRule(word = "she", pattern = "sh", ruleName = "ul")
@@ -385,7 +385,7 @@ fun ReadingWordItemDisplay(
     heightDp = 800
 )
 @Composable
-fun ReadingWordItemDisplayManyRules(
+private fun ReadingWordItemDisplayManyRules(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
     val rule1 = ReadingRule(word = "agIfkvwitlhnmrube", pattern = "a", ruleName = "ul")
@@ -417,7 +417,7 @@ fun ReadingWordItemDisplayManyRules(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun ReadingWordItemsReview(
+private fun ReadingWordItemsReview(
     @PreviewParameter(ColorDisplayParameterProvider::class) isColorDisplay: Boolean
 ) {
     val rule1 = ReadingRule(word = "she", pattern = "sh", ruleName = "ul")
