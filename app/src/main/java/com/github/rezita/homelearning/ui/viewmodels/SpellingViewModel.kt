@@ -192,11 +192,11 @@ data class SpellingViewModelState(
     fun isSavable(): Boolean {
         return when (state) {
             SpellingState.LOADED -> {
-                words.any { word -> word.status != WordStatus.UNCHECKED }
+                words.isNotEmpty() && words.any { word -> word.status != WordStatus.UNCHECKED }
             }
 
             SpellingState.SAVING_ERROR -> {
-                words.any { word -> word.status != WordStatus.UNCHECKED }
+                words.isNotEmpty() && words.any { word -> word.status != WordStatus.UNCHECKED }
             }
 
             else -> false
@@ -209,38 +209,24 @@ data class SpellingViewModelState(
     fun toUiState(): SpellingUiState =
         when (state) {
             SpellingState.LOADING ->
-                SpellingUiState.Loading(
-                    isSavable = isSavable()
-                )
+                SpellingUiState.Loading
 
             SpellingState.SAVING ->
-                SpellingUiState.Loading(
-                    isSavable = isSavable()
-                )
+                SpellingUiState.Loading
 
             SpellingState.LOADED ->
-                SpellingUiState.Loaded(
-                    isSavable = isSavable(),
-                    words = words
-                )
+                SpellingUiState.Loaded(words = words)
 
             SpellingState.SAVED -> {
-                SpellingUiState.Saved(
-                    isSavable = isSavable(),
-                    words = words
-                )
+                SpellingUiState.Saved(words = words)
             }
 
             SpellingState.LOAD_ERROR -> {
-                SpellingUiState.LoadingError(
-                    isSavable = isSavable(),
-                    errorMessage = errorMessage!!
-                )
+                SpellingUiState.LoadingError(errorMessage = errorMessage!!)
             }
 
             SpellingState.SAVING_ERROR -> {
                 SpellingUiState.SavingError(
-                    isSavable = isSavable(),
                     errorMessage = errorMessage!!,
                     words = words
                 )
