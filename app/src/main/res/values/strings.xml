@@ -91,6 +91,9 @@
     <string name="info_no_words_upload">There are no words to upload.</string>
     <string name="info_words_to_upload">Words to be uploaded</string>
     <string name="info_uploading">Saving words&#8230;</string>
+    <string name="upload_saving_words">Saving words</string>
+    <string name="upload_add_new">Add new word</string>
+
 
     <string name="edit_spelling_word_title">Edit spelling word</string>
     <string name="save_spelling_word_title">Add new spelling word</string>

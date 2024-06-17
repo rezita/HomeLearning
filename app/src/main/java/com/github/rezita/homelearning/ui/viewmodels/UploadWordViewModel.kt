@@ -313,22 +313,6 @@ data class UploadViewModelState(
     val errorMessage: Int? = null,
     val savingResponse: List<Pair<SpellingWord, String>> = emptyList()
 ) {
-    private fun isSavable(): Boolean {
-        return when (state) {
-            UploadState.SAVING_ERROR -> true
-            UploadState.VIEWING -> words.isNotEmpty()
-            else -> false
-        }
-    }
-
-    private fun isExpandable(): Boolean {
-        return when (state) {
-            UploadState.SAVED -> true
-            UploadState.VIEWING -> words.size < MAX_NR_OF_WORDS
-            else -> false
-        }
-    }
-
     /**
      * Converts this [UploadViewModelState] into a more strongly typed [UploadUiState] for driving
      * the ui.
@@ -336,68 +320,39 @@ data class UploadViewModelState(
     fun toUiState(): UploadUiState =
         when (state) {
             UploadState.LOADING ->
-                UploadUiState.Loading(
-                    isExpandable = isExpandable(),
-                    categories = categories,
-                    isSavable = isSavable()
-                )
+                UploadUiState.Loading
 
             UploadState.VIEWING -> {
                 if (words.isEmpty())
-                    UploadUiState.NoWords(
-                        isExpandable = isExpandable(),
-                        categories = categories,
-                        isSavable = isSavable()
-                    )
+                    UploadUiState.NoWords
                 else
-                    UploadUiState.HasWords(
-                        words = words,
-                        isExpandable = isExpandable(),
-                        categories = categories,
-                        isSavable = isSavable()
-                    )
+                    UploadUiState.HasWords(words = words)
             }
 
             UploadState.EDITING ->
                 UploadUiState.Editing(
                     editState = editState,
-                    isExpandable = isExpandable(),
                     categories = categories,
-                    isSavable = isSavable()
                 )
 
             UploadState.SAVED ->
                 UploadUiState.Saved(
                     words = words,
-                    isExpandable = isExpandable(),
-                    categories = categories,
-                    isSavable = isSavable(),
                     savingResult = savingResponse
                 )
 
             UploadState.SAVING ->
-                UploadUiState.Saving(
-                    words = words,
-                    isExpandable = isExpandable(),
-                    categories = categories,
-                    isSavable = isSavable()
-                )
+                UploadUiState.Saving
 
             UploadState.LOAD_ERROR ->
                 UploadUiState.LoadingError(
                     errorMessage = errorMessage,
-                    isExpandable = isExpandable(),
-                    categories = categories,
-                    isSavable = isSavable()
                 )
 
             UploadState.SAVING_ERROR ->
                 UploadUiState.SavingError(
                     words = words,
-                    errorMessage = errorMessage,
-                    isExpandable = isExpandable(),
-                    categories = categories,
-                    isSavable = isSavable()
+                    errorMessage = errorMessage
                 )
         }
 }

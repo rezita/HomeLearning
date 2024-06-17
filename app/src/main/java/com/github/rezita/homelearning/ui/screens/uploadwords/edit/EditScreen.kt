@@ -275,9 +275,7 @@ private fun SpellingItemPreview() {
             EditScreen(
                 state = UploadUiState.Editing(
                     EditState(word = spelling1),
-                    categories = categories,
-                    isSavable = false,
-                    isExpandable = false
+                    categories = categories
                 ),
                 saveCallback = {},
                 cancelCallback = {},

@@ -65,10 +65,7 @@ private fun UploadErrorItemPreview() {
 
     val state = UploadUiState.SavingError(
         words = listOf(spellingWord1, spellingWord2),
-        errorMessage = null,
-        isExpandable = false,
-        categories = listOf("home", "school"),
-        isSavable = true
+        errorMessage = null
     )
     
     HomeLearningTheme {

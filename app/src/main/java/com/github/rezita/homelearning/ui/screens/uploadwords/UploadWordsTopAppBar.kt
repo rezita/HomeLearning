@@ -10,6 +10,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
+import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
@@ -32,20 +33,20 @@ fun UploadWordsTopAppBar(
         navigateUp = navigateUp,
 
         actions = {
-            if (state.isSavable) {
+            if (state.isSavable()) {
                 IconButton(onClick = saveCallback) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
-                        contentDescription = stringResource(id = R.string.spelling_save),
+                        contentDescription = stringResource(id = R.string.upload_saving_words),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
-            if (state.isExpandable) {
+            if (state.isExpandable()) {
                 IconButton(onClick = { addNewCallback() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
-                        contentDescription = stringResource(id = R.string.spelling_add_new_word),
+                        contentDescription = stringResource(id = R.string.upload_add_new),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
@@ -57,14 +58,38 @@ fun UploadWordsTopAppBar(
 
 @Preview
 @Composable
-fun UploadWordsTopAppBar_downloaded() {
+private fun UploadWordsTopAppBar_downloaded() {
     HomeLearningTheme {
         UploadWordsTopAppBar(
-            state = UploadUiState.NoWords(
-                categories = emptyList(),
-                isExpandable = true,
-                isSavable = true
-            ),
+            state = UploadUiState.NoWords,
+            canNavigateBack = true,
+            navigateUp = {},
+            saveCallback = {},
+            addNewCallback = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun UploadWordsTopAppBar_hasWords() {
+    HomeLearningTheme {
+        UploadWordsTopAppBar(
+            state = UploadUiState.HasWords(words = emptyList()),
+            canNavigateBack = true,
+            navigateUp = {},
+            saveCallback = {},
+            addNewCallback = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun UploadWordsTopAppBar_editing() {
+    HomeLearningTheme {
+        UploadWordsTopAppBar(
+            state = UploadUiState.Editing(EditState(), emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             saveCallback = {},

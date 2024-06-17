@@ -146,10 +146,7 @@ private fun SavedWordsPreview() {
     )
 
     val state = UploadUiState.HasWords(
-        words = listOf(spellingWord1, spellingWord2),
-        isExpandable = false,
-        categories = listOf("home", "school"),
-        isSavable = true
+        words = listOf(spellingWord1, spellingWord2)
     )
     HomeLearningTheme {
         Scaffold {

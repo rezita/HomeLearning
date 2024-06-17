@@ -2,66 +2,68 @@ package com.github.rezita.homelearning.ui.screens.uploadwords
 
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
+import com.github.rezita.homelearning.ui.viewmodels.MAX_NR_OF_WORDS
 
 sealed interface UploadUiState {
-    val categories: List<String>
-    val isExpandable: Boolean
-    val isSavable: Boolean
+    fun isExpandable(): Boolean
+    fun isSavable(): Boolean
 
+    data object Loading : UploadUiState {
+        override fun isExpandable() = false
+        override fun isSavable() = false
 
-    data class Loading(
-        override val categories: List<String>,
-        override val isExpandable: Boolean,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    }
 
-    data class Saving(
-        val words: List<SpellingWord>,
-        override val categories: List<String>,
-        override val isExpandable: Boolean,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    data object Saving : UploadUiState {
+        override fun isExpandable() = false
+        override fun isSavable() = false
 
-    data class NoWords(
-        override val categories: List<String>,
-        override val isExpandable: Boolean,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    }
+
+    data object NoWords : UploadUiState {
+        override fun isExpandable() = true
+        override fun isSavable() = false
+
+    }
 
     data class HasWords(
         val words: List<SpellingWord> = emptyList(),
-        override val categories: List<String>,
-        override val isExpandable: Boolean,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    ) : UploadUiState {
+        override fun isExpandable() = words.size < MAX_NR_OF_WORDS
+        override fun isSavable() = true
+
+    }
 
     data class Saved(
         val words: List<SpellingWord>,
         val savingResult: List<Pair<SpellingWord, String>> = emptyList(),
-        override val isExpandable: Boolean,
-        override val categories: List<String>,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    ) : UploadUiState {
+        override fun isExpandable() = true
+        override fun isSavable() = false
+
+    }
 
     data class Editing(
         val editState: EditState = EditState(),
-        override val isExpandable: Boolean,
-        override val categories: List<String>,
-        override val isSavable: Boolean
-    ) : UploadUiState
+        val categories: List<String>,
+    ) : UploadUiState {
+        override fun isExpandable() = false
+        override fun isSavable() = false
+    }
 
     data class LoadingError(
         val errorMessage: Int?,
-        override val isExpandable: Boolean,
-        override val categories: List<String>,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    ) : UploadUiState {
+        override fun isExpandable() = false
+        override fun isSavable() = false
+
+    }
 
     data class SavingError(
         val words: List<SpellingWord>,
         val errorMessage: Int?,
-        override val isExpandable: Boolean,
-        override val categories: List<String>,
-        override val isSavable: Boolean
-    ) : UploadUiState
+    ) : UploadUiState {
+        override fun isExpandable() = false
+        override fun isSavable() = false
+    }
 }
