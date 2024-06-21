@@ -1,13 +1,20 @@
 package com.github.rezita.homelearning.ui
 
 import androidx.compose.runtime.Composable
+import com.github.rezita.homelearning.data.AppContainer
 import com.github.rezita.homelearning.navigation.HomeLearningNavigation
+import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
+import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun HomeLearningApp(
-    appState: HomeLearningAppState
+    appContainer: AppContainer,
+    windowSizeClass: HomeLearningWindowSizeClass
 ) {
-    HomeLearningNavigation(
-        homeLearningAppState = appState,
-    )
+    HomeLearningTheme {
+        HomeLearningNavigation(
+            appContainer = appContainer,
+            windowSizeClass = windowSizeClass
+        )
+    }
 }

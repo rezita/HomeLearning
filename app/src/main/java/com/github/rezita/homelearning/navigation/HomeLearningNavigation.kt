@@ -10,9 +10,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.data.AppContainer
 import com.github.rezita.homelearning.network.SheetAction
-import com.github.rezita.homelearning.ui.HomeLearningAppState
 import com.github.rezita.homelearning.ui.screens.home.HomeLearningTabItem
 import com.github.rezita.homelearning.ui.screens.home.HomeScreen
 import com.github.rezita.homelearning.ui.screens.home.TabButton
@@ -21,6 +22,7 @@ import com.github.rezita.homelearning.ui.screens.reading.ReadingScreen
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceScreen
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingScreen
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsScreen
+import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 
 val start_destination = "${Home.route}/0"
 
@@ -39,11 +41,12 @@ fun NavHostController.navigateStartDestinationWithoutBack() {
 
 @Composable
 fun HomeLearningNavigation(
-    homeLearningAppState: HomeLearningAppState,
+    appContainer: AppContainer,
+    windowSizeClass: HomeLearningWindowSizeClass,
     startDestination: String = start_destination,
     modifier: Modifier = Modifier
 ) {
-    val navController = homeLearningAppState.navController
+    val navController = rememberNavController()
 
     val erikTabButtons = listOf(
         TabButton(
@@ -137,7 +140,7 @@ fun HomeLearningNavigation(
                         }"
                     )
                 },
-                windowSize = homeLearningAppState.windowSizeClass,
+                windowSize = windowSizeClass,
                 modifier = modifier
             )
         }
@@ -154,7 +157,7 @@ fun HomeLearningNavigation(
                 sheetAction = sheetAction,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
-                windowSize = homeLearningAppState.windowSizeClass,
+                windowSize = windowSizeClass,
                 modifier = modifier
             )
         }

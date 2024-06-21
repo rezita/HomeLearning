@@ -8,9 +8,7 @@ import androidx.compose.ui.graphics.toComposeRect
 import androidx.compose.ui.platform.LocalDensity
 import androidx.window.layout.WindowMetricsCalculator
 import com.github.rezita.homelearning.ui.HomeLearningApp
-import com.github.rezita.homelearning.ui.rememberHomeLearningAppState
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
-import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,14 +16,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            HomeLearningTheme {
-                val appState = rememberHomeLearningAppState(
-                    windowSizeClass = calculateHomeLearningWindowSizeClass(),
-                    wordRepository = (application as HomeLearningApplication).container.wordRepository
-                )
-                HomeLearningApp(appState)
-            }
+            val windowSizeClass = calculateHomeLearningWindowSizeClass()
+            val appContainer = (application as HomeLearningApplication).container
+            HomeLearningApp(appContainer, windowSizeClass)
         }
+
     }
 
     @Composable
