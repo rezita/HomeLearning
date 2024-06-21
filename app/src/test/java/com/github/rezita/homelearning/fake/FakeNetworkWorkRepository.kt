@@ -40,11 +40,15 @@ class FakeNetworkWorkRepository : WordRepository {
     }
 
     override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String> {
-        TODO("Not yet implemented")
+        return RepositoryResult.Success("Success")
     }
 
     override suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String> {
-        TODO("Not yet implemented")
+        return if(sentences.isNotEmpty()) {
+            RepositoryResult.Success("Success")
+        } else {
+            RepositoryResult.Error("Empty list")
+        }
     }
 
     override suspend fun updateErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
