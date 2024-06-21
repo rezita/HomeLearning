@@ -117,6 +117,7 @@ class FillInSentenceViewModel(
     }
 
     fun updateAnswer(index: Int, answer: String) {
+        require(index in viewModelState.value.sentences.indices) { "Invalid index value" }
         viewModelState.update {
             it.copy(
                 sentences = it.sentences.toMutableList()
@@ -182,6 +183,7 @@ data class SentenceViewModelState(
             SentenceState.LOADED -> {
                 sentences.none { word -> word.status == WordStatus.UNCHECKED }
             }
+
             SentenceState.SAVING_ERROR -> {
                 sentences.none { word -> word.status == WordStatus.UNCHECKED }
             }
