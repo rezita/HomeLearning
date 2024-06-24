@@ -2,7 +2,6 @@ package com.github.rezita.homelearning.ui.screens.reading
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
@@ -43,19 +40,15 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
-import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithIcon
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.size.WidthSizeBasedValue
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.balsamiq
-import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
 import com.github.rezita.homelearning.utils.getDecorated
 import com.github.rezita.homelearning.utils.getOutlineText
 import com.github.rezita.homelearning.utils.getUndecorated
@@ -67,67 +60,6 @@ const val MIN_FONT_SIZE = 14
 
 @Composable
 fun ReadingScreen(
-    sheetAction: SheetAction,
-    viewModel: ReadingViewModel = viewModel(
-        factory = ReadingViewModel.ReadingWordViewModelFactory(
-            sheetAction
-        )
-    ),
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    windowSize: HomeLearningWindowSizeClass,
-    modifier: Modifier = Modifier
-) {
-    val readingState by viewModel.readingUIState.collectAsState()
-    var isTopAppBarShown by remember {
-        mutableStateOf(true)
-    }
-    val configuration = LocalConfiguration.current
-
-    Scaffold(
-        modifier = modifier.pointerInput(Unit) {
-            detectTapGestures(
-                onDoubleTap = { _ ->
-                    isTopAppBarShown = !isTopAppBarShown
-                }
-            )
-        },
-        topBar = {
-            if (isTopAppBarShown) {
-                ReadingTopAppBar(
-                    state = readingState,
-                    canNavigateBack = canNavigateBack,
-                    navigateUp = navigateUp,
-                    colorDisplayCallback = { value -> viewModel.setColorDisplay(value) },
-                    isColorDisplay = viewModel.isColourDisplay
-                )
-            }
-        }
-    ) {
-        when (configuration.orientation) {
-            Configuration.ORIENTATION_PORTRAIT ->
-                ErrorDisplayWithIcon(
-                    message = stringResource(id = R.string.msg_turn_landscape_mode),
-                    iconSource = R.drawable.screen_rotation_24px,
-                    modifier = modifier
-                        .padding(it)
-                )
-
-            else ->
-                ReadingContent(
-                    windowSize = windowSize,
-                    state = readingState,
-                    isColorDisplay = viewModel.isColourDisplay,
-                    onLoadCallback = { viewModel.load() },
-                    modifier = modifier.padding(it)
-                )
-        }
-    }
-}
-
-
-@Composable
-private fun ReadingContent(
     windowSize: HomeLearningWindowSizeClass,
     state: ReadingUiState,
     isColorDisplay: Boolean = false,

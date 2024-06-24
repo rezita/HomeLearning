@@ -23,11 +23,16 @@ val progressBarMessages = listOf(
     "Discovering new ways of making you wait.",
     "Your time is very important to us. Please wait.",
     "Kindly hold on until I finish a cup of coffee.",
-    "Don't panic, Just count to infinite.",
+    "Don't panic, Just count to infinity.",
     "Let's talk about trains...",
-    "Wash your teeth before go to bed.",
+    "Brush your teeth before go to bed.",
     "I'll finish when pigs fly.",
-    "The lights are on, but nobody's home."
+    "The lights are on, but nobody's home.",
+    "Please wait while the minions do their work.",
+    "You are number 257642 in the queue.",
+    "This is your funny loading message.",
+    "Don't worry, be happy...",
+    "Don't worry, be Erik."
 )
 
 @Composable
@@ -57,7 +62,7 @@ fun LoadingProgressBar(modifier: Modifier = Modifier) {
 @Composable
 private fun LoadingProgressBarPreview() {
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             LoadingProgressBar(modifier = Modifier.padding(it))
         }
     }
