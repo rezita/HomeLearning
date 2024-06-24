@@ -106,8 +106,8 @@ class SpellingViewModel(
                         state = SpellingState.LOADED,
                         words = result.data,
                     )
-
-                    is RepositoryResult.Error -> it.copy(
+                    //else: RepositoryResult.Error
+                    else -> it.copy(
                         state = SpellingState.LOAD_ERROR,
                         errorMessage = R.string.snackBar_error_loading,
                     )
@@ -155,8 +155,8 @@ class SpellingViewModel(
                         savingResponse = result.data,
                         errorMessage = null,
                     )
-
-                    is RepositoryResult.Error -> it.copy(
+                    //else: RepositoryResult.Error
+                    else -> it.copy(
                         state = SpellingState.SAVING_ERROR,
                         savingResponse = "",
                         errorMessage = R.string.snackBar_save_error,
@@ -168,7 +168,8 @@ class SpellingViewModel(
 
 
     class SpellingViewModelFactory(
-        private val sheetAction: SheetAction
+        private val repository: WordRepository,
+        private val sheetAction: SheetAction,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
@@ -176,7 +177,7 @@ class SpellingViewModel(
             val application =
                 checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
             return SpellingViewModel(
-                (application as HomeLearningApplication).container.wordRepository,
+                repository,
                 sheetAction
             ) as T
         }

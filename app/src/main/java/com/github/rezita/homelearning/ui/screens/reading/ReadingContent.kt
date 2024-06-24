@@ -59,7 +59,7 @@ import kotlin.math.roundToInt
 const val MIN_FONT_SIZE = 14
 
 @Composable
-fun ReadingScreen(
+fun ReadingContent(
     windowSize: HomeLearningWindowSizeClass,
     state: ReadingUiState,
     isColorDisplay: Boolean = false,
@@ -81,7 +81,6 @@ fun ReadingScreen(
             modifier = modifier
         )
     }
-
 }
 
 @Composable

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.github.rezita.homelearning.HomeLearningApplication
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
@@ -156,6 +155,7 @@ class FillInSentenceViewModel(
     }
 
     class FillInSentenceViewModelFactory(
+        private val repository: WordRepository,
         private val sheetAction: SheetAction
     ) : ViewModelProvider.Factory {
 
@@ -164,8 +164,7 @@ class FillInSentenceViewModel(
             val application =
                 checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
             return FillInSentenceViewModel(
-                (application as HomeLearningApplication).container.wordRepository,
-                sheetAction
+                repository, sheetAction
             ) as T
         }
     }

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.github.rezita.homelearning.HomeLearningApplication
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
@@ -289,6 +288,7 @@ class UploadWordViewModel(
 
 
     class UploadWordViewModelFactory(
+        private val repository: WordRepository,
         private val sheetAction: SheetAction
     ) : ViewModelProvider.Factory {
 
@@ -297,7 +297,7 @@ class UploadWordViewModel(
             val application =
                 checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
             return UploadWordViewModel(
-                (application as HomeLearningApplication).container.wordRepository,
+                repository,
                 sheetAction
             ) as T
         }

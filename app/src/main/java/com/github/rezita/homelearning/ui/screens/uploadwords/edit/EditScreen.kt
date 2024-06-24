@@ -123,9 +123,9 @@ fun EditScreen(
 private fun EditTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    labelId: Int,
     modifier: Modifier = Modifier,
     readOnly: Boolean = false,
-    labelId: Int,
     trailingIcon: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     error: Int? = null,

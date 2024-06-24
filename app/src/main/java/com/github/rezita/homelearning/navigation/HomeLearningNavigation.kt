@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,11 +19,15 @@ import com.github.rezita.homelearning.ui.screens.home.HomeLearningTabItem
 import com.github.rezita.homelearning.ui.screens.home.HomeScreen
 import com.github.rezita.homelearning.ui.screens.home.TabButton
 import com.github.rezita.homelearning.ui.screens.home.TabWithButtons
-import com.github.rezita.homelearning.ui.screens.reading.ReadingScreen
-import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceScreen
-import com.github.rezita.homelearning.ui.screens.spelling.SpellingScreen
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsScreen
+import com.github.rezita.homelearning.ui.screens.reading.ReadingRoute
+import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceRoute
+import com.github.rezita.homelearning.ui.screens.spelling.SpellingRoute
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsRoute
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
+import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
+import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
+import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
+import com.github.rezita.homelearning.ui.viewmodels.UploadWordViewModel
 
 val start_destination = "${Home.route}/0"
 
@@ -127,8 +132,15 @@ fun HomeLearningNavigation(
                 navBackStackEntry.arguments,
                 SheetAction.READ_ERIK_SPELLING_WORDS
             )
-            SpellingScreen(
-                sheetAction = sheetAction,
+            val spellingViewModel: SpellingViewModel = viewModel(
+                factory = SpellingViewModel.SpellingViewModelFactory(
+                    appContainer.wordRepository,
+                    sheetAction
+                )
+            )
+
+            SpellingRoute(
+                viewModel = spellingViewModel,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 addNewCallback = {
@@ -153,8 +165,16 @@ fun HomeLearningNavigation(
                 navBackStackEntry.arguments,
                 SheetAction.READ_READING_WORDS
             )
-            ReadingScreen(
-                sheetAction = sheetAction,
+
+            val readingViewModel: ReadingViewModel = viewModel(
+                factory = ReadingViewModel.ReadingWordViewModelFactory(
+                    appContainer.wordRepository,
+                    sheetAction
+                )
+            )
+
+            ReadingRoute(
+                viewModel = readingViewModel,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 windowSize = windowSizeClass,
@@ -170,8 +190,16 @@ fun HomeLearningNavigation(
                 navBackStackEntry.arguments,
                 SheetAction.SAVE_ERIK_WORDS
             )
-            UploadWordsScreen(
-                sheetAction = sheetAction,
+
+            val uploadViewModel: UploadWordViewModel = viewModel(
+                factory = UploadWordViewModel.UploadWordViewModelFactory(
+                    appContainer.wordRepository,
+                    sheetAction
+                )
+            )
+
+            UploadWordsRoute(
+                viewModel = uploadViewModel,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
@@ -179,8 +207,16 @@ fun HomeLearningNavigation(
         }
 
         composable(route = Homophones.route) {
-            FillInSentenceSentenceScreen(
-                sheetAction = SheetAction.READ_HOMOPHONES,
+
+            val fillInSentenceViewModel: FillInSentenceViewModel = viewModel(
+                factory = FillInSentenceViewModel.FillInSentenceViewModelFactory(
+                    appContainer.wordRepository,
+                    SheetAction.READ_HOMOPHONES
+                )
+            )
+
+            FillInSentenceSentenceRoute(
+                viewModel = fillInSentenceViewModel,
                 titleId = R.string.homophones_title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
@@ -189,8 +225,14 @@ fun HomeLearningNavigation(
         }
 
         composable(route = IrregularVerbs.route) {
-            FillInSentenceSentenceScreen(
-                sheetAction = SheetAction.READ_IRREGULAR_VERBS,
+            val fillInSentenceViewModel: FillInSentenceViewModel = viewModel(
+                factory = FillInSentenceViewModel.FillInSentenceViewModelFactory(
+                    appContainer.wordRepository,
+                    SheetAction.READ_IRREGULAR_VERBS
+                )
+            )
+            FillInSentenceSentenceRoute(
+                viewModel = fillInSentenceViewModel,
                 titleId = R.string.verbs_title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },

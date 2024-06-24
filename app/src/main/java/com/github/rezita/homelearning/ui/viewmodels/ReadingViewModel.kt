@@ -81,6 +81,7 @@ class ReadingViewModel(
     }
 
     class ReadingWordViewModelFactory(
+        private val repository: WordRepository,
         private val sheetAction: SheetAction
     ) : ViewModelProvider.Factory {
 
@@ -88,7 +89,7 @@ class ReadingViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
             val application = checkNotNull(extras[APPLICATION_KEY])
             return ReadingViewModel(
-                (application as HomeLearningApplication).container.wordRepository,
+                repository,
                 sheetAction
             ) as T
         }
