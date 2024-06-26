@@ -1,8 +1,9 @@
-package com.github.rezita.homelearning.utils
+package com.github.rezita.homelearning.utils.sentenceDisplay
 
 import androidx.compose.ui.graphics.Color
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.utils.getWithResult
 import org.junit.Assert
 import org.junit.Test
 
