@@ -14,7 +14,7 @@ class SentenceSplitBySeparatorTest {
         val originalSentence =
             FillInSentence(sentence = sentence, suggestion = suggestion, solutions = solutions)
         val expectedResult = Pair("I have never ", " to Italy. (be)")
-        Assert.assertEquals(originalSentence.splitBySparatorWithSuggestion(), expectedResult)
+        Assert.assertEquals(originalSentence.splitBySeparatorWithSuggestion(), expectedResult)
     }
 
     @Test
@@ -26,7 +26,7 @@ class SentenceSplitBySeparatorTest {
         val originalSentence =
             FillInSentence(sentence = sentence, suggestion = suggestion, solutions = solutions)
         val expectedResult = Pair("", " I have never to Italy. (be)")
-        Assert.assertEquals(originalSentence.splitBySparatorWithSuggestion(), expectedResult)
+        Assert.assertEquals(originalSentence.splitBySeparatorWithSuggestion(), expectedResult)
     }
 
     @Test
@@ -38,7 +38,7 @@ class SentenceSplitBySeparatorTest {
         val originalSentence =
             FillInSentence(sentence = sentence, suggestion = suggestion, solutions = solutions)
         val expectedResult = Pair("I have never to Italy. ", " (be)")
-        Assert.assertEquals(originalSentence.splitBySparatorWithSuggestion(), expectedResult)
+        Assert.assertEquals(originalSentence.splitBySeparatorWithSuggestion(), expectedResult)
     }
 
     @Test
@@ -50,7 +50,7 @@ class SentenceSplitBySeparatorTest {
         val originalSentence =
             FillInSentence(sentence = sentence, suggestion = suggestion, solutions = solutions)
         val expectedResult = Pair("I have ", " never \$£ to Italy. (be)")
-        Assert.assertEquals(originalSentence.splitBySparatorWithSuggestion(), expectedResult)
+        Assert.assertEquals(originalSentence.splitBySeparatorWithSuggestion(), expectedResult)
     }
 
     @Test
@@ -62,7 +62,7 @@ class SentenceSplitBySeparatorTest {
         val originalSentence =
             FillInSentence(sentence = sentence, suggestion = suggestion, solutions = solutions)
         val expectedResult = Pair("", " I have never to Italy. (be)")
-        Assert.assertEquals(originalSentence.splitBySparatorWithSuggestion(), expectedResult)
+        Assert.assertEquals(originalSentence.splitBySeparatorWithSuggestion(), expectedResult)
     }
 
 }

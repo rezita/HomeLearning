@@ -1,7 +1,6 @@
 package com.github.rezita.homelearning.utils
 
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextDecoration
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import org.junit.Assert
@@ -24,7 +23,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
 
         val expectedText = "was been I have never been to Italy. (be)"
@@ -43,7 +42,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -66,7 +64,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
 
         val expectedText = "I have never was been to $£ Italy. (be)"
@@ -86,7 +84,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -109,7 +106,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "was been I have never been to Italy. (be)"
         val expectedSpan1Start = 0
@@ -126,7 +123,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -149,7 +145,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "I have never been to Italy. was been (be)"
         val expectedSpan1Start = originalSentence.sentence.length - 1
@@ -166,7 +162,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -190,7 +185,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "I have never was been to Italy. (be)"
         val expectedSpan1Start = 13
@@ -207,7 +202,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -230,7 +224,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "burn burned/burnt I have dinner yet again! (burn)"
         val expectedSpan1Start = 0
@@ -247,7 +241,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -270,7 +263,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "burn burned/burnt I have dinner yet again! (burn)"
         val expectedSpan1Start = 0
@@ -287,7 +280,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -312,7 +304,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "I have dinner yet again! burn burned/burnt (burn)"
         val expectedSpan1Start = originalSentence.sentence.length - 1
@@ -329,7 +321,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)
@@ -353,7 +344,7 @@ class SentenceGetWithResultIncorrectAnswerTest {
         /** span for the answer*/
         val span1 = spans[0]
 
-        /** span for the correct soultion(s)*/
+        /** span for the correct solution(s)*/
         val span2 = spans[1]
         val expectedText = "I have burn burned/burnt dinner yet again! (burn)"
         val expectedSpan1Start = 7
@@ -370,7 +361,6 @@ class SentenceGetWithResultIncorrectAnswerTest {
         Assert.assertEquals(span1.start, expectedSpan1Start)
         Assert.assertEquals(span1.end, expectedSpan1End)
         Assert.assertEquals(span1.item.color, Color.Red)
-        Assert.assertEquals(span1.item.textDecoration, TextDecoration.LineThrough)
 
         Assert.assertEquals(span2.start, expectedSpan2Start)
         Assert.assertEquals(span2.end, expectedSpan2End)

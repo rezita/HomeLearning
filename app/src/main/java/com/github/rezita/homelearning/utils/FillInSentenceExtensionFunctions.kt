@@ -4,15 +4,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.SEPARATOR
 import com.github.rezita.homelearning.model.SOLUTION_SEPARATOR
 import com.github.rezita.homelearning.model.WordStatus
 
-fun FillInSentence.splitBySparatorWithSuggestion(): Pair<String, String> {
-    val index = this.sentence.indexOf(SEPARATOR)
-    return when (index) {
+fun FillInSentence.splitBySeparatorWithSuggestion(): Pair<String, String> {
+    return when (this.sentence.indexOf(SEPARATOR)) {
         -1 -> Pair("", " ${this.sentence.trim()} ($suggestion)")
         0 -> Pair("", " ${this.sentence.substringAfter(SEPARATOR).trim()} ($suggestion)")
         this.sentence.length - SEPARATOR.length -> Pair(
@@ -37,7 +35,7 @@ private fun FillInSentence.getWithSuggestionsAndSeparatorReplaced(replacement: S
 }
 
 fun FillInSentence.getWithResult(correctColor: Color, incorrectColor: Color): AnnotatedString {
-    val (prefix, suffix) = splitBySparatorWithSuggestion()
+    val (prefix, suffix) = splitBySeparatorWithSuggestion()
 
     val annotated = buildAnnotatedString {
         append(prefix)
@@ -47,7 +45,10 @@ fun FillInSentence.getWithResult(correctColor: Color, incorrectColor: Color): An
     return annotated
 }
 
-private fun FillInSentence.getResultText(correctColor: Color, incorrectColor: Color): AnnotatedString {
+private fun FillInSentence.getResultText(
+    correctColor: Color,
+    incorrectColor: Color
+): AnnotatedString {
     val solutionsString = solutions.joinWithSeparator(SOLUTION_SEPARATOR)
 
     val annotated = buildAnnotatedString {
@@ -75,7 +76,6 @@ private fun FillInSentence.getResultText(correctColor: Color, incorrectColor: Co
                 append(answer)
                 addStyle(
                     style = SpanStyle(
-                        textDecoration = TextDecoration.LineThrough,
                         color = incorrectColor
                     ),
                     start = 0,

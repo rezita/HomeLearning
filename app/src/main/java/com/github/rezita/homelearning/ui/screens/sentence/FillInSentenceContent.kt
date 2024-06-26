@@ -43,7 +43,7 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.sentence_correct
 import com.github.rezita.homelearning.ui.theme.sentence_incorrect
 import com.github.rezita.homelearning.utils.getWithResult
-import com.github.rezita.homelearning.utils.splitBySparatorWithSuggestion
+import com.github.rezita.homelearning.utils.splitBySeparatorWithSuggestion
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -110,7 +110,7 @@ fun SentenceItems(
     val kc = LocalSoftwareKeyboardController.current
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
-            val (prefix, suffix) = item.splitBySparatorWithSuggestion()
+            val (prefix, suffix) = item.splitBySeparatorWithSuggestion()
             val prefixWithIndex = "${getIndexPrefix(index)} $prefix"
             PartiallyEditableText(
                 prefix = prefixWithIndex,
