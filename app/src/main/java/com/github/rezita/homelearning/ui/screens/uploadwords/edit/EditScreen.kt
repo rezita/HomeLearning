@@ -50,9 +50,7 @@ fun EditScreen(
     state: UploadUiState.Editing,
     saveCallback: () -> Unit,
     cancelCallback: () -> Unit,
-    onWordChangeCallback: (String) -> Unit,
-    onCommentChangeCallback: (String) -> Unit,
-    onCategoryChangeCallback: (String) -> Unit,
+    onWordChangeCallback: (SpellingWord) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -64,14 +62,15 @@ fun EditScreen(
     ) {
         EditTextField(
             value = state.editState.word.word,
-            onValueChange = { onWordChangeCallback(it) },
+            onValueChange = { onWordChangeCallback(state.editState.word.copy(word = it)) },
             labelId = R.string.upload_word_label,
             error = state.editState.getWordError(),
             maxLength = MAX_WORD_LENGTH
         )
         EditTextField(
             value = state.editState.word.comment,
-            onValueChange = { onCommentChangeCallback(it) },
+            onValueChange = { onWordChangeCallback(state.editState.word.copy(comment = it)) },
+
             labelId = R.string.upload_comment_label,
             error = state.editState.getCommentError(),
             maxLength = MAX_COMMENT_LENGTH
@@ -82,7 +81,7 @@ fun EditScreen(
             selectedItem = state.editState.word.category,
             onOptionSelected = {
                 if (it != null) {
-                    onCategoryChangeCallback(it)
+                    onWordChangeCallback(state.editState.word.copy(category = it))
                 }
             },
             modifier = Modifier
@@ -280,8 +279,6 @@ private fun SpellingItemPreview() {
                 saveCallback = {},
                 cancelCallback = {},
                 onWordChangeCallback = {},
-                onCommentChangeCallback = {},
-                onCategoryChangeCallback = {},
                 modifier = Modifier.padding(it)
             )
         }

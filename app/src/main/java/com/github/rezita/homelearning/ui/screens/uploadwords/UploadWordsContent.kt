@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.github.rezita.homelearning.R
+import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
@@ -27,10 +28,7 @@ fun UploadWordsContent(
     onRemoveWordCallback: (Int) -> Unit,
     onWordSaveCallback: () -> Unit,
     onCancelEditCallback: () -> Unit,
-    onWordChangeCallback: (String) -> Unit,
-    onCommentChangeCallback: (String) -> Unit,
-    onCategoryChangeCallback: (String) -> Unit,
-
+    onWordChangeCallback:(SpellingWord) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
@@ -76,8 +74,6 @@ fun UploadWordsContent(
                 saveCallback = onWordSaveCallback,
                 cancelCallback = onCancelEditCallback,
                 onWordChangeCallback = onWordChangeCallback,
-                onCommentChangeCallback = onCommentChangeCallback,
-                onCategoryChangeCallback = onCategoryChangeCallback,
                 modifier = modifier
             )
         }

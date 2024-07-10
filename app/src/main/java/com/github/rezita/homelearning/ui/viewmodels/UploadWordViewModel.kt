@@ -245,21 +245,9 @@ class UploadWordViewModel(
         }
     }
 
-    fun updateCurrentWordWord(word: String) {
+    fun updateCurrentWord(word: SpellingWord) {
         viewModelState.update {
-            it.copy(editState = it.editState.copy(word = it.editState.word.copy(word = word)))
-        }
-    }
-
-    fun updateCurrentWordCategory(category: String) {
-        viewModelState.update {
-            it.copy(editState = it.editState.copy(word = it.editState.word.copy(category = category)))
-        }
-    }
-
-    fun updateCurrentWordComment(comment: String) {
-        viewModelState.update {
-            it.copy(editState = it.editState.copy(word = it.editState.word.copy(comment = comment)))
+            it.copy(editState = it.editState.copy(word = word))
         }
     }
 
