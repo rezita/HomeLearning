@@ -60,6 +60,27 @@ fun EditScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        EditWordForm(
+            state = state,
+            onWordChangeCallback = onWordChangeCallback
+        )
+        EditWordButtons(
+            saveCallback = saveCallback,
+            cancelCallback = cancelCallback
+        )
+    }
+}
+
+@Composable
+fun EditWordForm(
+    state: UploadUiState.Editing,
+    onWordChangeCallback: (SpellingWord) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_small))
+    ) {
         EditTextField(
             value = state.editState.word.word,
             onValueChange = { onWordChangeCallback(state.editState.word.copy(word = it)) },
@@ -89,32 +110,40 @@ fun EditScreen(
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
             error = state.editState.getCategoryError()
         )
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            OutlinedButton(
-                onClick = saveCallback,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .weight(1f)
-            ) {
-                Text(
-                    stringResource(id = R.string.upload_save)
-                )
+    }
+}
 
-            }
-            OutlinedButton(
-                onClick = cancelCallback,
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.padding_small))
-                    .weight(1f)
-            ) {
-                Text(
-                    stringResource(id = R.string.upload_cancel),
-                )
-            }
+@Composable
+fun EditWordButtons(
+    saveCallback: () -> Unit,
+    cancelCallback: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        OutlinedButton(
+            onClick = saveCallback,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+                .weight(1f)
+        ) {
+            Text(
+                stringResource(id = R.string.upload_save)
+            )
         }
+        OutlinedButton(
+            onClick = cancelCallback,
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.padding_small))
+                .weight(1f)
+        ) {
+            Text(
+                stringResource(id = R.string.upload_cancel),
+            )
+        }
+
     }
 }
 
