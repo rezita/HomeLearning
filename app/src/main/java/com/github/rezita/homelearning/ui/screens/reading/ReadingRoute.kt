@@ -31,11 +31,11 @@ fun ReadingRoute(
         orientation = configuration.orientation,
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
-        onLoadCallback = { viewModel.load() },
+        onLoadCallback = viewModel::load,
         isTopAppBarShown = isTopAppBarShown,
         onChangeTopAppBarVisibility = { isTopAppBarShown = !isTopAppBarShown },
         isColorDisplay = viewModel.isColourDisplay,
-        colorDisplayChange = { value -> viewModel.setColorDisplay(value) },
+        colorDisplayChange = viewModel::setColorDisplay,
         modifier = modifier
 
     )

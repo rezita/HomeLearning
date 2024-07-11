@@ -14,12 +14,11 @@ fun UploadWordsScreen(
     state: UploadUiState,
     onLoadCallback: () -> Unit,
     saveCallback: () -> Unit,
-    addNewCallback: () -> Unit,
-    onWordEditCallback: (Int) -> Unit,
+    onWordEditCallback: (Int?) -> Unit,
     onRemoveWordCallback: (Int) -> Unit,
     onWordSaveCallback: () -> Unit,
     onCancelEditCallback: () -> Unit,
-    onWordChangeCallback:(SpellingWord) -> Unit,
+    onWordChangeCallback: (SpellingWord) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     canNavigateBack: Boolean,
@@ -35,7 +34,7 @@ fun UploadWordsScreen(
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 saveCallback = saveCallback,
-                addNewCallback = addNewCallback
+                addNewCallback = onWordEditCallback
             )
         }
     ) {

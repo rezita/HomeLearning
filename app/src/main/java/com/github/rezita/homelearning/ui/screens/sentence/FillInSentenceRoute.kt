@@ -24,9 +24,9 @@ fun FillInSentenceSentenceRoute(
 
     FillInSentenceScreen(
         state = sentenceUiState,
-        onValueChange = { index, value -> viewModel.updateAnswer(index, value) },
-        onDoneCallback = { viewModel.saveSentences() },
-        onLoadCallback = { viewModel.load() },
+        onValueChange = viewModel::updateAnswer,
+        onDoneCallback = viewModel::saveSentences,
+        onLoadCallback = viewModel::load,
         scope = scope,
         snackBarHostState = snackBarHostState,
         titleId = titleId,

@@ -28,13 +28,13 @@ fun SpellingRoute(
 
     SpellingScreen(
         state = spellingUiState,
-        onItemValueChange = { index, status -> viewModel.updateWordStatus(index, status) },
-        onItemReset = { index -> viewModel.resetWordStatus(index) },
-        onLoadCallback = { viewModel.load() },
-        onSaveCallback = { viewModel.saveSpellingResults() },
+        onItemValueChange = viewModel::updateWordStatus,
+        onItemReset = viewModel::resetWordStatus,
+        onLoadCallback = viewModel::load,
+        onSaveCallback = viewModel::saveSpellingResults,
         rbContentType = rbContentType,
         addNewCallback = addNewCallback,
-        saveCallback = { viewModel.saveSpellingResults() },
+        saveCallback = viewModel::saveSpellingResults,
         scope = scope,
         snackBarHostState = snackBarHostState,
         canNavigateBack = canNavigateBack,

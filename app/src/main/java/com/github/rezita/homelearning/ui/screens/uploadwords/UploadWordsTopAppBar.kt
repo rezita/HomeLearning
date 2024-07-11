@@ -19,7 +19,7 @@ fun UploadWordsTopAppBar(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     saveCallback: () -> Unit,
-    addNewCallback: () -> Unit,
+    addNewCallback: (Int?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -43,7 +43,7 @@ fun UploadWordsTopAppBar(
                 }
             }
             if (state.isExpandable()) {
-                IconButton(onClick = { addNewCallback() }) {
+                IconButton(onClick = { addNewCallback(null) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
                         contentDescription = stringResource(id = R.string.upload_add_new),

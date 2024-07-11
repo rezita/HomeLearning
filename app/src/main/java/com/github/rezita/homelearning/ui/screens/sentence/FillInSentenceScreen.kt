@@ -42,7 +42,6 @@ fun FillInSentenceScreen(
             onValueChange = onValueChange,
             onDoneCallback = onDoneCallback,
             onLoadCallback = onLoadCallback,
-            //viewModel = viewModel,
             scope = scope,
             snackBarHostState = snackBarHostState,
             modifier = Modifier
