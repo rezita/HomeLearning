@@ -25,6 +25,7 @@ class SentenceTopAppBarTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     private val titleId = R.string.homophones_title
     private val actionSave = context.getText(R.string.sentences_check_and_save).toString()
+    private val actionRedo = context.getText(R.string.menu_redo).toString()
 
     /**Loading state with no navBack
      * Back button doesn't show, title: Homophones, no action button shows*/
@@ -41,7 +42,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -63,6 +65,11 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loading state with navBack
@@ -80,7 +87,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -100,6 +108,11 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -119,7 +132,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -141,10 +155,15 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack and savable (all answered)
-     * Back button doesn't show, title: Homophones, action button shows*/
+     * Back button doesn't show, title: Homophones, save action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_savable_state_test() {
@@ -172,7 +191,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -194,10 +214,15 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack and savable (all answered)
-     * Back button shows, title: Homophones, action button shows*/
+     * Back button shows, title: Homophones, save action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_savable_navBack_state_test() {
@@ -225,7 +250,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -241,16 +267,22 @@ class SentenceTopAppBarTest {
                 useUnmergedTree = true
             )
             .assertIsDisplayed()
-        //no ActionButtons displayed
+        //save ActionButtons displayed
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack and not savable
-     * Back button doesn't show, title: Homophones, action button shows*/
+     * Back button doesn't show, title: Homophones, no action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_not_savable_state_test() {
@@ -278,7 +310,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -300,10 +333,16 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack and not savable
-     * Back button shows, title: Homophones, action button shows*/
+     * Back button shows, title: Homophones, no action button shows*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_loaded_not_savable_navBack_state_test() {
@@ -331,7 +370,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -352,6 +392,12 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loading error state with no navBack
@@ -369,7 +415,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -389,6 +436,12 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -408,7 +461,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -430,10 +484,16 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Saved state with no navBack
-     * Back button doesn't show, title: Homophones, no action button shows*/
+     * Back button doesn't show, title: Homophones, redo action button displayed, save action button not*/
     @SmallTest
     @Test
     fun sentenceTopAppBar_saved_state_test() {
@@ -447,46 +507,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
-                )
-            }
-        }
-
-        //Title
-        composeTestRule.onNodeWithText(text = context.getText(titleId).toString())
-        //There is no button
-        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(0)
-        //no navBack
-        composeTestRule
-            .onNode(
-                buttonWithImageAndDescription("Back"),
-                useUnmergedTree = true
-            )
-            .assertDoesNotExist()
-        //no ActionButtons displayed
-        composeTestRule
-            .onNode(
-                buttonWithImageAndDescription(actionSave),
-                useUnmergedTree = true
-            ).assertDoesNotExist()
-    }
-
-    /**Saved state with navBack
-     * Back button shows, title: Homophones, no action button shows*/
-    @SmallTest
-    @Test
-    fun sentenceTopAppBar_loading_saved_state_with_navBack_test() {
-        val state = SentenceUiState.Saved(emptyList())
-        val canNavigateBack = true
-
-        composeTestRule.setContent {
-            HomeLearningTheme {
-                SentenceTopAppBar(
-                    titleId = titleId,
-                    state = state,
-                    canNavigateBack = canNavigateBack,
-                    navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -501,6 +523,51 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription("Back"),
                 useUnmergedTree = true
             )
+            .assertDoesNotExist()
+        //no ActionButtons displayed
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+    }
+
+    /**Saved state with navBack
+     * Back button shows, title: Homophones, redo action button shows, save action button not*/
+    @SmallTest
+    @Test
+    fun sentenceTopAppBar_loading_saved_state_with_navBack_test() {
+        val state = SentenceUiState.Saved(emptyList())
+        val canNavigateBack = true
+
+        composeTestRule.setContent {
+            HomeLearningTheme {
+                SentenceTopAppBar(
+                    titleId = titleId,
+                    state = state,
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = { },
+                    saveCallback = {},
+                    redoCallback = {}
+                )
+            }
+        }
+
+        //Title
+        composeTestRule.onNodeWithText(text = context.getText(titleId).toString())
+        //There is no button
+        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(2)
+        //no navBack
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription("Back"),
+                useUnmergedTree = true
+            )
             .assertIsDisplayed()
         //no ActionButtons displayed
         composeTestRule
@@ -508,6 +575,11 @@ class SentenceTopAppBarTest {
                 buttonWithImageAndDescription(actionSave),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
     }
 
     /**Saving error state with no navBack empty sentences
@@ -525,7 +597,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -545,6 +618,12 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -564,7 +643,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -584,6 +664,12 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -611,7 +697,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -631,6 +718,12 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -658,7 +751,8 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    callback = {},
+                    saveCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -678,6 +772,12 @@ class SentenceTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionSave),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        //redo action button
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }

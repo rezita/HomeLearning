@@ -20,6 +20,7 @@ fun ReadingTopAppBar(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     colorDisplayCallback: (Boolean) -> Unit,
+    redoCallback: () -> Unit,
     isColorDisplay: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -48,6 +49,14 @@ fun ReadingTopAppBar(
                         )
                     }
                 }
+                //reload icon
+                IconButton(onClick = { redoCallback() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_menu_refresh),
+                        contentDescription = stringResource(id = R.string.menu_reload),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
         },
         modifier = modifier
@@ -58,13 +67,14 @@ fun ReadingTopAppBar(
 @Preview
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun ReadingTopAppBarBlackPreview_success() {
+private fun ReadingTopAppBarBlackPreview_downloaded() {
     HomeLearningTheme {
         ReadingTopAppBar(
             state = ReadingUiState.Downloaded(emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             colorDisplayCallback = {},
+            redoCallback = {},
             isColorDisplay = false
         )
     }
@@ -80,6 +90,7 @@ private fun ReadingTopAppBarColorPreview_loading() {
             canNavigateBack = false,
             navigateUp = {},
             colorDisplayCallback = {},
+            redoCallback = {},
             isColorDisplay = true
         )
     }
@@ -95,6 +106,7 @@ private fun ReadingTopAppBarColorPreview_error() {
             canNavigateBack = false,
             navigateUp = {},
             colorDisplayCallback = {},
+            redoCallback = {},
             isColorDisplay = true
         )
     }

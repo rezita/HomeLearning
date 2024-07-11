@@ -27,6 +27,7 @@ class SpellingTopAppBarTest {
     private val title = context.getText(R.string.activity_spelling).toString()
     private val actionSave = context.getText(R.string.spelling_save).toString()
     private val actionAddNew = context.getText(R.string.spelling_add_new_word).toString()
+    private val actionRedo = context.getText(R.string.menu_redo).toString()
 
     /**Loading state with no navBack
      * Back button doesn't show, title: Spelling, no action button shows*/
@@ -43,7 +44,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -70,6 +72,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loading state with navBack
@@ -87,7 +94,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -113,6 +121,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack, empty words list
@@ -130,7 +143,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -157,6 +171,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack empty words list
@@ -174,7 +193,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -200,6 +220,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack, all unchecked
@@ -232,7 +257,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -259,6 +285,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack all unchecked
@@ -291,7 +322,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -317,6 +349,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack, at least one not unchecked
@@ -349,7 +386,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -376,6 +414,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack not all all unchecked
@@ -408,7 +451,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -434,6 +478,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with no navBack, all answered
@@ -466,7 +515,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -493,6 +543,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loaded state with navBack all answered
@@ -525,7 +580,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -551,6 +607,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loading error with no navBack
@@ -568,7 +629,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -593,6 +655,11 @@ class SpellingTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionAddNew),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -612,7 +679,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -636,6 +704,11 @@ class SpellingTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionAddNew),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -655,7 +728,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -663,7 +737,7 @@ class SpellingTopAppBarTest {
         //Title
         composeTestRule.onNodeWithText(text = title)
         //There is no button
-        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(1)
+        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(2)
         //no navBack
         composeTestRule
             .onNode(
@@ -680,6 +754,11 @@ class SpellingTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionAddNew),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertIsDisplayed()
     }
@@ -699,7 +778,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -707,7 +787,7 @@ class SpellingTopAppBarTest {
         //Title
         composeTestRule.onNodeWithText(text = title)
         //There is no button
-        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(2)
+        composeTestRule.onAllNodes(withRole(Role.Button)).assertCountEquals(3)
         //navBack
         composeTestRule
             .onNode(
@@ -723,6 +803,11 @@ class SpellingTopAppBarTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionAddNew),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
                 useUnmergedTree = true
             ).assertIsDisplayed()
     }
@@ -742,7 +827,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -769,6 +855,11 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Saving error state with navBack
@@ -786,7 +877,8 @@ class SpellingTopAppBarTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     saveCallback = {},
-                    addNewCallback = {}
+                    addNewCallback = {},
+                    redoCallback = {}
                 )
             }
         }
@@ -812,7 +904,10 @@ class SpellingTopAppBarTest {
                 buttonWithImageAndDescription(actionAddNew),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionRedo),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
-
-
 }

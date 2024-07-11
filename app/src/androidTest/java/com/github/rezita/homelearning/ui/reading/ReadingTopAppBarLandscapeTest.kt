@@ -40,6 +40,7 @@ class ReadingTopAppBarLandscapeTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     val actionBlackIconDescr = context.getText(R.string.reading_black_display).toString()
     val actionColorIconDescr = context.getText(R.string.reading_colour_display).toString()
+    val actionReloadDescr = context.getText(R.string.menu_reload).toString()
     val title = "Reading"
 
     /**Loading state in Landscape mode
@@ -57,6 +58,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { },
+                    redoCallback = {},
                     isColorDisplay = false
                 )
             }
@@ -85,9 +87,14 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
-    /**Loading state in Portrait mode, isColorDisplay flase
+    /**Downloaded state in Portrait mode, isColorDisplay false
      * Back button shows, title: Reading, no action button shows*/
     @SmallTest
     @Test
@@ -104,6 +111,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -114,7 +122,7 @@ class ReadingTopAppBarLandscapeTest {
         //There is no button
         composeTestRule
             .onAllNodes(withRole(Role.Button))
-            .assertCountEquals(2)
+            .assertCountEquals(3)
         //no navBack
         composeTestRule
             .onNode(
@@ -133,10 +141,16 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+
     }
 
-    /**Loading state in Portrait mode, isColorDisplay flase
-     * Back button shows, title: Reading, no action button shows*/
+    /**Downloaded state in Portrait mode, isColorDisplay false
+     * Back button shows, title: Reading, reload and black buttons are displayed*/
     @SmallTest
     @Test
     fun readingAppBar_downloaded_state_landscape_color_display_test() {
@@ -152,6 +166,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -162,7 +177,7 @@ class ReadingTopAppBarLandscapeTest {
         //There is no button
         composeTestRule
             .onAllNodes(withRole(Role.Button))
-            .assertCountEquals(2)
+            .assertCountEquals(3)
         //no navBack
         composeTestRule
             .onNode(
@@ -181,9 +196,15 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
     }
 
-    /**Loading state in Portrait mode, changing the colorDisplay value by clicking on the action button
+    /**Loading state in Portrait mode,
+     * action: changing the colorDisplay value by clicking on the action button
      * Back button shows, title: Reading, no action button shows*/
     @SmallTest
     @Test
@@ -200,6 +221,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -210,7 +232,7 @@ class ReadingTopAppBarLandscapeTest {
         //There is no button
         composeTestRule
             .onAllNodes(withRole(Role.Button))
-            .assertCountEquals(2)
+            .assertCountEquals(3)
         //no navBack
         composeTestRule
             .onNode(
@@ -223,6 +245,11 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
 
         //Click
         composeTestRule
@@ -243,9 +270,15 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionBlackIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
     }
 
-    /**Loading state in Portrait mode, changing the colorDisplay value by clicking on the action button
+    /**downloaded state in Portrait mode,
+     * action: changing the colorDisplay value by clicking on the action button
      * Back button shows, title: Reading, no action button shows*/
     @SmallTest
     @Test
@@ -262,6 +295,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -272,7 +306,7 @@ class ReadingTopAppBarLandscapeTest {
         //There is no button
         composeTestRule
             .onAllNodes(withRole(Role.Button))
-            .assertCountEquals(2)
+            .assertCountEquals(3)
         //no navBack
         composeTestRule
             .onNode(
@@ -285,6 +319,11 @@ class ReadingTopAppBarLandscapeTest {
                 buttonWithImageAndDescription(actionBlackIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
 
         //Click
         composeTestRule
@@ -303,6 +342,11 @@ class ReadingTopAppBarLandscapeTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionBlackIconDescr),
+                useUnmergedTree = true
+            ).assertIsDisplayed()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
                 useUnmergedTree = true
             ).assertIsDisplayed()
 
@@ -324,6 +368,7 @@ class ReadingTopAppBarLandscapeTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { },
+                    redoCallback = {},
                     isColorDisplay = false
                 )
             }
@@ -350,6 +395,11 @@ class ReadingTopAppBarLandscapeTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionColorIconDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }

@@ -35,6 +35,7 @@ class ReadingTopAppBarPortraitTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     val actionBlackIconDescr = context.getText(R.string.reading_black_display).toString()
     val actionColorIconDescr = context.getText(R.string.reading_colour_display).toString()
+    val actionReloadDescr = context.getText(R.string.menu_reload).toString()
     val title = "Reading"
 
     /**Loading state in Portrait mode
@@ -52,6 +53,7 @@ class ReadingTopAppBarPortraitTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { },
+                    redoCallback = {},
                     isColorDisplay = false
                 )
             }
@@ -80,6 +82,11 @@ class ReadingTopAppBarPortraitTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Loading state in Portrait mode, isColorDisplay false
@@ -98,6 +105,7 @@ class ReadingTopAppBarPortraitTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -124,6 +132,11 @@ class ReadingTopAppBarPortraitTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionColorIconDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
@@ -144,6 +157,7 @@ class ReadingTopAppBarPortraitTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { isColorDisplay = !isColorDisplay },
+                    redoCallback = {},
                     isColorDisplay = isColorDisplay
                 )
             }
@@ -172,6 +186,11 @@ class ReadingTopAppBarPortraitTest {
                 buttonWithImageAndDescription(actionColorIconDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
     }
 
     /**Error state in Portrait mode
@@ -189,6 +208,7 @@ class ReadingTopAppBarPortraitTest {
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
                     colorDisplayCallback = { },
+                    redoCallback = {},
                     isColorDisplay = false
                 )
             }
@@ -215,6 +235,11 @@ class ReadingTopAppBarPortraitTest {
         composeTestRule
             .onNode(
                 buttonWithImageAndDescription(actionColorIconDescr),
+                useUnmergedTree = true
+            ).assertDoesNotExist()
+        composeTestRule
+            .onNode(
+                buttonWithImageAndDescription(actionReloadDescr),
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }

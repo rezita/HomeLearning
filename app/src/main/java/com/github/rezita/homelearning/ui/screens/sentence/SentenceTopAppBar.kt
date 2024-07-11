@@ -22,7 +22,8 @@ fun SentenceTopAppBar(
     state: SentenceUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    callback: () -> Unit,
+    saveCallback: () -> Unit,
+    redoCallback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -32,10 +33,19 @@ fun SentenceTopAppBar(
 
         actions = {
             if (state.isSavable()) {
-                IconButton(onClick = { callback() }) {
+                IconButton(onClick = { saveCallback() }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_check),
                         contentDescription = stringResource(id = R.string.sentences_check_and_save),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+            if (state is SentenceUiState.Saved) {
+                IconButton(onClick = { redoCallback() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_menu_redo),
+                        contentDescription = stringResource(id = R.string.menu_redo),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
@@ -58,7 +68,8 @@ private fun SentenceTopAppBar_success_can_navBack(
             state = SentenceUiState.Loaded(sentences = emptyList()),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            callback = {},
+            saveCallback = {},
+            redoCallback = {}
         )
     }
 }
@@ -83,7 +94,8 @@ private fun SentenceTopAppBar_success_notSavable(
             state = SentenceUiState.Loaded(sentences = sentences),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            callback = {},
+            saveCallback = {},
+            redoCallback = {}
         )
     }
 }
@@ -100,7 +112,8 @@ private fun SentenceTopAppBar_loading(
             state = SentenceUiState.Loading,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            callback = {}
+            saveCallback = {},
+            redoCallback = {}
         )
     }
 }
@@ -117,7 +130,35 @@ private fun SentenceTopAppBar_error(
             state = SentenceUiState.LoadingError(errorMessage = 12),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            callback = {},
+            saveCallback = {},
+            redoCallback = {}
+        )
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun SentenceTopAppBar_saved(
+    @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
+) {
+    val sentences = listOf(
+        FillInSentence(
+            sentence = "I have never been to Italy.",
+            suggestion = "be",
+            solutions = listOf("been"),
+            answer = "was"
+        )
+    )
+
+    HomeLearningTheme {
+        SentenceTopAppBar(
+            titleId = R.string.activity_homophones,
+            state = SentenceUiState.Saved(sentences = sentences),
+            canNavigateBack = canNavigateBack,
+            navigateUp = {},
+            saveCallback = {},
+            redoCallback = {}
         )
     }
 }

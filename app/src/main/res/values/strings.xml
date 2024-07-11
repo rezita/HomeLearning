@@ -59,6 +59,8 @@
     <string name="menu_cancel">Cancel</string>
     <string name="menu_check">Check</string>
     <string name="menu_add_new_word">Add new word</string>
+    <string name="menu_redo">New test</string>
+    <string name="menu_reload">Reload words</string>
 
     <!-- Restore From Logs-->
     <string name="confirm_restore_from_log">

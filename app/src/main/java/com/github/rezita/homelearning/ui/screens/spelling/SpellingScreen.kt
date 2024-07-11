@@ -35,7 +35,8 @@ fun SpellingScreen(
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 saveCallback = saveCallback,
-                addNewCallback = addNewCallback
+                addNewCallback = addNewCallback,
+                redoCallback = onLoadCallback
             )
         }
     ) {

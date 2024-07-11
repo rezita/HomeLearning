@@ -32,7 +32,8 @@ fun FillInSentenceScreen(
                 state = state,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
-                callback = onDoneCallback
+                saveCallback = onDoneCallback,
+                redoCallback = onLoadCallback
             )
         }
     ) {

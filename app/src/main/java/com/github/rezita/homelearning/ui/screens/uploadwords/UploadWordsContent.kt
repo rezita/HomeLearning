@@ -28,7 +28,7 @@ fun UploadWordsContent(
     onRemoveWordCallback: (Int) -> Unit,
     onWordSaveCallback: () -> Unit,
     onCancelEditCallback: () -> Unit,
-    onWordChangeCallback:(SpellingWord) -> Unit,
+    onWordChangeCallback: (SpellingWord) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier

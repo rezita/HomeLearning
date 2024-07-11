@@ -42,6 +42,7 @@ fun ReadingScreen(
                     canNavigateBack = canNavigateBack,
                     navigateUp = navigateUp,
                     colorDisplayCallback = colorDisplayChange,
+                    redoCallback = onLoadCallback,
                     isColorDisplay = isColorDisplay
                 )
             }

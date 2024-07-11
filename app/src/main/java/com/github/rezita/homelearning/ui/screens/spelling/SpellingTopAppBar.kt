@@ -24,6 +24,7 @@ fun SpellingTopAppBar(
     navigateUp: () -> Unit,
     saveCallback: () -> Unit,
     addNewCallback: () -> Unit,
+    redoCallback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -42,6 +43,17 @@ fun SpellingTopAppBar(
                     )
                 }
             }
+
+            if (state is SpellingUiState.Saved) {
+                IconButton(onClick = { redoCallback() }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_menu_redo),
+                        contentDescription = stringResource(id = R.string.menu_redo),
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }
+
             if (state is SpellingUiState.Loaded || state is SpellingUiState.Saved) {
                 IconButton(onClick = { addNewCallback() }) {
                     Icon(
@@ -68,7 +80,8 @@ private fun SpellingTopAppBar_loading(
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             saveCallback = {},
-            addNewCallback = {}
+            addNewCallback = {},
+            redoCallback = {},
         )
     }
 }
@@ -85,7 +98,8 @@ private fun SpellingTopAppBar_loaded_empty(
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             saveCallback = {},
-            addNewCallback = {}
+            addNewCallback = {},
+            redoCallback = {},
         )
     }
 }
@@ -117,7 +131,8 @@ private fun SpellingTopAppBar_loaded_savable(
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             saveCallback = {},
-            addNewCallback = {}
+            addNewCallback = {},
+            redoCallback = {},
         )
     }
 }
@@ -134,7 +149,8 @@ private fun SpellingTopAppBar_upload_success(
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             saveCallback = {},
-            addNewCallback = {}
+            addNewCallback = {},
+            redoCallback = {}
         )
     }
 }
