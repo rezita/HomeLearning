@@ -183,12 +183,7 @@ class UploadWordViewModel(
 
     fun setForEditing(index: Int? = null) {
         if (viewModelState.value.state == UploadState.SAVED) {
-            viewModelState.update {
-                it.copy(
-                    words = emptyList(),
-                    savingResponse = emptyList()
-                )
-            }
+            resetViewModelState()
         }
 
         val editWordState = if (index == null) EditState() else
