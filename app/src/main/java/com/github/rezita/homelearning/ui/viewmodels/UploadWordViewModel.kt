@@ -1,14 +1,14 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.navigation.SpellingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
 import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
@@ -35,9 +35,13 @@ enum class UploadState {
 
 
 class UploadWordViewModel(
+    savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
-    private val sheetAction: SheetAction
 ) : ViewModel() {
+
+    private val sheetAction: SheetAction =
+        checkNotNull(savedStateHandle[SpellingDestination.sheetActionArg])
+
     private val viewModelState = MutableStateFlow(
         UploadViewModelState(state = UploadState.LOADING)
     )
@@ -274,22 +278,6 @@ class UploadWordViewModel(
         return pattern.matches(text)
     }
 
-
-    class UploadWordViewModelFactory(
-        private val repository: WordRepository,
-        private val sheetAction: SheetAction
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val application =
-                checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-            return UploadWordViewModel(
-                repository,
-                sheetAction
-            ) as T
-        }
-    }
 }
 
 data class UploadViewModelState(

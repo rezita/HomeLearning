@@ -7,14 +7,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.UploadWordViewModel
 
 @Composable
 fun UploadWordsRoute(
-    viewModel: UploadWordViewModel,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: UploadWordViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uploadUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }

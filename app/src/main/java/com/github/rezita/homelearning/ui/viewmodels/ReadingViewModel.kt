@@ -3,16 +3,14 @@ package com.github.rezita.homelearning.ui.viewmodels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.github.rezita.homelearning.HomeLearningApplication
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.navigation.ReadingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.reading.ReadingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +20,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ReadingViewModel(
+    savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
-    private val sheetAction: SheetAction
 ) : ViewModel() {
+
+    private val sheetAction: SheetAction =
+        checkNotNull(savedStateHandle[ReadingDestination.sheetActionArg])
+
     private val _readingUIState =
         MutableStateFlow<ReadingUiState>(ReadingUiState.Loading)
     var isColourDisplay by mutableStateOf(true)
@@ -77,21 +79,6 @@ class ReadingViewModel(
                         ReadingUiState.LoadingError(errorMessage = R.string.snackBar_error_loading)
                 }
             }
-        }
-    }
-
-    class ReadingWordViewModelFactory(
-        private val repository: WordRepository,
-        private val sheetAction: SheetAction
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val application = checkNotNull(extras[APPLICATION_KEY])
-            return ReadingViewModel(
-                repository,
-                sheetAction
-            ) as T
         }
     }
 }

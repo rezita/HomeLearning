@@ -8,16 +8,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
+import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.ReadingViewModel
 
 @Composable
 fun ReadingRoute(
-    viewModel: ReadingViewModel,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     windowSize: HomeLearningWindowSizeClass,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ReadingViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val readingState by viewModel.readingUIState.collectAsState()
     var isTopAppBarShown by remember {

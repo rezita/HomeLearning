@@ -1,14 +1,14 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.navigation.SentenceDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,9 +23,12 @@ enum class SentenceState {
 }
 
 class FillInSentenceViewModel(
+    savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
-    private val sheetAction: SheetAction
 ) : ViewModel() {
+
+    private val sheetAction: SheetAction =
+        checkNotNull(savedStateHandle[SentenceDestination.sheetActionArg])
 
     private val viewModelState = MutableStateFlow(
         SentenceViewModelState(state = SentenceState.LOADING)
@@ -153,23 +156,7 @@ class FillInSentenceViewModel(
             }
         }
     }
-
-    class FillInSentenceViewModelFactory(
-        private val repository: WordRepository,
-        private val sheetAction: SheetAction
-    ) : ViewModelProvider.Factory {
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-            val application =
-                checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-            return FillInSentenceViewModel(
-                repository, sheetAction
-            ) as T
-        }
-    }
 }
-
 
 data class SentenceViewModelState(
     val state: SentenceState,

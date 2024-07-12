@@ -8,12 +8,10 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun HomeLearningApp(
-    appContainer: AppContainer,
     windowSizeClass: HomeLearningWindowSizeClass
 ) {
     HomeLearningTheme {
         HomeLearningNavigation(
-            appContainer = appContainer,
             windowSizeClass = windowSizeClass
         )
     }

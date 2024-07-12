@@ -8,15 +8,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
 
 @Composable
 fun FillInSentenceSentenceRoute(
-    viewModel: FillInSentenceViewModel,
     @StringRes titleId: Int,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: FillInSentenceViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val sentenceUiState by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }

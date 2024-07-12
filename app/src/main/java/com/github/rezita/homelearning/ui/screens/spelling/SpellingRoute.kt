@@ -8,18 +8,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.ui.size.HomeLearningWidthClass
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
+import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
 
 @Composable
 fun SpellingRoute(
-    viewModel: SpellingViewModel,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     addNewCallback: () -> Unit,
     windowSize: HomeLearningWindowSizeClass,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SpellingViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }

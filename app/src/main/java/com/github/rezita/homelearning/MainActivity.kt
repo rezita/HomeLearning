@@ -17,8 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val windowSizeClass = calculateHomeLearningWindowSizeClass()
-            val appContainer = (application as HomeLearningApplication).container
-            HomeLearningApp(appContainer, windowSizeClass)
+            HomeLearningApp(windowSizeClass)
         }
 
     }

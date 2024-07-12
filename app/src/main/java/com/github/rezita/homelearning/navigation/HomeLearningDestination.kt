@@ -18,26 +18,27 @@ object Home : HomeLearningDestination {
     )
 }
 
-object Spelling : HomeLearningDestination {
+object SpellingDestination : HomeLearningDestination {
     override val route = "spelling"
-    private const val sheetActionArg = "sheet_action"
+    const val sheetActionArg = "sheet_action"
     val routeWithArgs = "${route}/{${sheetActionArg}}"
     val arguments = listOf(
         navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
     )
 }
 
-object Homophones : HomeLearningDestination {
-    override val route = "homophones"
+object SentenceDestination : HomeLearningDestination {
+    override val route = "sentence"
+    const val sheetActionArg = "sheet_action"
+    val routeWithArgs = "${route}/{${sheetActionArg}}"
+    val arguments = listOf(
+        navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
+    )
 }
 
-object IrregularVerbs : HomeLearningDestination {
-    override val route = "irregular_verbs"
-}
-
-object Reading : HomeLearningDestination {
+object ReadingDestination : HomeLearningDestination {
     override val route = "reading"
-    private const val sheetActionArg = "sheet_action"
+    const val sheetActionArg = "sheet_action"
     val routeWithArgs = "${route}/{${sheetActionArg}}"
     val arguments = listOf(
         navArgument(sheetActionArg) { type = NavType.EnumType(SheetAction::class.java) }
