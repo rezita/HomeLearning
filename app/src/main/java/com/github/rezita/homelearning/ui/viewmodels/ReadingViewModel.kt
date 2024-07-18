@@ -64,8 +64,7 @@ class ReadingViewModel(
     }
 
     private fun getWords(callback: suspend () -> RepositoryResult<List<ReadingWord>>) {
-        if (_readingUIState.value is ReadingUiState.Downloaded) return
-
+        //if (_readingUIState.value is ReadingUiState.Downloaded) return
         resetUiState()
 
         viewModelScope.launch {
