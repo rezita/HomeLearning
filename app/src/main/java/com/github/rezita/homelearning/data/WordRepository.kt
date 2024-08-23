@@ -40,6 +40,10 @@ WordRepository {
 
     suspend fun saveMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
+    suspend fun modifyErikSpellingWord(wordOld: String, wordNew: String): RepositoryResult<String>
+
+    suspend fun modifyMarkSpellingWord(wordOld: String, wordNew: String): RepositoryResult<String>
+
     //suspend fun restoreSpellingWordsFromLogs(): RepositoryResult<SpellingWord>
 }
 
@@ -176,6 +180,26 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             words = words
         )
 
+    override suspend fun modifyErikSpellingWord(
+        wordOld: String,
+        wordNew: String
+    ): RepositoryResult<String> =
+        modifySpellingWord(
+            sheetAction = SheetAction.MODIFY_ERIK_SPELLING_WORD,
+            wordOld = wordOld,
+            wordNew = wordNew
+        )
+
+
+    override suspend fun modifyMarkSpellingWord(
+        wordOld: String,
+        wordNew: String
+    ): RepositoryResult<String> = modifySpellingWord(
+        sheetAction = SheetAction.MODIFY_MARK_SPELLING_WORD,
+        wordOld = wordOld,
+        wordNew = wordNew
+    )
+
     private suspend fun saveSpellingWords(
         sheetAction: SheetAction,
         words: List<SpellingWord>
@@ -262,6 +286,36 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         val params = PostApiParameter(
             items = sentenceParam,
             action = sheetAction.value
+        )
+        wordsAPIService.updateData(
+            parameter = json.encodeToJsonElement(params)
+        )
+            .onSuccess { response ->
+                return if (response.result.isNotEmpty()) {
+                    RepositoryResult.Success(data = response.result)
+                } else {
+                    RepositoryResult.Error(message = response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return RepositoryResult.Error(
+                    message = it.message.toString()
+                )
+            }
+        return RepositoryResult.Error(message = "Error")
+    }
+
+
+    private suspend fun modifySpellingWord(
+        sheetAction: SheetAction,
+        wordOld: String,
+        wordNew: String
+    ): RepositoryResult<String> {
+        val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+        val params = PostApiParameter(
+            action = sheetAction.value,
+            items = listOf(wordOld, wordNew)
         )
         wordsAPIService.updateData(
             parameter = json.encodeToJsonElement(params)

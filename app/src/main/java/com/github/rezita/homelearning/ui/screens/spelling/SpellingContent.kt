@@ -12,11 +12,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,10 +32,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.rezita.homelearning.R
@@ -38,12 +40,15 @@ import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
+import com.github.rezita.homelearning.ui.screens.common.ErrorText
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
-import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
+import com.github.rezita.homelearning.ui.theme.sentence_correct
+import com.github.rezita.homelearning.ui.theme.sentence_incorrect
+import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 import com.github.rezita.homelearning.utils.toDp
 import kotlinx.coroutines.CoroutineScope
 
@@ -52,8 +57,12 @@ fun SpellingContent(
     state: SpellingUiState,
     onItemValueChange: (Int, WordStatus) -> Unit,
     onItemReset: (Int) -> Unit,
+    onItemEdit: (Int) -> Unit,
+    onEditItemValueChange: (String) -> Unit,
     onLoadCallback: () -> Unit,
     onSaveCallback: () -> Unit,
+    onEditCancelCallback: () -> Unit,
+    onEditSubmitCallback: () -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     rbContentType: RadioButtonContentType,
@@ -67,10 +76,11 @@ fun SpellingContent(
         is SpellingUiState.Loaded -> {
             SpellingItems(
                 words = state.words,
+                rbContentType = rbContentType,
+                modifier = modifier,
                 onValueChange = onItemValueChange,
                 onItemReset = onItemReset,
-                rbContentType = rbContentType,
-                modifier = modifier
+                onItemEdit = onItemEdit
             )
         }
 
@@ -87,10 +97,9 @@ fun SpellingContent(
             SavingSuccessSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             SpellingItems(
                 words = state.words,
-                onValueChange = { _, _ -> run {} },
                 rbContentType = rbContentType,
-                isEnabled = false,
-                modifier = modifier
+                modifier = modifier,
+                isEnabled = false
             )
         }
 
@@ -102,7 +111,6 @@ fun SpellingContent(
                 content = {
                     SpellingItems(
                         words = state.words,
-                        onValueChange = { _, _ -> run {} },
                         rbContentType = rbContentType,
                         isEnabled = false,
                     )
@@ -110,17 +118,48 @@ fun SpellingContent(
                 modifier = modifier
             )
         }
+
+        is SpellingUiState.Editing -> {
+            EditSpellingItems(
+                words = state.words,
+                rbContentType = rbContentType,
+                editedIndex = state.editState.index!!,
+                modifiedWord = state.editState.wordModified,
+                onValueChange = onEditItemValueChange,
+                onEditCancelCallback = onEditCancelCallback,
+                onEditSubmitCallback = onEditSubmitCallback,
+                modifier = modifier,
+                isEditing = state.isEditing
+            )
+        }
+
+        is SpellingUiState.EditError -> {
+            EditSpellingItems(
+                words = state.words,
+                rbContentType = rbContentType,
+                editedIndex = state.editState.index!!,
+                modifiedWord = state.editState.wordModified,
+                onValueChange = onEditItemValueChange,
+                onEditCancelCallback = onEditCancelCallback,
+                onEditSubmitCallback = onEditSubmitCallback,
+                modifier = modifier,
+                isEditing = true,
+                errorMsg = state.errorMessage
+            )
+
+        }
     }
 }
 
 @Composable
 private fun SpellingItems(
     words: List<SpellingWord>,
-    onValueChange: (Int, WordStatus) -> Unit,
-    onItemReset: (Int) -> Unit = {},
     rbContentType: RadioButtonContentType,
-    isEnabled: Boolean = true,
     modifier: Modifier = Modifier,
+    onValueChange: (Int, WordStatus) -> Unit = { _, _ -> run {} },
+    onItemReset: (Int) -> Unit = {},
+    onItemEdit: (Int) -> Unit = {},
+    isEnabled: Boolean = true,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -139,9 +178,69 @@ private fun SpellingItems(
                     wordStatus = item.status,
                     onItemSelected = { status -> onValueChange(index, status) },
                     onItemReset = { onItemReset(index) },
+                    onItemEdit = { onItemEdit(index) },
                     rbContentType = rbContentType,
                     isEnabled = isEnabled,
                 )
+                HorizontalDivider(
+                    modifier = Modifier
+                        .height(1.dp)
+                        .fillMaxHeight()
+                        .fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.surfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun EditSpellingItems(
+    words: List<SpellingWord>,
+    rbContentType: RadioButtonContentType,
+    editedIndex: Int,
+    modifiedWord: String,
+    onValueChange: (String) -> Unit,
+    onEditCancelCallback: () -> Unit,
+    onEditSubmitCallback: () -> Unit,
+    modifier: Modifier = Modifier,
+    isEditing: Boolean = true,
+    errorMsg: String? = null
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Text(
+            text = getScores(words),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            textAlign = TextAlign.Right,
+        )
+
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            itemsIndexed(words) { index, item ->
+                if (index == editedIndex) {
+                    SpellingEditedItem(
+                        index = index,
+                        word = modifiedWord,
+                        onValueChange = onValueChange,
+                        onEditCancelCallback = onEditCancelCallback,
+                        onEditSubmitCallback = onEditSubmitCallback,
+                        isEditing = isEditing,
+                        errorMsg = errorMsg
+                    )
+
+                } else {
+                    SpellingItem(
+                        index = index,
+                        word = item.word,
+                        wordStatus = item.status,
+                        onItemSelected = { _ -> run {} },
+                        onItemReset = {},
+                        onItemEdit = {},
+                        rbContentType = rbContentType,
+                        isEnabled = false,
+                    )
+                }
                 HorizontalDivider(
                     modifier = Modifier
                         .height(1.dp)
@@ -162,9 +261,10 @@ private fun SpellingItem(
     wordStatus: WordStatus,
     onItemSelected: (WordStatus) -> Unit,
     onItemReset: () -> Unit,
+    onItemEdit: () -> Unit,
     rbContentType: RadioButtonContentType,
+    modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
-    modifier: Modifier = Modifier
 ) {
     if (rbContentType == RadioButtonContentType.BUTTONS_SECOND_LINE) {
         Column(
@@ -185,8 +285,9 @@ private fun SpellingItem(
                     index = index,
                     word = word,
                     onItemReset = onItemReset,
-                    isEnabled = isEnabled,
-                    textModifier = Modifier.weight(1f)
+                    onItemEdit = onItemEdit,
+                    textModifier = Modifier.weight(1f),
+                    isEnabled = isEnabled
                 )
             }
             Row(
@@ -216,8 +317,9 @@ private fun SpellingItem(
                 index = index,
                 word = word,
                 onItemReset = onItemReset,
+                onItemEdit = onItemEdit,
+                textModifier = Modifier.weight(1f),
                 isEnabled = isEnabled,
-                textModifier = Modifier.weight(1f)
             )
             SpellingRadioGroup(
                 selected = wordStatus,
@@ -230,12 +332,91 @@ private fun SpellingItem(
 }
 
 @Composable
+private fun SpellingEditedItem(
+    index: Int,
+    word: String,
+    onValueChange: (String) -> Unit,
+    onEditCancelCallback: () -> Unit,
+    onEditSubmitCallback: () -> Unit,
+    modifier: Modifier = Modifier,
+    isEditing: Boolean = true,
+    errorMsg: String? = null
+) {
+    val fontScale = LocalDensity.current.fontScale
+    val ordinalNumberWidth = (28.sp * fontScale)
+    Column(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            //index
+            Text(
+                text = getIndexPrefix(index),
+                modifier = Modifier
+                    .width(ordinalNumberWidth.toDp())
+            )
+            //Word
+            OutlinedTextField(
+                value = word,
+                enabled = isEditing,
+                onValueChange = {
+                    if (it.length <= MAX_WORD_LENGTH) {
+                        onValueChange(it)
+                    }
+                },
+                isError = errorMsg != null,
+                modifier = Modifier.weight(1f)
+
+            )
+            //buttons
+            OutlinedIconButton(
+                onClick = { onEditSubmitCallback() },
+                shape = MaterialTheme.shapes.small,
+                enabled = isEditing
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Done,
+                    contentDescription = stringResource(id = R.string.spelling_save_edited_word),
+                    tint = sentence_correct,
+
+                    )
+            }
+            OutlinedIconButton(
+                onClick = { onEditCancelCallback() },
+                shape = MaterialTheme.shapes.small,
+                enabled = isEditing
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.spelling_cancel_editing),
+                    tint = sentence_incorrect
+                )
+            }
+        }
+        //ErrorMessage
+        if (errorMsg != null) {
+            ErrorText(errorMsg)
+        }
+    }
+}
+
+
+@Composable
 fun SpellingTextWithNumber(
     index: Int,
     word: String,
     onItemReset: () -> Unit,
+    onItemEdit: () -> Unit,
+    textModifier: Modifier = Modifier,
     isEnabled: Boolean = true,
-    textModifier: Modifier = Modifier
 ) {
     val alpha = if (isEnabled) 1f else 0.38f
     val fontScale = LocalDensity.current.fontScale
@@ -253,7 +434,8 @@ fun SpellingTextWithNumber(
             .pointerInput(Unit) {
                 if (isEnabled) {
                     detectTapGestures(
-                        onDoubleTap = { onItemReset() }
+                        onDoubleTap = { onItemReset() },
+                        onLongPress = { onItemEdit() }
                     )
                 }
             }
@@ -279,7 +461,7 @@ private fun getScores(words: List<SpellingWord>): String {
     )
 }
 
-
+/*
 @PreviewFontScale
 @Composable
 private fun SpellingItemSizePreview(
@@ -310,6 +492,27 @@ private fun SpellingItemSizePreview(
                     onItemSelected = {},
                     rbContentType = rbContentType,
                     onItemReset = {},
+                    onItemEdit = {},
+                    modifier = Modifier.padding(it)
+                )
+            }
+        }
+    }
+}
+*/
+@PreviewLightDark
+@Composable
+private fun SpellingEditItem(
+) {
+    HomeLearningTheme {
+        Scaffold {
+            Column {
+                SpellingEditedItem(
+                    index = 17,
+                    word = "anticlockwise",
+                    onValueChange = {},
+                    onEditCancelCallback = {},
+                    onEditSubmitCallback = {},
                     modifier = Modifier.padding(it)
                 )
             }
@@ -318,6 +521,7 @@ private fun SpellingItemSizePreview(
 }
 
 
+/*
 @PreviewLightDark
 @Composable
 private fun SpellingItemEnablePreview(
@@ -331,6 +535,7 @@ private fun SpellingItemEnablePreview(
                 wordStatus = WordStatus.CORRECT,
                 onItemSelected = {},
                 onItemReset = {},
+                onItemEdit = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 isEnabled = isEnabled,
             )
@@ -389,12 +594,13 @@ private fun SpellingItemsPreview(
         Scaffold {
             SpellingItems(
                 words = words,
-                onValueChange = { _, _ -> run {} },
-                onItemReset = {},
-                isEnabled = isEnabled,
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
-                modifier = Modifier.padding(it)
+                modifier = Modifier.padding(it),
+                onItemReset = {},
+                isEnabled = isEnabled
             )
         }
     }
 }
+
+ */

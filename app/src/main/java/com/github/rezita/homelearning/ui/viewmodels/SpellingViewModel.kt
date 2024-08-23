@@ -19,7 +19,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class SpellingState {
-    LOADING, LOADED, LOAD_ERROR, SAVED, SAVING, SAVING_ERROR
+    LOADING, LOADED, LOAD_ERROR, SAVED, SAVING, SAVING_ERROR,
+    EDITING, EDIT_SAVE, EDIT_ERROR
 }
 
 class SpellingViewModel(
@@ -78,27 +79,6 @@ class SpellingViewModel(
 
     private fun getMarkSpellingWords() = getSpellingWords { wordRepository.getMarkSpellingWords() }
 
-    fun saveSpellingResults() {
-        when (sheetAction) {
-            SheetAction.READ_ERIK_SPELLING_WORDS -> saveErikSpellingResults()
-            SheetAction.READ_MARK_SPELLING_WORDS -> saveMarkSpellingResults()
-            else -> viewModelState.update {
-                it.copy(
-                    state = SpellingState.SAVING_ERROR,
-                    words = emptyList(),
-                    savingResponse = "",
-                    errorMessage = R.string.msg_wrong_action
-                )
-            }
-        }
-    }
-
-    private fun saveErikSpellingResults() =
-        saveSpellingResults { wordRepository.updateErikSpellingWords(it) }
-
-    private fun saveMarkSpellingResults() =
-        saveSpellingResults { wordRepository.updateMarkSpellingWords(it) }
-
     private fun getSpellingWords(callback: suspend () -> RepositoryResult<List<SpellingWord>>) {
         resetUiState()
         viewModelScope.launch {
@@ -119,25 +99,29 @@ class SpellingViewModel(
         }
     }
 
-    fun updateWordStatus(index: Int, status: WordStatus) {
-        viewModelState.update {
-            it.copy(
-                words = it.words.toMutableList()
-                    .apply { this[index] = this[index].copy(status = status) }
-            )
+    fun saveSpellingResults() {
+        when (sheetAction) {
+            SheetAction.READ_ERIK_SPELLING_WORDS -> saveErikSpellingResults()
+            SheetAction.READ_MARK_SPELLING_WORDS -> saveMarkSpellingResults()
+            else -> viewModelState.update {
+                it.copy(
+                    state = SpellingState.SAVING_ERROR,
+                    words = emptyList(),
+                    savingResponse = "",
+                    errorMessage = R.string.msg_wrong_action
+                )
+            }
         }
     }
 
-    fun resetWordStatus(index: Int) {
-        viewModelState.update {
-            it.copy(
-                words = it.words.toMutableList()
-                    .apply { this[index] = this[index].copy(status = WordStatus.UNCHECKED) }
-            )
-        }
-    }
+    private fun saveErikSpellingResults() =
+        uploadSpellingResults { wordRepository.updateErikSpellingWords(it) }
 
-    private fun saveSpellingResults(callback: suspend (List<SpellingWord>) -> RepositoryResult<String>) {
+    private fun saveMarkSpellingResults() =
+        uploadSpellingResults { wordRepository.updateMarkSpellingWords(it) }
+
+
+    private fun uploadSpellingResults(callback: suspend (List<SpellingWord>) -> RepositoryResult<String>) {
         if (!viewModelState.value.isSavable()) {
             return
         }
@@ -168,13 +152,149 @@ class SpellingViewModel(
             }
         }
     }
+
+    fun updateWordStatus(index: Int, status: WordStatus) {
+        viewModelState.update {
+            it.copy(
+                words = it.words.toMutableList()
+                    .apply { this[index] = this[index].copy(status = status) }
+            )
+        }
+    }
+
+    fun resetWordStatus(index: Int) {
+        viewModelState.update {
+            it.copy(
+                words = it.words.toMutableList()
+                    .apply { this[index] = this[index].copy(status = WordStatus.UNCHECKED) }
+            )
+        }
+    }
+
+    fun setForEditing(index: Int) {
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.EDITING,
+                editState = SpellingEditState(
+                    wordOriginal = it.words[index].word,
+                    wordModified = it.words[index].word,
+                    index = index
+                )
+            )
+        }
+    }
+
+    fun discardEditing() {
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.LOADED,
+                editState = SpellingEditState(),
+                errorMessage = null
+            )
+        }
+    }
+
+    fun modifyEditedWord(word: String) {
+        if (this.viewModelState.value.state !in listOf(
+                SpellingState.EDITING,
+                SpellingState.EDIT_ERROR
+            )
+        ) {
+            return
+        }
+
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.EDITING,
+                editState = it.editState.copy(wordModified = word),
+                savingResponse = ""
+            )
+        }
+    }
+
+    fun saveEditing() {
+        //save
+        when (sheetAction) {
+            SheetAction.READ_ERIK_SPELLING_WORDS -> saveEditedErikSpellingWord()
+            SheetAction.READ_MARK_SPELLING_WORDS -> saveEditedMarkSpellingWord()
+            else -> viewModelState.update {
+                it.copy(
+                    state = SpellingState.EDIT_ERROR,
+                    savingResponse = "Wrong action provided",
+                )
+            }
+        }
+    }
+
+    private fun saveEditedErikSpellingWord() =
+        saveEditedWord { wordOld, wordNew ->
+            wordRepository.modifyErikSpellingWord(wordOld, wordNew)
+        }
+
+    private fun saveEditedMarkSpellingWord() =
+        saveEditedWord { wordOld, wordNew ->
+            wordRepository.modifyMarkSpellingWord(wordOld, wordNew)
+        }
+
+
+    private fun saveEditedWord(callback: suspend (String, String) -> RepositoryResult<String>) {
+        if (this.viewModelState.value.state !in listOf(
+                SpellingState.EDITING,
+                SpellingState.EDIT_ERROR
+            )
+        ) {
+            return
+        }
+        //change state to Edit_save
+        viewModelState.update {
+            it.copy(
+                state = SpellingState.EDIT_SAVE,
+                savingResponse = ""
+            )
+        }
+        val newWord = viewModelState.value.editState.wordModified
+        val index = viewModelState.value.editState.index
+        viewModelScope.launch {
+            val result = callback(
+                viewModelState.value.editState.wordOriginal,
+                viewModelState.value.editState.wordModified
+            )
+            viewModelState.update {
+                when (result) {
+                    //success - update spelling state with the new word
+                    is RepositoryResult.Success -> {
+                        it.copy(
+                            state = SpellingState.LOADED,
+                            words = it.words.toMutableList()
+                                .apply { this[index!!] = this[index!!].copy(word = newWord) },
+                            errorMessage = null,
+                            savingResponse = "",
+                            editState = SpellingEditState()
+                        )
+                    }
+                    //else: RepositoryResult.Error
+                    is RepositoryResult.Error -> it.copy(
+                        state = SpellingState.EDIT_ERROR,
+                        savingResponse = result.message,
+                    )
+                }
+            }
+        }
+
+
+        //if successs update wordlist + message + change state
+        //if failed: discard changes + message + change state
+    }
+
+
 }
 
 data class SpellingViewModelState(
     val state: SpellingState,
     val words: List<SpellingWord> = emptyList(),
     val errorMessage: Int? = null,
-    val savingResponse: String = ""
+    val savingResponse: String = "",
+    val editState: SpellingEditState = SpellingEditState(),
 ) {
     fun isSavable(): Boolean {
         return when (state) {
@@ -218,5 +338,35 @@ data class SpellingViewModelState(
                     words = words
                 )
             }
+
+            SpellingState.EDITING -> {
+                SpellingUiState.Editing(
+                    words = words,
+                    editState = editState,
+                    isEditing = true
+                )
+            }
+
+            SpellingState.EDIT_SAVE -> {
+                SpellingUiState.Editing(
+                    words = words,
+                    editState = editState,
+                    isEditing = false
+                )
+            }
+
+            SpellingState.EDIT_ERROR -> {
+                SpellingUiState.EditError(
+                    errorMessage = savingResponse,
+                    words = words,
+                    editState = editState,
+                )
+            }
         }
 }
+
+data class SpellingEditState(
+    val wordOriginal: String = "",
+    val wordModified: String = "",
+    val index: Int? = null
+)

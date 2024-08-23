@@ -88,6 +88,10 @@
     <string name="spelling_incorrect_short">IC</string>
     <string name="spelling_result">Result: %1$d/%2$d (%3$d\%%) </string>
     <string name="message_after_update_spelling_words">Spelling words results are saved.</string>
+    <string name="spelling_save_edited_word">Save word</string>
+    <string name="spelling_cancel_editing">Cancel</string>
+    <string name="spelling_editing_save_success">Changing word is success.</string>
+
 
     <!-- Upload words -->
     <string name="info_no_words_upload">There are no words to upload.</string>

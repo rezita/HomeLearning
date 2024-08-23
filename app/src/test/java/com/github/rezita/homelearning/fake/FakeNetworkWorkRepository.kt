@@ -5,6 +5,7 @@ import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.model.SpellingWord
+import kotlinx.coroutines.delay
 
 class FakeNetworkWorkRepository : WordRepository {
     override suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>> {
