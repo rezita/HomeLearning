@@ -1,20 +1,21 @@
 package com.github.rezita.homelearning.ui.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
+import app.cash.turbine.test
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.fake.FakeNetworkWorkRepository
 import com.github.rezita.homelearning.model.FillInSentence
+import com.github.rezita.homelearning.navigation.SentenceDestination
 import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.rules.TestDispatcherRule
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class FillInSentenceViewModelTest {
@@ -45,28 +46,25 @@ class FillInSentenceViewModelTest {
     private val sentences =
         listOf(sentence1, sentence2, sentence3)
 
-
+    @get:Rule
+    val testDispatcher = TestDispatcherRule()
     private lateinit var fillInSentenceViewModel: FillInSentenceViewModel
     private lateinit var fakeRepository: WordRepository
-    private val dispatcher = StandardTestDispatcher()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
+
     @Before
     fun setUp() {
-        Dispatchers.setMain(dispatcher)
         fakeRepository = FakeNetworkWorkRepository()
+
         runTest {
+            val saveStateHandle =
+                SavedStateHandle(mapOf(SentenceDestination.sheetActionArg to SheetAction.READ_HOMOPHONES))
+
             fillInSentenceViewModel = FillInSentenceViewModel(
-                wordRepository = fakeRepository,
-                sheetAction = SheetAction.READ_HOMOPHONES
+                savedStateHandle = saveStateHandle,
+                wordRepository = fakeRepository
             )
         }
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @After
-    fun close() {
-        Dispatchers.resetMain()
     }
 
     /**Answers all questions and returns the expected updated list*/
@@ -83,10 +81,24 @@ class FillInSentenceViewModelTest {
         return newSentences
     }
 
+    /**Test that the load() function works using Turbine*/
+    @Test
+    fun load_valid_data_test() = runTest {
+        fillInSentenceViewModel.uiState.test {
+            fillInSentenceViewModel.load()
+            //because the sentences were already loaded
+            assertEquals(SentenceUiState.Loaded(sentences), awaitItem())
+            //during loading
+            assertEquals(SentenceUiState.Loading, awaitItem())
+            //after loading
+            assertEquals(SentenceUiState.Loaded(sentences), awaitItem())
+        }
+    }
+
     @Test
     fun after_init_valid_data_test() {
         val stateAfterInit = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(stateAfterInit, SentenceUiState.Loaded(sentences = sentences))
+        assertEquals(stateAfterInit, SentenceUiState.Loaded(sentences = sentences))
         Assert.assertFalse(stateAfterInit.isSavable())
     }
 
@@ -94,8 +106,9 @@ class FillInSentenceViewModelTest {
     fun after_load_valid_data_test() =
         runTest {
             fillInSentenceViewModel.load()
+            delay(1000)
             val stateAfterLoad = fillInSentenceViewModel.uiState.value
-            Assert.assertEquals(stateAfterLoad, SentenceUiState.Loaded(sentences = sentences))
+            assertEquals(SentenceUiState.Loaded(sentences = sentences), stateAfterLoad)
             Assert.assertFalse(stateAfterLoad.isSavable())
         }
 
@@ -110,7 +123,7 @@ class FillInSentenceViewModelTest {
         val newSentences =
             sentences.toMutableList().apply { this[index] = this[index].copy(answer = answer) }
         val stateAfterUpdate = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(SentenceUiState.Loaded(sentences = newSentences), stateAfterUpdate)
+        assertEquals(SentenceUiState.Loaded(sentences = newSentences), stateAfterUpdate)
     }
 
     @Test
@@ -123,14 +136,14 @@ class FillInSentenceViewModelTest {
         }
 
         val uiState = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(uiState, SentenceUiState.Loaded(sentences = sentences))
+        assertEquals(uiState, SentenceUiState.Loaded(sentences = sentences))
     }
 
     @Test
     fun save_sentences_answer_all_test() {
         val newSentences = answerAllQuestions()
         val state0 = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(state0, SentenceUiState.Loaded(sentences = newSentences))
+        assertEquals(state0, SentenceUiState.Loaded(sentences = newSentences))
 
         val allAnswered = fillInSentenceViewModel.uiState.value.isSavable()
         Assert.assertTrue(allAnswered)
@@ -142,7 +155,7 @@ class FillInSentenceViewModelTest {
             fillInSentenceViewModel.saveSentences()
         }
         val stateAfterSave = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(stateAfterSave, SentenceUiState.Loaded(sentences = sentences))
+        assertEquals(stateAfterSave, SentenceUiState.Loaded(sentences = sentences))
     }
 
 
@@ -154,7 +167,7 @@ class FillInSentenceViewModelTest {
         }
 
         val stateAfterSave = fillInSentenceViewModel.uiState.value
-        Assert.assertEquals(stateAfterSave, SentenceUiState.Saved(sentences = newSentences))
+        assertEquals(stateAfterSave, SentenceUiState.Saved(sentences = newSentences))
     }
 
 }

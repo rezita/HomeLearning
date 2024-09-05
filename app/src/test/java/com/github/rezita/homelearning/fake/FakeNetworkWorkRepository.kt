@@ -17,10 +17,12 @@ class FakeNetworkWorkRepository : WordRepository {
     }
 
     override suspend fun getIrregularVerbs(): RepositoryResult<List<FillInSentence>> {
+        delay(500)
         return FakeSentenceDataSource.sentences
     }
 
     override suspend fun getHomophones(): RepositoryResult<List<FillInSentence>> {
+        delay(500)
         return FakeSentenceDataSource.sentences
     }
 
@@ -68,6 +70,20 @@ class FakeNetworkWorkRepository : WordRepository {
 
     override suspend fun saveMarkSpellingWords(
         words: List<SpellingWord>
+    ): RepositoryResult<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun modifyErikSpellingWord(
+        wordOld: String,
+        wordNew: String
+    ): RepositoryResult<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun modifyMarkSpellingWord(
+        wordOld: String,
+        wordNew: String
     ): RepositoryResult<String> {
         TODO("Not yet implemented")
     }
