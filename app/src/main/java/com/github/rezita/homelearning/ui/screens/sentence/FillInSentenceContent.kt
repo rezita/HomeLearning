@@ -2,6 +2,7 @@ package com.github.rezita.homelearning.ui.screens.sentence
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -10,6 +11,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -200,21 +205,44 @@ fun SentenceResultItems(
 ) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
-            Text(
-                text = getResultWithIndex(
-                    index,
-                    item.getWithResult(
-                        sentence_correct,
-                        sentence_incorrect,
+            Row(modifier = modifier.fillMaxSize()) {
+                if (item.status == WordStatus.CORRECT) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = stringResource(id = R.string.sentences_result_correct),
+                        tint = sentence_correct,
+                        modifier = Modifier.padding(
+                            start = dimensionResource(id = R.dimen.padding_small),
+                            top = dimensionResource(id = R.dimen.padding_medium)
+                        )
                     )
-                ),
-                textAlign = TextAlign.Left,
-                modifier = Modifier.padding(
-                    start = dimensionResource(id = R.dimen.padding_medium),
-                    end = dimensionResource(id = R.dimen.padding_medium),
-                    top = dimensionResource(id = R.dimen.padding_medium)
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = stringResource(id = R.string.sentences_result_incorrect),
+                        tint = sentence_incorrect,
+                        modifier = Modifier.padding(
+                            start = dimensionResource(id = R.dimen.padding_small),
+                            top = dimensionResource(id = R.dimen.padding_medium)
+                        )
+                    )
+                }
+                Text(
+                    text = getResultWithIndex(
+                        index,
+                        item.getWithResult(
+                            sentence_correct,
+                            sentence_incorrect,
+                        )
+                    ),
+                    textAlign = TextAlign.Left,
+                    modifier = Modifier.padding(
+                        start = dimensionResource(id = R.dimen.padding_small),
+                        end = dimensionResource(id = R.dimen.padding_medium),
+                        top = dimensionResource(id = R.dimen.padding_medium)
+                    )
                 )
-            )
+            }
         }
     }
 }

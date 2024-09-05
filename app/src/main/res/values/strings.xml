@@ -99,8 +99,6 @@
     <string name="info_uploading">Saving words&#8230;</string>
     <string name="upload_saving_words">Saving words</string>
     <string name="upload_add_new">Add new word</string>
-
-
     <string name="edit_spelling_word_title">Edit spelling word</string>
     <string name="save_spelling_word_title">Add new spelling word</string>
     <string name="saving_spelling_word_text">Saving word&#8230;</string>
@@ -130,7 +128,6 @@
     <string name="upload_edit_word">Edit word</string>
     <string name="upload_no_words_message">There\'s nothing to save. \nPlease create at least one word.</string>
 
-
     <!-- Fill In Sentences Activity -->
     <string name="irregular_verb_dialog_title">Unable to check</string>
     <string name="irregular_verb_not_all_filled_message">Please answer all the questions!</string>
@@ -138,6 +135,9 @@
     <string name="irregular_verb_instruction">Fill the empty spaces!</string>
     <string name="irregular_checking_text">Checking the answers&#8230;</string>
     <string name="sentences_message_after_update">Results are saved.</string>
+    <string name="sentences_result_correct">Correct</string>
+    <string name="sentences_result_incorrect">Incorrect</string>
+
 
     <!-- Irregular Verbs words / Spelling / Reading words -->
     <string name="loading_fail_text">Loading words failed.</string>

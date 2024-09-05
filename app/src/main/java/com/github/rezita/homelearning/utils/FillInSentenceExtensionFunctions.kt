@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.SEPARATOR
 import com.github.rezita.homelearning.model.SOLUTION_SEPARATOR
@@ -56,7 +57,7 @@ private fun FillInSentence.getResultText(
             WordStatus.UNCHECKED -> {
                 append(solutionsString)
                 addStyle(
-                    style = SpanStyle(color = incorrectColor),
+                    style = SpanStyle(color = incorrectColor, fontWeight = FontWeight.Bold),
                     start = 0,
                     end = solutionsString.length
                 )
@@ -65,7 +66,7 @@ private fun FillInSentence.getResultText(
             WordStatus.CORRECT -> {
                 append(answer)
                 addStyle(
-                    style = SpanStyle(color = correctColor),
+                    style = SpanStyle(color = correctColor, fontWeight = FontWeight.Bold),
                     start = 0,
                     end = answer.length
                 )
@@ -75,9 +76,7 @@ private fun FillInSentence.getResultText(
             WordStatus.INCORRECT -> {
                 append(answer)
                 addStyle(
-                    style = SpanStyle(
-                        color = incorrectColor
-                    ),
+                    style = SpanStyle(color = incorrectColor, fontWeight = FontWeight.Bold),
                     start = 0,
                     end = answer.length
                 )
@@ -85,7 +84,7 @@ private fun FillInSentence.getResultText(
                 append(" ")
                 append(solutionsString)
                 addStyle(
-                    style = SpanStyle(color = correctColor),
+                    style = SpanStyle(color = correctColor, fontWeight = FontWeight.Bold),
                     start = answer.length + 1,
                     end = answer.length + solutionsString.length + 1
                 )
