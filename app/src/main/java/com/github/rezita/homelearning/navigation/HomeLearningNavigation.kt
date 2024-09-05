@@ -62,7 +62,9 @@ fun HomeLearningNavigation(
         TabButton(
             titleId = R.string.upload_erik_words,
             onClick = { navController.navigate("${Upload.route}/${SheetAction.SAVE_ERIK_WORDS}") }
-        ))
+        )
+    )
+
 
     val markTabButtons = listOf(
         TabButton(
@@ -80,7 +82,8 @@ fun HomeLearningNavigation(
         TabButton(
             titleId = R.string.upload_mark_words,
             onClick = { navController.navigate("${Upload.route}/${SheetAction.SAVE_MARK_WORDS}") }
-        ))
+        )
+    )
 
     val erikTabValues = HomeLearningTabItem(
         name = "Erik",
