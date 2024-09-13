@@ -7,8 +7,8 @@ package com.github.rezita.homelearning.ui.size
  * (average English word length is 4.79 chars)*/
 const val wxS_min_type1 = 0
 const val wS_min_type1 = 320
-const val wM_min_type1 = 365
-const val wL_min_type1 = 390
+const val wM_min_type1 = 380
+const val wL_min_type1 = 420
 const val wxL_min_type1 = 480
 
 /**window width for ReadingScreen

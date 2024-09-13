@@ -91,6 +91,8 @@
     <string name="spelling_save_edited_word">Save word</string>
     <string name="spelling_cancel_editing">Cancel</string>
     <string name="spelling_editing_save_success">Changing word is success.</string>
+    <string name="spelling_text_to_speech">Read aloud</string>
+
 
 
     <!-- Upload words -->

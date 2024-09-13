@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.ui.screens.spelling
 
+import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,24 +16,34 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Done
+import androidx.compose.material.icons.rounded.RecordVoiceOver
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.rezita.homelearning.R
@@ -51,6 +62,7 @@ import com.github.rezita.homelearning.ui.theme.sentence_incorrect
 import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 import com.github.rezita.homelearning.utils.toDp
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 @Composable
 fun SpellingContent(
@@ -146,7 +158,6 @@ fun SpellingContent(
                 isEditing = true,
                 errorMsg = state.errorMessage
             )
-
         }
     }
 }
@@ -161,6 +172,8 @@ private fun SpellingItems(
     onItemEdit: (Int) -> Unit = {},
     isEnabled: Boolean = true,
 ) {
+    var isSpeaking by remember { mutableStateOf(false) }
+    val tts = rememberTextToSpeech()
     Column(modifier = modifier.fillMaxSize()) {
         Text(
             text = getScores(words),
@@ -181,6 +194,9 @@ private fun SpellingItems(
                     onItemEdit = { onItemEdit(index) },
                     rbContentType = rbContentType,
                     isEnabled = isEnabled,
+                    showSpeaker = true,
+                    textToSpeech = tts.value,
+                    isSpeakingCallback = { isSpeaking = it },
                 )
                 HorizontalDivider(
                     modifier = Modifier
@@ -239,6 +255,7 @@ private fun EditSpellingItems(
                         onItemEdit = {},
                         rbContentType = rbContentType,
                         isEnabled = false,
+                        showSpeaker = false
                     )
                 }
                 HorizontalDivider(
@@ -265,12 +282,19 @@ private fun SpellingItem(
     rbContentType: RadioButtonContentType,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
+    showSpeaker: Boolean = true,
+    textToSpeech: TextToSpeech? = null,
+    isSpeakingCallback: (Boolean) -> Unit = {}
+
 ) {
     if (rbContentType == RadioButtonContentType.BUTTONS_SECOND_LINE) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_small),
+                    end = dimensionResource(id = R.dimen.padding_medium)
+                ),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
         ) {
@@ -281,6 +305,9 @@ private fun SpellingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
+                if (showSpeaker) {
+                    SpeakerIconButton { isSpeakingCallback(setSpeaker(word, textToSpeech)) }
+                }
                 SpellingTextWithNumber(
                     index = index,
                     word = word,
@@ -309,10 +336,16 @@ private fun SpellingItem(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                .padding(
+                    start = dimensionResource(id = R.dimen.padding_small),
+                    end = dimensionResource(id = R.dimen.padding_medium)
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
+            if (showSpeaker) {
+                SpeakerIconButton { isSpeakingCallback(setSpeaker(word, textToSpeech)) }
+            }
             SpellingTextWithNumber(
                 index = index,
                 word = word,
@@ -447,7 +480,6 @@ private fun getIndexPrefix(index: Int): String {
     return "${index + 1}".padStart(1, ' ') + "."
 }
 
-
 @Composable
 private fun getScores(words: List<SpellingWord>): String {
     val nrOfQuestions = words.filter { it.status != WordStatus.UNCHECKED }.size
@@ -460,6 +492,59 @@ private fun getScores(words: List<SpellingWord>): String {
         ratio
     )
 }
+
+
+@Composable
+private fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
+    val context = LocalContext.current
+    val tts = remember { mutableStateOf<TextToSpeech?>(null) }
+    DisposableEffect(context) {
+        val textToSpeech = TextToSpeech(context) { status ->
+            //Log.i("Speaking", status.toString())
+            if (status == TextToSpeech.SUCCESS) {
+                tts.value?.language = Locale.UK
+            }
+        }
+        tts.value = textToSpeech
+
+        onDispose {
+            textToSpeech.stop()
+            textToSpeech.shutdown()
+        }
+    }
+    return tts
+}
+
+@Composable
+private fun SpeakerIconButton(
+    //word: String,
+    //textToSpeech: TextToSpeech? = null,
+    //isSpeakingCallback: () -> Unit = {}
+    onClickCallback: () -> Unit
+) {
+    IconButton(
+        onClick = { onClickCallback() }
+    ) {
+        Icon(
+            imageVector = Icons.Rounded.RecordVoiceOver,
+            contentDescription = stringResource(id = R.string.spelling_text_to_speech)
+        )
+    }
+}
+
+private fun setSpeaker(
+    word: String,
+    textToSpeech: TextToSpeech? = null,
+): Boolean {
+    if (textToSpeech?.isSpeaking == true) {
+        textToSpeech?.stop()
+        return false
+    } else {
+        textToSpeech?.speak(word, TextToSpeech.QUEUE_ADD, null, null)
+        return true
+    }
+}
+
 
 /*
 @PreviewFontScale
@@ -493,13 +578,17 @@ private fun SpellingItemSizePreview(
                     rbContentType = rbContentType,
                     onItemReset = {},
                     onItemEdit = {},
-                    modifier = Modifier.padding(it)
+                    modifier = Modifier.padding(it),
+                    showSpeaker = true,
+                    isSpeakingCallback = {}
                 )
             }
         }
     }
 }
-*/
+
+ */
+/*
 @PreviewLightDark
 @Composable
 private fun SpellingEditItem(
@@ -521,7 +610,8 @@ private fun SpellingEditItem(
 }
 
 
-/*
+ */
+
 @PreviewLightDark
 @Composable
 private fun SpellingItemEnablePreview(
@@ -538,11 +628,14 @@ private fun SpellingItemEnablePreview(
                 onItemEdit = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 isEnabled = isEnabled,
+                showSpeaker = true,
+                isSpeakingCallback = {}
             )
         }
     }
 }
 
+/*
 @PreviewLightDark
 @Composable
 private fun SpellingItemsPreview(
@@ -601,6 +694,4 @@ private fun SpellingItemsPreview(
             )
         }
     }
-}
-
- */
+}*/
