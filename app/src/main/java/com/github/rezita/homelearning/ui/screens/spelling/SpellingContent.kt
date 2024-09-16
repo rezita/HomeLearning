@@ -29,10 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -80,6 +78,7 @@ fun SpellingContent(
     rbContentType: RadioButtonContentType,
     modifier: Modifier = Modifier
 ) {
+    val tts = rememberTextToSpeech()
     when (state) {
         is SpellingUiState.Loading -> {
             LoadingProgressBar(modifier = modifier)
@@ -89,6 +88,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
+                textToSpeech = tts.value,
                 modifier = modifier,
                 onValueChange = onItemValueChange,
                 onItemReset = onItemReset,
@@ -110,6 +110,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
+                textToSpeech = tts.value,
                 modifier = modifier,
                 isEnabled = false
             )
@@ -124,6 +125,7 @@ fun SpellingContent(
                     SpellingItems(
                         words = state.words,
                         rbContentType = rbContentType,
+                        textToSpeech = tts.value,
                         isEnabled = false,
                     )
                 },
@@ -166,14 +168,14 @@ fun SpellingContent(
 private fun SpellingItems(
     words: List<SpellingWord>,
     rbContentType: RadioButtonContentType,
+    textToSpeech: TextToSpeech?,
     modifier: Modifier = Modifier,
     onValueChange: (Int, WordStatus) -> Unit = { _, _ -> run {} },
     onItemReset: (Int) -> Unit = {},
     onItemEdit: (Int) -> Unit = {},
     isEnabled: Boolean = true,
 ) {
-    var isSpeaking by remember { mutableStateOf(false) }
-    val tts = rememberTextToSpeech()
+
     Column(modifier = modifier.fillMaxSize()) {
         Text(
             text = getScores(words),
@@ -194,9 +196,8 @@ private fun SpellingItems(
                     onItemEdit = { onItemEdit(index) },
                     rbContentType = rbContentType,
                     isEnabled = isEnabled,
-                    showSpeaker = true,
-                    textToSpeech = tts.value,
-                    isSpeakingCallback = { isSpeaking = it },
+                    showSpeaker = textToSpeech != null,
+                    isSpeakingCallback = { setSpeaker(item.word, textToSpeech) },
                 )
                 HorizontalDivider(
                     modifier = Modifier
@@ -283,8 +284,7 @@ private fun SpellingItem(
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     showSpeaker: Boolean = true,
-    textToSpeech: TextToSpeech? = null,
-    isSpeakingCallback: (Boolean) -> Unit = {}
+    isSpeakingCallback: () -> Unit = {}
 
 ) {
     if (rbContentType == RadioButtonContentType.BUTTONS_SECOND_LINE) {
@@ -306,7 +306,7 @@ private fun SpellingItem(
                 horizontalArrangement = Arrangement.Start
             ) {
                 if (showSpeaker) {
-                    SpeakerIconButton { isSpeakingCallback(setSpeaker(word, textToSpeech)) }
+                    SpeakerIconButton { isSpeakingCallback() }
                 }
                 SpellingTextWithNumber(
                     index = index,
@@ -344,7 +344,7 @@ private fun SpellingItem(
             horizontalArrangement = Arrangement.Center
         ) {
             if (showSpeaker) {
-                SpeakerIconButton { isSpeakingCallback(setSpeaker(word, textToSpeech)) }
+                SpeakerIconButton { isSpeakingCallback() }
             }
             SpellingTextWithNumber(
                 index = index,
@@ -500,13 +500,14 @@ private fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
     val tts = remember { mutableStateOf<TextToSpeech?>(null) }
     DisposableEffect(context) {
         val textToSpeech = TextToSpeech(context) { status ->
-            //Log.i("Speaking", status.toString())
+            Log.i("Speaking", status.toString())
             if (status == TextToSpeech.SUCCESS) {
                 tts.value?.language = Locale.UK
             }
         }
         tts.value = textToSpeech
-
+        //cleaning up the textToSpeech -
+        // it calls when the composable leaves the Composition (aka when user leaves SpellingContent)
         onDispose {
             textToSpeech.stop()
             textToSpeech.shutdown()
@@ -517,9 +518,6 @@ private fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
 
 @Composable
 private fun SpeakerIconButton(
-    //word: String,
-    //textToSpeech: TextToSpeech? = null,
-    //isSpeakingCallback: () -> Unit = {}
     onClickCallback: () -> Unit
 ) {
     IconButton(
@@ -535,14 +533,9 @@ private fun SpeakerIconButton(
 private fun setSpeaker(
     word: String,
     textToSpeech: TextToSpeech? = null,
-): Boolean {
-    if (textToSpeech?.isSpeaking == true) {
-        textToSpeech?.stop()
-        return false
-    } else {
-        textToSpeech?.speak(word, TextToSpeech.QUEUE_ADD, null, null)
-        return true
-    }
+) {
+    //simply add the word to the queue
+    textToSpeech?.speak(word, TextToSpeech.QUEUE_ADD, null, null)
 }
 
 
