@@ -500,7 +500,6 @@ private fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
     val tts = remember { mutableStateOf<TextToSpeech?>(null) }
     DisposableEffect(context) {
         val textToSpeech = TextToSpeech(context) { status ->
-            Log.i("Speaking", status.toString())
             if (status == TextToSpeech.SUCCESS) {
                 tts.value?.language = Locale.UK
             }
