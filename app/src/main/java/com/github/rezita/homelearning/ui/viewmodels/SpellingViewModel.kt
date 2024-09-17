@@ -266,7 +266,7 @@ class SpellingViewModel(
                         it.copy(
                             state = SpellingState.LOADED,
                             words = it.words.toMutableList()
-                                .apply { this[index!!] = this[index!!].copy(word = newWord) },
+                                .apply { this[index!!] = this[index].copy(word = newWord) },
                             errorMessage = null,
                             savingResponse = "",
                             editState = SpellingEditState()
