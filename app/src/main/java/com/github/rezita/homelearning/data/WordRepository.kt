@@ -227,7 +227,6 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                 }
             }
             .onFailure {
-                Log.e("onFailure", it.message.toString())
                 return RepositoryResult.Error(
                     message = it.message.toString()
                 )
