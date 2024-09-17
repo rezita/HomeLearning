@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Done
@@ -28,12 +30,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -224,7 +229,13 @@ private fun EditSpellingItems(
     isEditing: Boolean = true,
     errorMsg: String? = null
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
+    val listState = rememberLazyListState(editedIndex)
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding()
+    ) {
         Text(
             text = getScores(words),
             modifier = Modifier
@@ -233,7 +244,10 @@ private fun EditSpellingItems(
             textAlign = TextAlign.Right,
         )
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize()
+        ) {
             itemsIndexed(words) { index, item ->
                 if (index == editedIndex) {
                     SpellingEditedItem(
@@ -397,15 +411,11 @@ private fun SpellingEditedItem(
                     .width(ordinalNumberWidth.toDp())
             )
             //Word
-            OutlinedTextField(
-                value = word,
-                enabled = isEditing,
-                onValueChange = {
-                    if (it.length <= MAX_WORD_LENGTH) {
-                        onValueChange(it)
-                    }
-                },
-                isError = errorMsg != null,
+            AutoFocusingSpellingText(
+                word = word,
+                isEditing = isEditing,
+                onValueChange = onValueChange,
+                errorMsg = errorMsg,
                 modifier = Modifier.weight(1f)
 
             )
@@ -438,6 +448,35 @@ private fun SpellingEditedItem(
         if (errorMsg != null) {
             ErrorText(errorMsg)
         }
+    }
+}
+
+@Composable
+fun AutoFocusingSpellingText(
+    word: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    isEditing: Boolean = true,
+
+    errorMsg: String? = null
+) {
+    //var value by mutableStateOf("Enter Text")
+    val focusRequester = remember { FocusRequester() }
+    OutlinedTextField(
+        value = word,
+        enabled = isEditing,
+        onValueChange = {
+            if (it.length <= MAX_WORD_LENGTH) {
+                onValueChange(it)
+            }
+        },
+        isError = errorMsg != null,
+        // modifier = modifier.weight(1f)
+        modifier = modifier.focusRequester(focusRequester)
+    )
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 }
 
