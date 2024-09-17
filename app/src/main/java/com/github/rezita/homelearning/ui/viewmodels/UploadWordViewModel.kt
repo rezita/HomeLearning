@@ -158,6 +158,7 @@ class UploadWordViewModel(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun parseResponse(response: String): List<Pair<SpellingWord, String>> {
         Log.i("Response", response)
 
@@ -168,9 +169,8 @@ class UploadWordViewModel(
                 val pair =
                     word.split(RESPONSE_INNER_SEPARATOR)
                         .let { Pair(findWordInList(it[0]), it.getOrNull(1) ?: "") }
-                if (pair.first != null) {
-                    result.add(pair as Pair<SpellingWord, String>)
-                }
+                pair.takeIf { it.first != null }
+                    .let { result.add(pair as Pair<SpellingWord, String>) }
             }
         }
         Log.i("Result", result.toString())
