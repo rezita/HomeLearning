@@ -187,7 +187,7 @@ private fun EditTextField(
             colors = colors,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
-                autoCorrect = false,
+                autoCorrectEnabled = false,
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             ),
@@ -221,7 +221,7 @@ private fun CategoryDropDownMenu(
         modifier = modifier,
     ) {
         EditTextField(
-            modifier = Modifier.menuAnchor(),
+            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true),
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
