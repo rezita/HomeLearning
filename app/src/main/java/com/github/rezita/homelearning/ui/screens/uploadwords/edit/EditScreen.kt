@@ -92,7 +92,6 @@ fun EditWordForm(
         EditTextField(
             value = state.editState.word.comment,
             onValueChange = { onWordChangeCallback(state.editState.word.copy(comment = it)) },
-
             labelId = R.string.upload_comment_label,
             error = state.editState.getCommentError(),
             maxLength = MAX_COMMENT_LENGTH
@@ -178,8 +177,7 @@ private fun EditTextField(
                     onValueChange(it)
                 }
             },
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             readOnly = readOnly,
             label = { Text(stringResource(id = labelId)) },
             trailingIcon = trailingIcon,
@@ -222,7 +220,9 @@ private fun CategoryDropDownMenu(
         modifier = modifier,
     ) {
         EditTextField(
-            modifier = Modifier.menuAnchor(type = MenuAnchorType.PrimaryNotEditable, enabled = true),
+            modifier = Modifier.menuAnchor(
+                type = MenuAnchorType.PrimaryNotEditable, enabled = true
+            ),
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
@@ -285,10 +285,7 @@ private fun CategoryDropDownMenuPreview() {
 @Composable
 private fun SpellingItemPreview() {
     val spelling1 = SpellingWord(
-        word = "appear",
-        category = "school",
-        comment = "Y3Y4",
-        status = WordStatus.CORRECT
+        word = "appear", category = "school", comment = "Y3Y4", status = WordStatus.CORRECT
     )
 
     val categories = listOf("home", "school")
