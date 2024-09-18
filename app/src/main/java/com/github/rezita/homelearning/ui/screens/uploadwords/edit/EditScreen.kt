@@ -100,7 +100,7 @@ fun EditWordForm(
         CategoryDropDownMenu(
             options = state.categories,
             labelId = R.string.upload_category_label,
-            selectedItem = state.editState.word.category,
+            selectedItem = state.editState.word.category.ifEmpty { if (state.categories.isNotEmpty()) state.categories[0] else "" },
             onOptionSelected = {
                 if (it != null) {
                     onWordChangeCallback(state.editState.word.copy(category = it))
@@ -109,6 +109,7 @@ fun EditWordForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
+
             error = state.editState.getCategoryError()
         )
     }
