@@ -186,8 +186,16 @@ class UploadWordViewModel(
             resetViewModelState()
         }
 
-        val editWordState = if (index == null) EditState() else
+        val editWordState = if (index == null) {
+            //set the category for the drop down menu
+            if (viewModelState.value.categories.isNotEmpty()) {
+                EditState(viewModelState.value.categories[0])
+            } else {
+                EditState()
+            }
+        } else {
             EditState(word = viewModelState.value.words[index])
+        }
         viewModelState.update {
             it.copy(
                 state = UploadState.EDITING,

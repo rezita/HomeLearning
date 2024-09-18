@@ -99,7 +99,7 @@ fun EditWordForm(
         CategoryDropDownMenu(
             options = state.categories,
             labelId = R.string.upload_category_label,
-            selectedItem = state.editState.word.category.ifEmpty { if (state.categories.isNotEmpty()) state.categories[0] else "" },
+            selectedItem = state.editState.word.category,
             onOptionSelected = {
                 if (it != null) {
                     onWordChangeCallback(state.editState.word.copy(category = it))

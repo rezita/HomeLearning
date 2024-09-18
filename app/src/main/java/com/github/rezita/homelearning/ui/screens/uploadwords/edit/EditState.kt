@@ -7,6 +7,7 @@ data class EditState(
     val word: SpellingWord = SpellingWord("", "", ""),
     val invalidFields: List<Pair<String, Int>> = emptyList()
 ) {
+    constructor(category: String): this(word = SpellingWord("", category, ""))
     fun getCategoryError() = invalidFields.find { it.first == INPUT_CATEGORY.first }?.second
     fun getWordError() = invalidFields.find { it.first == INPUT_WORD.first }?.second
     fun getCommentError() = invalidFields.find { it.first == INPUT_COMMENT.first }?.second
