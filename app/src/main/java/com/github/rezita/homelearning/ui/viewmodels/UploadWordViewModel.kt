@@ -26,7 +26,7 @@ const val MAX_COMMENT_LENGTH = 25
 const val RESPONSE_SEPARATOR = ","
 const val RESPONSE_INNER_SEPARATOR = ":"
 
-private val wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s'-]{1,35}")
+private val wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s'-()]{1,35}")
 private val commentPattern = Regex("[\\w\\s-']{1,35}")
 
 enum class UploadState {
