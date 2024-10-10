@@ -10,7 +10,6 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
-import com.github.rezita.homelearning.navigation.ReadingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.reading.ReadingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +23,7 @@ class ReadingViewModel(
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction =
-        checkNotNull(savedStateHandle[ReadingDestination.sheetActionArg])
+    private val sheetAction: SheetAction = checkNotNull(savedStateHandle["sheetAction"])
 
     private val _readingUIState =
         MutableStateFlow<ReadingUiState>(ReadingUiState.Loading)

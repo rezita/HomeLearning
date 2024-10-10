@@ -8,7 +8,6 @@ import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.navigation.SentenceDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +26,7 @@ class FillInSentenceViewModel(
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction =
-        checkNotNull(savedStateHandle[SentenceDestination.sheetActionArg])
+    private val sheetAction: SheetAction = checkNotNull(savedStateHandle["sheetAction"])
 
     private val viewModelState = MutableStateFlow(
         SentenceViewModelState(state = SentenceState.LOADING)
