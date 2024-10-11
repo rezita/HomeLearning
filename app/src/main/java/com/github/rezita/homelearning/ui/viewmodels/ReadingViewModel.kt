@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.navigation.ReadingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.reading.ReadingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +25,8 @@ class ReadingViewModel(
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction = checkNotNull(savedStateHandle["sheetAction"])
+    private val sheetAction: SheetAction =
+        savedStateHandle.toRoute<ReadingDestination>().sheetAction
 
     private val _readingUIState =
         MutableStateFlow<ReadingUiState>(ReadingUiState.Loading)
