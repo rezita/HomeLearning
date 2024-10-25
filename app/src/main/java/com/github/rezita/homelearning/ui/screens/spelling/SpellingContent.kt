@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -196,6 +197,7 @@ private fun SpellingItems(
                     index = index,
                     word = item.word,
                     wordStatus = item.status,
+                    isRepeatedWord = item.repeated,
                     onItemSelected = { status -> onValueChange(index, status) },
                     onItemReset = { onItemReset(index) },
                     onItemEdit = { onItemEdit(index) },
@@ -265,6 +267,7 @@ private fun EditSpellingItems(
                         index = index,
                         word = item.word,
                         wordStatus = item.status,
+                        isRepeatedWord = item.repeated,
                         onItemSelected = { _ -> run {} },
                         onItemReset = {},
                         onItemEdit = {},
@@ -291,6 +294,7 @@ private fun SpellingItem(
     index: Int,
     word: String,
     wordStatus: WordStatus,
+    isRepeatedWord: Boolean,
     onItemSelected: (WordStatus) -> Unit,
     onItemReset: () -> Unit,
     onItemEdit: () -> Unit,
@@ -325,6 +329,7 @@ private fun SpellingItem(
                 SpellingTextWithNumber(
                     index = index,
                     word = word,
+                    isRepeated = isRepeatedWord,
                     onItemReset = onItemReset,
                     onItemEdit = onItemEdit,
                     textModifier = Modifier.weight(1f),
@@ -363,6 +368,7 @@ private fun SpellingItem(
             SpellingTextWithNumber(
                 index = index,
                 word = word,
+                isRepeated = isRepeatedWord,
                 onItemReset = onItemReset,
                 onItemEdit = onItemEdit,
                 textModifier = Modifier.weight(1f),
@@ -485,6 +491,7 @@ fun AutoFocusingSpellingText(
 fun SpellingTextWithNumber(
     index: Int,
     word: String,
+    isRepeated: Boolean,
     onItemReset: () -> Unit,
     onItemEdit: () -> Unit,
     textModifier: Modifier = Modifier,
@@ -512,6 +519,7 @@ fun SpellingTextWithNumber(
                 }
             }
             .alpha(alpha),
+        color = if (isRepeated) MaterialTheme.colorScheme.primary else Color.Unspecified
     )
 }
 
@@ -645,6 +653,31 @@ private fun SpellingEditItem(
 
 @PreviewLightDark
 @Composable
+private fun SpellingItemRepeatedPreview(
+    @PreviewParameter(BooleanPreviewProvider::class) isEnabled: Boolean
+) {
+    HomeLearningTheme {
+        Surface {
+            SpellingItem(
+                index = 0,
+                word = "successfully",
+                wordStatus = WordStatus.CORRECT,
+                isRepeatedWord = true,
+                onItemSelected = {},
+                onItemReset = {},
+                onItemEdit = {},
+                rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
+                isEnabled = isEnabled,
+                showSpeaker = true,
+                isSpeakingCallback = {}
+            )
+        }
+    }
+}
+
+
+@PreviewLightDark
+@Composable
 private fun SpellingItemEnablePreview(
     @PreviewParameter(BooleanPreviewProvider::class) isEnabled: Boolean
 ) {
@@ -654,6 +687,7 @@ private fun SpellingItemEnablePreview(
                 index = 0,
                 word = "successfully",
                 wordStatus = WordStatus.CORRECT,
+                isRepeatedWord = false,
                 onItemSelected = {},
                 onItemReset = {},
                 onItemEdit = {},

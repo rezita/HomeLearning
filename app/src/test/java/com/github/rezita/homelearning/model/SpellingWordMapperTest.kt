@@ -147,4 +147,80 @@ class SpellingWordMapperTest {
         )
         Assert.assertEquals(expectedResult, original.asSpellingWord())
     }
+
+    @Test
+    fun test_APIspellingWord_to_SpellingWord_no_repeat() {
+        val expectedResult = SpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            status = WordStatus.UNCHECKED,
+            repeated = false
+        )
+
+        val original = ApiSpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            repeat = 0
+        )
+        Assert.assertEquals(expectedResult, original.asSpellingWord())
+    }
+
+    @Test
+    fun test_APIspellingWord_to_SpellingWord_no_repeat_invalid_value() {
+        val expectedResult = SpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            status = WordStatus.UNCHECKED,
+            repeated = false
+        )
+
+        val original = ApiSpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            repeat = 5
+        )
+        Assert.assertEquals(expectedResult, original.asSpellingWord())
+    }
+
+    @Test
+    fun test_APIspellingWord_to_SpellingWord_no_repeat_no_value() {
+        val expectedResult = SpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            status = WordStatus.UNCHECKED,
+            repeated = false
+        )
+
+        val original = ApiSpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+        )
+        Assert.assertEquals(expectedResult, original.asSpellingWord())
+    }
+
+    @Test
+    fun test_APIspellingWord_to_SpellingWord_repeated() {
+        val expectedResult = SpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            status = WordStatus.UNCHECKED,
+            repeated = true
+        )
+
+        val original = ApiSpellingWord(
+            word = "this",
+            category = "Y1",
+            comment = "No Comment",
+            repeat = 1
+        )
+        Assert.assertEquals(expectedResult, original.asSpellingWord())
+    }
+
 }
