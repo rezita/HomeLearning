@@ -155,7 +155,8 @@ dependencies {
     androidTestImplementation"androidx.test.espresso:espresso-device:1.0.1"
     implementation "androidx.tracing:tracing:1.2.0"
 
-    debugImplementation "androidx.compose.ui:ui-test-manifest:1.7.1"
+    debugImplementation "androidx.compose.ui:ui-test-manifest:1.7.4"
+    androidTestImplementation "androidx.navigation:navigation-testing:2.8.0"
 
     //for unit tests
     testImplementation "junit:junit:4.13.2"
@@ -163,4 +164,7 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0"
     //turbine for testing kotlin coroutines flow
     testImplementation("app.cash.turbine:turbine:1.1.0")
+
+    //mocking the navigation library in viewModelTest - for savestehandle
+    testImplementation "io.mockk:mockk-android:1.13.13"
 }

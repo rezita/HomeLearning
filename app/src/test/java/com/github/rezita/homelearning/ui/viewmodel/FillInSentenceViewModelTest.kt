@@ -1,7 +1,7 @@
 package com.github.rezita.homelearning.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.testing.*
+import androidx.navigation.toRoute
 import app.cash.turbine.test
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.fake.FakeNetworkWorkRepository
@@ -11,6 +11,8 @@ import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.rules.TestDispatcherRule
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
+import io.mockk.every
+import io.mockk.mockkStatic
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -18,10 +20,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 class FillInSentenceViewModelTest {
 
     private val sentence1 = FillInSentence(
@@ -58,13 +57,16 @@ class FillInSentenceViewModelTest {
 
     @Before
     fun setUp() {
+        val savedStateHandle = SavedStateHandle()
+        mockkStatic("androidx.navigation.SavedStateHandleKt")
+        every { savedStateHandle.toRoute<SentenceDestination>() } returns SentenceDestination(
+            SheetAction.READ_HOMOPHONES
+        )
         fakeRepository = FakeNetworkWorkRepository()
 
         runTest {
             fillInSentenceViewModel = FillInSentenceViewModel(
-                savedStateHandle = SavedStateHandle.Companion.(
-                    route = SentenceDestination(SheetAction.READ_HOMOPHONES)
-                ),
+                savedStateHandle = savedStateHandle,
                 wordRepository = fakeRepository
             )
         }
