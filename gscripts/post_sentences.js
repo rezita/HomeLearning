@@ -1,14 +1,10 @@
 /******UPDATE (LIST OF) SENTENCES (IRREGULAR VERBS and HOMOPHONES) **** */
-function updateSentences(e, sheetName, logSheetName){
-  const sentences = JSON.parse(e.parameter.sentences);
+function updateSentences(sentences, sheetName, logSheetName){
+  //const sentences = JSON.parse(e.parameter.sentences);
   response = "";
   sentences.forEach(function(sentence){
-    Logger.log(`SheetName: ${sheetName}`);
-    Logger.log(`Sentence: ${sentence.sentence}`);
-    Logger.log(`Result: ${sentence.result}`);
-
     let modifySuccess = modifySentence(sheetName, sentence.sentence, sentence.result);
-    response += `${sentence} ${modifySuccess}, `
+    response += `${sentence.sentence} ${modifySuccess}, `
     insertUpdateSentenceLog(logSheetName, sentence, modifySuccess);
   });
   return response;

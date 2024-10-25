@@ -13,23 +13,29 @@ const sheets = {spellingErik: "spellingErik",
                 irregVerbs: "irregVerbs", 
                 irregular_logs: "logs_irregular",
                 homophones: "homophones", 
-                homophones_logs: "logs_homophones"}
+                homophones_logs: "logs_homophones",
+                error_logs: "logs_error"}
 
 //actions
-const actions = {insertSpellingWords: "insertSpellingWords", 
-                updateSpellingWords: "updateSpellingWords", 
-                getSpellingWords: "getSpellingWords", 
-                getSpellingCategories: "getSpellingCategories",
+const actions = {
+  //insertSpellingWords: "insertSpellingWords", 
+  //              updateSpellingWords: "updateSpellingWords", 
+  //              getSpellingWords: "getSpellingWords", 
+  //              getSpellingCategories: "getSpellingCategories",
 
                 insertErikSpellingWords: "insertErikSpellingWords", 
                 updateErikSpellingWords: "updateErikSpellingWords", 
                 getErikSpellingWords: "getErikSpellingWords", 
                 getErikSpellingCategories: "getErikSpellingCategories",
+                getAllErikSpellingWords: "getAllSpellingWords",
+                modifyErikSpellingWord: "modifyErikSpellingWord",
                 
                 insertMarkSpellingWords: "insertMarkSpellingWords", 
                 updateMarkSpellingWords: "updateMarkSpellingWords", 
                 getMarkSpellingWords: "getMarkSpellingWords", 
                 getMarkSpellingCategories: "getMarkSpellingCategories",
+                getAllMarkSpellingWords: "getAllSpellingWords",
+                modifyMarkSpellingWord: "modifyMarkSpellingWord",
                 
                 getReadingWords: "getReadingWords",
                 getReadingCEW: "getReadingCEW",
@@ -38,7 +44,8 @@ const actions = {insertSpellingWords: "insertSpellingWords",
                 getIrregularVerbs: "getIrregularVerbs",
                 updateIrregularVerbs: "updateIrregularVerbs",
                 getHomophones: "getHomophones",
-                updateHomophones: "updateHomophones"}
+                updateHomophones: "updateHomophones",
+                getAllSpellingWords: "getAllSpellingWords",}
 
 
 //error messages
@@ -55,7 +62,9 @@ const responseMessages = {
   wordNotFound: "The given word did not find.", 
   wordAlreadyExist: "Existed",
   sentenceMissing: "Sentence is missing.",
-  sentenceNotFound: "The given sentence did not find."}
+  sentenceNotFound: "The given sentence did not find.",
+  severError: "There's a problem on the server side.",
+  modifyWordFailed: "Modifying spelling word failed."}
 
 //const spellingCategoryRules = [["school", 18], ["home", 7]];
 //Change in Dec.2023 - don't chach teh categories for Erik

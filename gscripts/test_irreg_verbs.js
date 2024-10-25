@@ -67,8 +67,3 @@ function test6_updateHomophones(){
   const param = {parameter: {sentences:verbs, action:"updateIrregularVerbs", ssId: spreadSheetID}};
   doPost(param);
 }
-
-
-
-
-

@@ -1,3 +1,10 @@
+function getAllSpellingWords(sheetName){
+  const dataSheet = getDataSheet(sheetName);
+  const rows = getAllDataWoHeader(dataSheet);
+  const result = convertArrayToMap(rows, spellingIdxs);
+  return {items: result}
+}
+
 function getSpellingWords(sheetName, rules){
   const dataSheet = getDataSheet(sheetName);
   const rows = getAllDataWoHeader(dataSheet);

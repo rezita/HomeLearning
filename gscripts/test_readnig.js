@@ -1,7 +1,8 @@
 function test1_readingWords(){
   Logger.log("Testing Case: readnig words");
   spreadSheetID = test_sheet_id;
-  const words = getReadingWords();
+  const words = getReadingWords(sheets.read);
+  Logger.log(words)
   Logger.log(words.items.length);
 }
 

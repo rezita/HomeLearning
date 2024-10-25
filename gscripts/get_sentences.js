@@ -72,7 +72,3 @@ function getRandomSentenceForSuggestion(allData, suggestion){
   const sentenceIndex = getRandomNumber(0, rowsForSuggestion.length - 1);
   return rowsForSuggestion[sentenceIndex];
 }
-
-
-
-
