@@ -1,6 +1,7 @@
 package com.github.rezita.homelearning.ui.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.testing.*
 import app.cash.turbine.test
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.fake.FakeNetworkWorkRepository
@@ -17,7 +18,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class FillInSentenceViewModelTest {
 
     private val sentence1 = FillInSentence(
@@ -57,11 +61,10 @@ class FillInSentenceViewModelTest {
         fakeRepository = FakeNetworkWorkRepository()
 
         runTest {
-            val saveStateHandle =
-                SavedStateHandle(mapOf(SentenceDestination.sheetActionArg to SheetAction.READ_HOMOPHONES))
-
             fillInSentenceViewModel = FillInSentenceViewModel(
-                savedStateHandle = saveStateHandle,
+                savedStateHandle = SavedStateHandle.Companion.(
+                    route = SentenceDestination(SheetAction.READ_HOMOPHONES)
+                ),
                 wordRepository = fakeRepository
             )
         }
