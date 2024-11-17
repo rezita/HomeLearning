@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
+import android.speech.tts.TextToSpeech
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.navigation.SpellingDestination
 import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.tts.HLTextToSpeech
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,7 +29,7 @@ enum class SpellingState {
 class SpellingViewModel(
     savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
-
+    private val tts: HLTextToSpeech
     ) : ViewModel() {
 
     private val sheetAction: SheetAction =
@@ -281,13 +283,11 @@ class SpellingViewModel(
                 }
             }
         }
-
-
-        //if successs update wordlist + message + change state
-        //if failed: discard changes + message + change state
     }
 
-
+    fun speakAloud(text: String){
+        tts.speak(text, TextToSpeech.QUEUE_ADD)
+    }
 }
 
 data class SpellingViewModelState(

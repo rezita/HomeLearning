@@ -41,6 +41,7 @@ fun SpellingRoute(
         saveCallback = viewModel::saveSpellingResults,
         onEditCancelCallback = viewModel::discardEditing,
         onEditSubmitCallback = viewModel::saveEditing,
+        onSpeakerClick = viewModel::speakAloud,
         scope = scope,
         snackBarHostState = snackBarHostState,
         canNavigateBack = canNavigateBack,

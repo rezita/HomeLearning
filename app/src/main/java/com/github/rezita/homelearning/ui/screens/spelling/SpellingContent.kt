@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.spelling
 
-import android.speech.tts.TextToSpeech
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,14 +24,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,13 +38,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.rezita.homelearning.R
@@ -60,13 +58,13 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
+import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.sentence_correct
 import com.github.rezita.homelearning.ui.theme.sentence_incorrect
 import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 import com.github.rezita.homelearning.utils.toDp
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 @Composable
 fun SpellingContent(
@@ -79,12 +77,12 @@ fun SpellingContent(
     onSaveCallback: () -> Unit,
     onEditCancelCallback: () -> Unit,
     onEditSubmitCallback: () -> Unit,
+    onSpeakerClick: (String) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     rbContentType: RadioButtonContentType,
     modifier: Modifier = Modifier
 ) {
-    val tts = rememberTextToSpeech()
     when (state) {
         is SpellingUiState.Loading -> {
             LoadingProgressBar(modifier = modifier)
@@ -94,7 +92,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
-                textToSpeech = tts.value,
+                onSpeakerClick = onSpeakerClick,
                 modifier = modifier,
                 onValueChange = onItemValueChange,
                 onItemReset = onItemReset,
@@ -116,7 +114,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
-                textToSpeech = tts.value,
+                onSpeakerClick = onSpeakerClick,
                 modifier = modifier,
                 isEnabled = false
             )
@@ -131,7 +129,7 @@ fun SpellingContent(
                     SpellingItems(
                         words = state.words,
                         rbContentType = rbContentType,
-                        textToSpeech = tts.value,
+                        onSpeakerClick = onSpeakerClick,
                         isEnabled = false,
                     )
                 },
@@ -148,6 +146,7 @@ fun SpellingContent(
                 onValueChange = onEditItemValueChange,
                 onEditCancelCallback = onEditCancelCallback,
                 onEditSubmitCallback = onEditSubmitCallback,
+                onSpeakerClick = onSpeakerClick,
                 modifier = modifier,
                 isEditing = state.isEditing
             )
@@ -162,6 +161,7 @@ fun SpellingContent(
                 onValueChange = onEditItemValueChange,
                 onEditCancelCallback = onEditCancelCallback,
                 onEditSubmitCallback = onEditSubmitCallback,
+                onSpeakerClick = onSpeakerClick,
                 modifier = modifier,
                 isEditing = true,
                 errorMsg = state.errorMessage
@@ -174,7 +174,7 @@ fun SpellingContent(
 private fun SpellingItems(
     words: List<SpellingWord>,
     rbContentType: RadioButtonContentType,
-    textToSpeech: TextToSpeech?,
+    onSpeakerClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     onValueChange: (Int, WordStatus) -> Unit = { _, _ -> run {} },
     onItemReset: (Int) -> Unit = {},
@@ -201,10 +201,9 @@ private fun SpellingItems(
                     onItemSelected = { status -> onValueChange(index, status) },
                     onItemReset = { onItemReset(index) },
                     onItemEdit = { onItemEdit(index) },
+                    onSpeakerClick = onSpeakerClick,
                     rbContentType = rbContentType,
                     isEnabled = isEnabled,
-                    showSpeaker = textToSpeech != null,
-                    isSpeakingCallback = { setSpeaker(item.word, textToSpeech) },
                 )
                 HorizontalDivider(
                     modifier = Modifier
@@ -227,6 +226,7 @@ private fun EditSpellingItems(
     onValueChange: (String) -> Unit,
     onEditCancelCallback: () -> Unit,
     onEditSubmitCallback: () -> Unit,
+    onSpeakerClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     isEditing: Boolean = true,
     errorMsg: String? = null
@@ -271,6 +271,7 @@ private fun EditSpellingItems(
                         onItemSelected = { _ -> run {} },
                         onItemReset = {},
                         onItemEdit = {},
+                        onSpeakerClick = onSpeakerClick,
                         rbContentType = rbContentType,
                         isEnabled = false,
                         showSpeaker = false
@@ -298,12 +299,11 @@ private fun SpellingItem(
     onItemSelected: (WordStatus) -> Unit,
     onItemReset: () -> Unit,
     onItemEdit: () -> Unit,
+    onSpeakerClick: (String) -> Unit,
     rbContentType: RadioButtonContentType,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     showSpeaker: Boolean = true,
-    isSpeakingCallback: () -> Unit = {}
-
 ) {
     if (rbContentType == RadioButtonContentType.BUTTONS_SECOND_LINE) {
         Column(
@@ -324,7 +324,7 @@ private fun SpellingItem(
                 horizontalArrangement = Arrangement.Start
             ) {
                 if (showSpeaker) {
-                    SpeakerIconButton { isSpeakingCallback() }
+                    SpeakerIconButton { onSpeakerClick(word) }
                 }
                 SpellingTextWithNumber(
                     index = index,
@@ -363,7 +363,7 @@ private fun SpellingItem(
             horizontalArrangement = Arrangement.Center
         ) {
             if (showSpeaker) {
-                SpeakerIconButton { isSpeakingCallback() }
+                SpeakerIconButton { onSpeakerClick(word) }
             }
             SpellingTextWithNumber(
                 index = index,
@@ -540,28 +540,6 @@ private fun getScores(words: List<SpellingWord>): String {
     )
 }
 
-
-@Composable
-private fun rememberTextToSpeech(): MutableState<TextToSpeech?> {
-    val context = LocalContext.current
-    val tts = remember { mutableStateOf<TextToSpeech?>(null) }
-    DisposableEffect(context) {
-        val textToSpeech = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                tts.value?.language = Locale.UK
-            }
-        }
-        tts.value = textToSpeech
-        //cleaning up the textToSpeech -
-        // it calls when the composable leaves the Composition (aka when user leaves SpellingContent)
-        onDispose {
-            textToSpeech.stop()
-            textToSpeech.shutdown()
-        }
-    }
-    return tts
-}
-
 @Composable
 private fun SpeakerIconButton(
     onClickCallback: () -> Unit
@@ -576,16 +554,7 @@ private fun SpeakerIconButton(
     }
 }
 
-private fun setSpeaker(
-    word: String,
-    textToSpeech: TextToSpeech? = null,
-) {
-    //simply add the word to the queue
-    textToSpeech?.speak(word, TextToSpeech.QUEUE_ADD, null, null)
-}
 
-
-/*
 @PreviewFontScale
 @Composable
 private fun SpellingItemSizePreview(
@@ -613,21 +582,20 @@ private fun SpellingItemSizePreview(
                     index = 17,
                     word = "anticlockwise",
                     wordStatus = WordStatus.CORRECT,
+                    isRepeatedWord = true,
                     onItemSelected = {},
-                    rbContentType = rbContentType,
                     onItemReset = {},
                     onItemEdit = {},
+                    onSpeakerClick = {},
+                    rbContentType = rbContentType,
                     modifier = Modifier.padding(it),
-                    showSpeaker = true,
-                    isSpeakingCallback = {}
+                    showSpeaker = true
                 )
             }
         }
     }
 }
 
- */
-/*
 @PreviewLightDark
 @Composable
 private fun SpellingEditItem(
@@ -648,9 +616,6 @@ private fun SpellingEditItem(
     }
 }
 
-
- */
-
 @PreviewLightDark
 @Composable
 private fun SpellingItemRepeatedPreview(
@@ -666,10 +631,10 @@ private fun SpellingItemRepeatedPreview(
                 onItemSelected = {},
                 onItemReset = {},
                 onItemEdit = {},
+                onSpeakerClick = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 isEnabled = isEnabled,
                 showSpeaker = true,
-                isSpeakingCallback = {}
             )
         }
     }
@@ -691,16 +656,16 @@ private fun SpellingItemEnablePreview(
                 onItemSelected = {},
                 onItemReset = {},
                 onItemEdit = {},
+                onSpeakerClick = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 isEnabled = isEnabled,
                 showSpeaker = true,
-                isSpeakingCallback = {}
             )
         }
     }
 }
 
-/*
+
 @PreviewLightDark
 @Composable
 private fun SpellingItemsPreview(
@@ -755,8 +720,9 @@ private fun SpellingItemsPreview(
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
                 modifier = Modifier.padding(it),
                 onItemReset = {},
+                onSpeakerClick = {},
                 isEnabled = isEnabled
             )
         }
     }
-}*/
+}

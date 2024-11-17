@@ -23,7 +23,8 @@ object AppViewModelProvider {
         initializer {
             SpellingViewModel(
                 this.createSavedStateHandle(),
-                homeLearningApplication().container.wordRepository
+                homeLearningApplication().container.wordRepository,
+                homeLearningApplication().textToSpeech
             )
         }
         // Initializer for ReadingViewModel
