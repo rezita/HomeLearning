@@ -18,12 +18,11 @@ fun ReadingScreen(
     windowSize: HomeLearningWindowSizeClass,
     orientation: Int,
     canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    onLoadCallback: () -> Unit,
-    isTopAppBarShown: Boolean,
-    onChangeTopAppBarVisibility: () -> Unit,
+    showTopAppBar: Boolean,
     isColorDisplay: Boolean,
-    colorDisplayChange: (Boolean) -> Unit,
+    navigateUp: () -> Unit,
+    onChangeTopAppBarVisibility: () -> Unit,
+    onUserEvent: (ReadingUserEvent) -> Unit,
     modifier: Modifier = Modifier
 
 ) {
@@ -36,14 +35,13 @@ fun ReadingScreen(
             )
         },
         topBar = {
-            if (isTopAppBarShown) {
+            if (showTopAppBar) {
                 ReadingTopAppBar(
                     state = readingState,
                     canNavigateBack = canNavigateBack,
+                    isColorDisplay = isColorDisplay,
                     navigateUp = navigateUp,
-                    colorDisplayCallback = colorDisplayChange,
-                    redoCallback = onLoadCallback,
-                    isColorDisplay = isColorDisplay
+                    onUserEvent = onUserEvent
                 )
             }
         }
@@ -62,7 +60,7 @@ fun ReadingScreen(
                     windowSize = windowSize,
                     state = readingState,
                     isColorDisplay = isColorDisplay,
-                    onLoadCallback = onLoadCallback,
+                    onUserEvent = onUserEvent,
                     modifier = modifier.padding(it)
                 )
         }

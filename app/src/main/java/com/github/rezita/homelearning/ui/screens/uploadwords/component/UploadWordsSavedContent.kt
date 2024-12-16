@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords
+package com.github.rezita.homelearning.ui.screens.uploadwords.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable

@@ -23,17 +23,11 @@ fun UploadWordsRoute(
     val scope = rememberCoroutineScope()
     UploadWordsScreen(
         state = uploadUiState,
-        onLoadCallback = viewModel::initCategories,
-        saveCallback = viewModel::saveSpellingWords,
-        onWordEditCallback = viewModel::setForEditing,
-        onRemoveWordCallback = viewModel::removeWord,
-        onWordSaveCallback = viewModel::updateWords,
-        onCancelEditCallback = viewModel::cancelUpdate,
-        onWordChangeCallback = viewModel::updateCurrentWord,
         scope = scope,
         snackBarHostState = snackBarHostState,
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
+        onUserEvent = viewModel::onUserEvent,
         modifier = modifier
     )
 }

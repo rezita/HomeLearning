@@ -13,14 +13,12 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun FillInSentenceScreen(
     state: SentenceUiState,
-    onValueChange: (Int, String) -> Unit,
-    onDoneCallback: () -> Unit,
-    onLoadCallback: () -> Unit,
+    titleId: Int,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
-    titleId: Int,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
+    onUserEvent: (SentenceUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -32,18 +30,15 @@ fun FillInSentenceScreen(
                 state = state,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
-                saveCallback = onDoneCallback,
-                redoCallback = onLoadCallback
+                onUserEvent = onUserEvent
             )
         }
     ) {
         SentenceContent(
             state = state,
-            onValueChange = onValueChange,
-            onDoneCallback = onDoneCallback,
-            onLoadCallback = onLoadCallback,
             scope = scope,
             snackBarHostState = snackBarHostState,
+            onUserEvent = onUserEvent,
             modifier = Modifier
                 .padding(it)
         )

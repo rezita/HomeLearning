@@ -18,8 +18,7 @@ fun UploadWordsTopAppBar(
     state: UploadUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    saveCallback: () -> Unit,
-    addNewCallback: (Int?) -> Unit,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -34,7 +33,7 @@ fun UploadWordsTopAppBar(
 
         actions = {
             if (state.isSavable()) {
-                IconButton(onClick = saveCallback) {
+                IconButton(onClick = { onUserEvent(UploadWordUserEvent.OnSave) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
                         contentDescription = stringResource(id = R.string.upload_saving_words),
@@ -43,7 +42,7 @@ fun UploadWordsTopAppBar(
                 }
             }
             if (state.isExpandable()) {
-                IconButton(onClick = { addNewCallback(null) }) {
+                IconButton(onClick = { onUserEvent(UploadWordUserEvent.OnAddNew) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
                         contentDescription = stringResource(id = R.string.upload_add_new),
@@ -64,8 +63,7 @@ private fun UploadWordsTopAppBar_downloaded() {
             state = UploadUiState.NoWords,
             canNavigateBack = true,
             navigateUp = {},
-            saveCallback = {},
-            addNewCallback = {}
+            onUserEvent = {},
         )
     }
 }
@@ -78,8 +76,7 @@ private fun UploadWordsTopAppBar_hasWords() {
             state = UploadUiState.HasWords(words = emptyList()),
             canNavigateBack = true,
             navigateUp = {},
-            saveCallback = {},
-            addNewCallback = {}
+            onUserEvent = {},
         )
     }
 }
@@ -92,8 +89,7 @@ private fun UploadWordsTopAppBar_editing() {
             state = UploadUiState.Editing(EditState(), emptyList()),
             canNavigateBack = true,
             navigateUp = {},
-            saveCallback = {},
-            addNewCallback = {}
+            onUserEvent = {},
         )
     }
 }

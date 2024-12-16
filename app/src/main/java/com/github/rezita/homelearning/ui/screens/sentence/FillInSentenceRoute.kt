@@ -26,14 +26,12 @@ fun FillInSentenceSentenceRoute(
 
     FillInSentenceScreen(
         state = sentenceUiState,
-        onValueChange = viewModel::updateAnswer,
-        onDoneCallback = viewModel::saveSentences,
-        onLoadCallback = viewModel::load,
+        titleId = titleId,
         scope = scope,
         snackBarHostState = snackBarHostState,
-        titleId = titleId,
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
+        onUserEvent = viewModel::onEvent,
         modifier = modifier
     )
 }

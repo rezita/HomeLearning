@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords
+package com.github.rezita.homelearning.ui.screens.uploadwords.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -30,13 +30,14 @@ import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun UploadWordsViewContent(
     state: UploadUiState.HasWords,
-    onWordEdit: (Int) -> Unit,
-    onWordDelete: (Int) -> Unit,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -50,8 +51,8 @@ fun UploadWordsViewContent(
         itemsIndexed(state.words) { index, item ->
             UploadItemDisplay(
                 word = item,
-                onDeleteCallback = { onWordDelete(index) },
-                onEditCallback = { onWordEdit(index) },
+                onDeleteCallback = { onUserEvent(UploadWordUserEvent.OnRemoveWord(index)) },
+                onEditCallback = { onUserEvent(UploadWordUserEvent.OnPrepareForEditing(index)) },
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -131,7 +132,7 @@ private fun WordManipulationIcons(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SavedWordsPreview() {
+private fun UploadWordsViewContentPreview() {
     val spellingWord1 = SpellingWord(
         word = "appear",
         category = "school",
@@ -152,8 +153,7 @@ private fun SavedWordsPreview() {
         Scaffold {
             UploadWordsViewContent(
                 state = state,
-                onWordEdit = {},
-                onWordDelete = {},
+                onUserEvent = {},
                 modifier = Modifier.padding(it)
             )
         }
@@ -163,7 +163,7 @@ private fun SavedWordsPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun UploadItemPreview() {
+private fun UploadItemDisplayPreview() {
     val spellingWord = SpellingWord(
         word = "appear",
         category = "school",

@@ -11,7 +11,9 @@ import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.navigation.SentenceDestination
 import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.ui.screens.reading.ReadingUserEvent
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
+import com.github.rezita.homelearning.ui.screens.sentence.SentenceUserEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -48,6 +50,18 @@ class FillInSentenceViewModel(
         load()
     }
 
+
+    fun onEvent(event: SentenceUserEvent){
+        when(event){
+            SentenceUserEvent.OnLoad -> load()
+            SentenceUserEvent.OnSave -> saveSentences()
+            is SentenceUserEvent.OnValueChange -> {
+                updateAnswer(event.index, event.value)
+            }
+
+        }
+    }
+
     fun load() {
         when (sheetAction) {
             SheetAction.READ_IRREGULAR_VERBS -> getIrregularVerbs()
@@ -79,7 +93,7 @@ class FillInSentenceViewModel(
     private fun getHomophones() = getSentences { wordRepository.getHomophones() }
 
 
-    fun saveSentences() {
+    private fun saveSentences() {
         when (sheetAction) {
             SheetAction.READ_IRREGULAR_VERBS -> saveIrregularVerbs()
             SheetAction.READ_HOMOPHONES -> saveHomophones()
@@ -119,7 +133,7 @@ class FillInSentenceViewModel(
         }
     }
 
-    fun updateAnswer(index: Int, answer: String) {
+    private fun updateAnswer(index: Int, answer: String) {
         require(index in viewModelState.value.sentences.indices) { "Invalid index value" }
         viewModelState.update {
             it.copy(

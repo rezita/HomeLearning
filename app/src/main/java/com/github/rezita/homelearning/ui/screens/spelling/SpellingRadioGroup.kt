@@ -63,8 +63,8 @@ val SpellingRadioItems = listOf(
 @Composable
 fun SpellingRadioGroup(
     selected: WordStatus,
-    setSelected: (selected: WordStatus) -> Unit,
     rbContentType: RadioButtonContentType,
+    setSelected: (WordStatus) -> Unit,
     isEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {

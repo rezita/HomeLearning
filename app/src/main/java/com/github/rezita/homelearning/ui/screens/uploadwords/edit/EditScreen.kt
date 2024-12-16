@@ -42,6 +42,7 @@ import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorText
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.MAX_COMMENT_LENGTH
 import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
@@ -49,9 +50,7 @@ import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 @Composable
 fun EditScreen(
     state: UploadUiState.Editing,
-    saveCallback: () -> Unit,
-    cancelCallback: () -> Unit,
-    onWordChangeCallback: (SpellingWord) -> Unit,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -63,11 +62,11 @@ fun EditScreen(
     ) {
         EditWordForm(
             state = state,
-            onWordChangeCallback = onWordChangeCallback
+            onUserEvent = onUserEvent
         )
         EditWordButtons(
-            saveCallback = saveCallback,
-            cancelCallback = cancelCallback
+            saveCallback = { onUserEvent(UploadWordUserEvent.OnSaveEditedWord) },
+            cancelCallback = { onUserEvent(UploadWordUserEvent.OnCancelEditing) }
         )
     }
 }
@@ -75,7 +74,7 @@ fun EditScreen(
 @Composable
 fun EditWordForm(
     state: UploadUiState.Editing,
-    onWordChangeCallback: (SpellingWord) -> Unit,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -84,14 +83,14 @@ fun EditWordForm(
     ) {
         EditTextField(
             value = state.editState.word.word,
-            onValueChange = { onWordChangeCallback(state.editState.word.copy(word = it)) },
+            onValueChange = { onUserEvent(UploadWordUserEvent.OnEditedWordWordChange(it)) },
             labelId = R.string.upload_word_label,
             error = state.editState.getWordError(),
             maxLength = MAX_WORD_LENGTH
         )
         EditTextField(
             value = state.editState.word.comment,
-            onValueChange = { onWordChangeCallback(state.editState.word.copy(comment = it)) },
+            onValueChange = { onUserEvent(UploadWordUserEvent.OnEditedWordCommentChange(it)) },
             labelId = R.string.upload_comment_label,
             error = state.editState.getCommentError(),
             maxLength = MAX_COMMENT_LENGTH
@@ -102,7 +101,7 @@ fun EditWordForm(
             selectedItem = state.editState.word.category,
             onOptionSelected = {
                 if (it != null) {
-                    onWordChangeCallback(state.editState.word.copy(category = it))
+                    onUserEvent(UploadWordUserEvent.OnEditedWordCategoryChange(it))
                 }
             },
             modifier = Modifier
@@ -296,9 +295,7 @@ private fun SpellingItemPreview() {
                     EditState(word = spelling1),
                     categories = categories
                 ),
-                saveCallback = {},
-                cancelCallback = {},
-                onWordChangeCallback = {},
+                onUserEvent = {},
                 modifier = Modifier.padding(it)
             )
         }

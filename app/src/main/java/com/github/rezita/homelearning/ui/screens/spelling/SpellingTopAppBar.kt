@@ -22,9 +22,8 @@ fun SpellingTopAppBar(
     state: SpellingUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    saveCallback: () -> Unit,
     addNewCallback: () -> Unit,
-    redoCallback: () -> Unit,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -35,7 +34,7 @@ fun SpellingTopAppBar(
 
         actions = {
             if (state.isSavable()) {
-                IconButton(onClick = saveCallback) {
+                IconButton(onClick = { onUserEvent(SpellingUserEvent.OnSave) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
                         contentDescription = stringResource(id = R.string.spelling_save),
@@ -45,7 +44,7 @@ fun SpellingTopAppBar(
             }
 
             if (state is SpellingUiState.Saved) {
-                IconButton(onClick = { redoCallback() }) {
+                IconButton(onClick = { onUserEvent(SpellingUserEvent.OnLoad) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_redo),
                         contentDescription = stringResource(id = R.string.menu_redo),
@@ -79,9 +78,8 @@ private fun SpellingTopAppBar_loading(
             state = SpellingUiState.Loading,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
             addNewCallback = {},
-            redoCallback = {},
+            onUserEvent = {}
         )
     }
 }
@@ -97,9 +95,8 @@ private fun SpellingTopAppBar_loaded_empty(
             state = SpellingUiState.Loaded(words = emptyList()),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
             addNewCallback = {},
-            redoCallback = {},
+            onUserEvent = {}
         )
     }
 }
@@ -130,9 +127,8 @@ private fun SpellingTopAppBar_loaded_savable(
             state = SpellingUiState.Loaded(words = words),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
             addNewCallback = {},
-            redoCallback = {},
+            onUserEvent = {}
         )
     }
 }
@@ -148,9 +144,8 @@ private fun SpellingTopAppBar_upload_success(
             state = SpellingUiState.Saved(words = emptyList()),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
             addNewCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }

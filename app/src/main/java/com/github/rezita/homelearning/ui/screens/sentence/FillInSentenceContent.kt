@@ -54,11 +54,9 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun SentenceContent(
     state: SentenceUiState,
-    onValueChange: (Int, String) -> Unit,
-    onDoneCallback: () -> Unit,
-    onLoadCallback: () -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
+    onUserEvent: (SentenceUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -70,8 +68,7 @@ fun SentenceContent(
             SentenceItems(
                 sentences = state.sentences,
                 isAllAnswered = state.isSavable(),
-                onValueChange = onValueChange,
-                onDoneCallback = onDoneCallback,
+                onUserEvent = onUserEvent,
                 modifier = modifier.imePadding()
             )
 
@@ -79,7 +76,7 @@ fun SentenceContent(
             LoadingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             ErrorDisplayInColumn(
                 message = stringResource(id = state.errorMessage),
-                callback = onLoadCallback,
+                callback = { onUserEvent(SentenceUserEvent.OnLoad) },
                 modifier = modifier
             )
         }
@@ -94,7 +91,7 @@ fun SentenceContent(
             SavingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             ErrorDisplayWithContent(
                 message = stringResource(id = state.errorMessage),
-                callback = onDoneCallback,
+                callback = { onUserEvent(SentenceUserEvent.OnSave) },
                 content = { SentenceResultScreen(sentences = state.sentences) },
                 modifier = modifier
             )
@@ -107,8 +104,7 @@ fun SentenceContent(
 fun SentenceItems(
     sentences: List<FillInSentence>,
     isAllAnswered: Boolean,
-    onValueChange: (Int, String) -> Unit,
-    onDoneCallback: () -> Unit,
+    onUserEvent: (SentenceUserEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val focusManager = LocalFocusManager.current
@@ -121,7 +117,14 @@ fun SentenceItems(
                 prefix = prefixWithIndex,
                 suffix = suffix,
                 value = item.answer,
-                onValueChange = { value -> onValueChange(index, value) },
+                onValueChange = { value ->
+                    onUserEvent(
+                        SentenceUserEvent.OnValueChange(
+                            index,
+                            value
+                        )
+                    )
+                },
                 baseTextColor = MaterialTheme.colorScheme.onSurface,
                 label = null,
                 keyboardOptions = KeyboardOptions(
@@ -138,7 +141,7 @@ fun SentenceItems(
                     // Pressing Ime button would call the onDoneCallback
                     onDone = {
                         kc?.hide()
-                        onDoneCallback()
+                        onUserEvent(SentenceUserEvent.OnSave)
                     }
                 ),
                 colors = TextFieldDefaults.colors(
@@ -283,8 +286,8 @@ fun SentenceItemsPreview() {
         SentenceItems(
             sentences = sentences,
             isAllAnswered = false,
-            onValueChange = { _, _ -> run {} },
-            onDoneCallback = {})
+            onUserEvent = {}
+        )
     }
 }
 

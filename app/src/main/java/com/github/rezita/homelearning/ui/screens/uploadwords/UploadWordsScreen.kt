@@ -12,17 +12,11 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun UploadWordsScreen(
     state: UploadUiState,
-    onLoadCallback: () -> Unit,
-    saveCallback: () -> Unit,
-    onWordEditCallback: (Int?) -> Unit,
-    onRemoveWordCallback: (Int) -> Unit,
-    onWordSaveCallback: () -> Unit,
-    onCancelEditCallback: () -> Unit,
-    onWordChangeCallback: (SpellingWord) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -33,22 +27,15 @@ fun UploadWordsScreen(
                 state = state,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
-                saveCallback = saveCallback,
-                addNewCallback = onWordEditCallback
+                onUserEvent = onUserEvent
             )
         }
     ) {
         UploadWordsContent(
             state = state,
-            onLoadCallback = onLoadCallback,
-            onSaveCallback = saveCallback,
-            onWordEditCallback = onWordEditCallback,
-            onRemoveWordCallback = onRemoveWordCallback,
-            onWordSaveCallback = onWordSaveCallback,
-            onCancelEditCallback = onCancelEditCallback,
-            onWordChangeCallback = onWordChangeCallback,
             scope = scope,
             snackBarHostState = snackBarHostState,
+            onUserEvent = onUserEvent,
             modifier = modifier.padding(it)
         )
     }

@@ -69,18 +69,10 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun SpellingContent(
     state: SpellingUiState,
-    onItemValueChange: (Int, WordStatus) -> Unit,
-    onItemReset: (Int) -> Unit,
-    onItemEdit: (Int) -> Unit,
-    onEditItemValueChange: (String) -> Unit,
-    onLoadCallback: () -> Unit,
-    onSaveCallback: () -> Unit,
-    onEditCancelCallback: () -> Unit,
-    onEditSubmitCallback: () -> Unit,
-    onSpeakerClick: (String) -> Unit,
+    rbContentType: RadioButtonContentType,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
-    rbContentType: RadioButtonContentType,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -92,11 +84,8 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
-                onSpeakerClick = onSpeakerClick,
+                onUserEvent = onUserEvent,
                 modifier = modifier,
-                onValueChange = onItemValueChange,
-                onItemReset = onItemReset,
-                onItemEdit = onItemEdit
             )
         }
 
@@ -104,7 +93,7 @@ fun SpellingContent(
             LoadingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             ErrorDisplayInColumn(
                 message = stringResource(id = state.errorMessage),
-                callback = onLoadCallback,
+                callback = { onUserEvent(SpellingUserEvent.OnLoad) },
                 modifier = modifier
             )
         }
@@ -114,7 +103,7 @@ fun SpellingContent(
             SpellingItems(
                 words = state.words,
                 rbContentType = rbContentType,
-                onSpeakerClick = onSpeakerClick,
+                onUserEvent = onUserEvent,
                 modifier = modifier,
                 isEnabled = false
             )
@@ -124,12 +113,12 @@ fun SpellingContent(
             SavingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
             ErrorDisplayWithContent(
                 message = stringResource(id = state.errorMessage),
-                callback = onSaveCallback,
+                callback = { onUserEvent(SpellingUserEvent.OnSave) },
                 content = {
                     SpellingItems(
                         words = state.words,
                         rbContentType = rbContentType,
-                        onSpeakerClick = onSpeakerClick,
+                        onUserEvent = onUserEvent,
                         isEnabled = false,
                     )
                 },
@@ -143,10 +132,7 @@ fun SpellingContent(
                 rbContentType = rbContentType,
                 editedIndex = state.editState.index!!,
                 modifiedWord = state.editState.wordModified,
-                onValueChange = onEditItemValueChange,
-                onEditCancelCallback = onEditCancelCallback,
-                onEditSubmitCallback = onEditSubmitCallback,
-                onSpeakerClick = onSpeakerClick,
+                onUserEvent = onUserEvent,
                 modifier = modifier,
                 isEditing = state.isEditing
             )
@@ -158,10 +144,7 @@ fun SpellingContent(
                 rbContentType = rbContentType,
                 editedIndex = state.editState.index!!,
                 modifiedWord = state.editState.wordModified,
-                onValueChange = onEditItemValueChange,
-                onEditCancelCallback = onEditCancelCallback,
-                onEditSubmitCallback = onEditSubmitCallback,
-                onSpeakerClick = onSpeakerClick,
+                onUserEvent = onUserEvent,
                 modifier = modifier,
                 isEditing = true,
                 errorMsg = state.errorMessage
@@ -174,11 +157,8 @@ fun SpellingContent(
 private fun SpellingItems(
     words: List<SpellingWord>,
     rbContentType: RadioButtonContentType,
-    onSpeakerClick: (String) -> Unit,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier,
-    onValueChange: (Int, WordStatus) -> Unit = { _, _ -> run {} },
-    onItemReset: (Int) -> Unit = {},
-    onItemEdit: (Int) -> Unit = {},
     isEnabled: Boolean = true,
 ) {
 
@@ -198,11 +178,8 @@ private fun SpellingItems(
                     word = item.word,
                     wordStatus = item.status,
                     isRepeatedWord = item.repeated,
-                    onItemSelected = { status -> onValueChange(index, status) },
-                    onItemReset = { onItemReset(index) },
-                    onItemEdit = { onItemEdit(index) },
-                    onSpeakerClick = onSpeakerClick,
                     rbContentType = rbContentType,
+                    onUserEvent = onUserEvent,
                     isEnabled = isEnabled,
                 )
                 HorizontalDivider(
@@ -223,10 +200,7 @@ private fun EditSpellingItems(
     rbContentType: RadioButtonContentType,
     editedIndex: Int,
     modifiedWord: String,
-    onValueChange: (String) -> Unit,
-    onEditCancelCallback: () -> Unit,
-    onEditSubmitCallback: () -> Unit,
-    onSpeakerClick: (String) -> Unit,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier,
     isEditing: Boolean = true,
     errorMsg: String? = null
@@ -255,9 +229,7 @@ private fun EditSpellingItems(
                     SpellingEditedItem(
                         index = index,
                         word = modifiedWord,
-                        onValueChange = onValueChange,
-                        onEditCancelCallback = onEditCancelCallback,
-                        onEditSubmitCallback = onEditSubmitCallback,
+                        onUserEvent = onUserEvent,
                         isEditing = isEditing,
                         errorMsg = errorMsg
                     )
@@ -268,11 +240,8 @@ private fun EditSpellingItems(
                         word = item.word,
                         wordStatus = item.status,
                         isRepeatedWord = item.repeated,
-                        onItemSelected = { _ -> run {} },
-                        onItemReset = {},
-                        onItemEdit = {},
-                        onSpeakerClick = onSpeakerClick,
                         rbContentType = rbContentType,
+                        onUserEvent = onUserEvent,
                         isEnabled = false,
                         showSpeaker = false
                     )
@@ -296,11 +265,8 @@ private fun SpellingItem(
     word: String,
     wordStatus: WordStatus,
     isRepeatedWord: Boolean,
-    onItemSelected: (WordStatus) -> Unit,
-    onItemReset: () -> Unit,
-    onItemEdit: () -> Unit,
-    onSpeakerClick: (String) -> Unit,
     rbContentType: RadioButtonContentType,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true,
     showSpeaker: Boolean = true,
@@ -324,14 +290,13 @@ private fun SpellingItem(
                 horizontalArrangement = Arrangement.Start
             ) {
                 if (showSpeaker) {
-                    SpeakerIconButton { onSpeakerClick(word) }
+                    SpeakerIconButton { onUserEvent(SpellingUserEvent.OnSpeakerClicked(word)) }
                 }
                 SpellingTextWithNumber(
                     index = index,
                     word = word,
                     isRepeated = isRepeatedWord,
-                    onItemReset = onItemReset,
-                    onItemEdit = onItemEdit,
+                    onUserEvent = onUserEvent,
                     textModifier = Modifier.weight(1f),
                     isEnabled = isEnabled
                 )
@@ -345,7 +310,14 @@ private fun SpellingItem(
             ) {
                 SpellingRadioGroup(
                     selected = wordStatus,
-                    setSelected = onItemSelected,
+                    setSelected = { status ->
+                        onUserEvent(
+                            SpellingUserEvent.OnItemStatusChange(
+                                index,
+                                status
+                            )
+                        )
+                    },
                     rbContentType = rbContentType,
                     isEnabled = isEnabled,
                 )
@@ -363,20 +335,26 @@ private fun SpellingItem(
             horizontalArrangement = Arrangement.Center
         ) {
             if (showSpeaker) {
-                SpeakerIconButton { onSpeakerClick(word) }
+                SpeakerIconButton { onUserEvent(SpellingUserEvent.OnSpeakerClicked(word)) }
             }
             SpellingTextWithNumber(
                 index = index,
                 word = word,
                 isRepeated = isRepeatedWord,
-                onItemReset = onItemReset,
-                onItemEdit = onItemEdit,
+                onUserEvent = onUserEvent,
                 textModifier = Modifier.weight(1f),
                 isEnabled = isEnabled,
             )
             SpellingRadioGroup(
                 selected = wordStatus,
-                setSelected = onItemSelected,
+                setSelected = { status ->
+                    onUserEvent(
+                        SpellingUserEvent.OnItemStatusChange(
+                            index,
+                            status
+                        )
+                    )
+                },
                 rbContentType = rbContentType,
                 isEnabled = isEnabled,
             )
@@ -388,9 +366,7 @@ private fun SpellingItem(
 private fun SpellingEditedItem(
     index: Int,
     word: String,
-    onValueChange: (String) -> Unit,
-    onEditCancelCallback: () -> Unit,
-    onEditSubmitCallback: () -> Unit,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     modifier: Modifier = Modifier,
     isEditing: Boolean = true,
     errorMsg: String? = null
@@ -420,14 +396,14 @@ private fun SpellingEditedItem(
             AutoFocusingSpellingText(
                 word = word,
                 isEditing = isEditing,
-                onValueChange = onValueChange,
+                onValueChange = { value -> onUserEvent(SpellingUserEvent.OnEditItemChange(value)) },
                 errorMsg = errorMsg,
                 modifier = Modifier.weight(1f)
 
             )
             //buttons
             OutlinedIconButton(
-                onClick = { onEditSubmitCallback() },
+                onClick = { onUserEvent(SpellingUserEvent.OnSaveEditing) },
                 shape = MaterialTheme.shapes.small,
                 enabled = isEditing
             ) {
@@ -439,7 +415,7 @@ private fun SpellingEditedItem(
                     )
             }
             OutlinedIconButton(
-                onClick = { onEditCancelCallback() },
+                onClick = { onUserEvent(SpellingUserEvent.OnDiscardEditing) },
                 shape = MaterialTheme.shapes.small,
                 enabled = isEditing
             ) {
@@ -463,7 +439,6 @@ fun AutoFocusingSpellingText(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     isEditing: Boolean = true,
-
     errorMsg: String? = null
 ) {
     //var value by mutableStateOf("Enter Text")
@@ -492,8 +467,7 @@ fun SpellingTextWithNumber(
     index: Int,
     word: String,
     isRepeated: Boolean,
-    onItemReset: () -> Unit,
-    onItemEdit: () -> Unit,
+    onUserEvent: (SpellingUserEvent) -> Unit,
     textModifier: Modifier = Modifier,
     isEnabled: Boolean = true,
 ) {
@@ -513,8 +487,8 @@ fun SpellingTextWithNumber(
             .pointerInput(Unit) {
                 if (isEnabled) {
                     detectTapGestures(
-                        onDoubleTap = { onItemReset() },
-                        onLongPress = { onItemEdit() }
+                        onDoubleTap = { onUserEvent(SpellingUserEvent.OnValueReset(index)) },
+                        onLongPress = { onUserEvent(SpellingUserEvent.OnPrepareForEditing(index)) }
                     )
                 }
             }
@@ -583,11 +557,8 @@ private fun SpellingItemSizePreview(
                     word = "anticlockwise",
                     wordStatus = WordStatus.CORRECT,
                     isRepeatedWord = true,
-                    onItemSelected = {},
-                    onItemReset = {},
-                    onItemEdit = {},
-                    onSpeakerClick = {},
                     rbContentType = rbContentType,
+                    onUserEvent = {},
                     modifier = Modifier.padding(it),
                     showSpeaker = true
                 )
@@ -606,9 +577,7 @@ private fun SpellingEditItem(
                 SpellingEditedItem(
                     index = 17,
                     word = "anticlockwise",
-                    onValueChange = {},
-                    onEditCancelCallback = {},
-                    onEditSubmitCallback = {},
+                    onUserEvent = {},
                     modifier = Modifier.padding(it)
                 )
             }
@@ -628,11 +597,8 @@ private fun SpellingItemRepeatedPreview(
                 word = "successfully",
                 wordStatus = WordStatus.CORRECT,
                 isRepeatedWord = true,
-                onItemSelected = {},
-                onItemReset = {},
-                onItemEdit = {},
-                onSpeakerClick = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
+                onUserEvent = {},
                 isEnabled = isEnabled,
                 showSpeaker = true,
             )
@@ -653,11 +619,8 @@ private fun SpellingItemEnablePreview(
                 word = "successfully",
                 wordStatus = WordStatus.CORRECT,
                 isRepeatedWord = false,
-                onItemSelected = {},
-                onItemReset = {},
-                onItemEdit = {},
-                onSpeakerClick = {},
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
+                onUserEvent = {},
                 isEnabled = isEnabled,
                 showSpeaker = true,
             )
@@ -718,9 +681,8 @@ private fun SpellingItemsPreview(
             SpellingItems(
                 words = words,
                 rbContentType = RadioButtonContentType.BUTTONS_AND_LONG,
+                onUserEvent = {},
                 modifier = Modifier.padding(it),
-                onItemReset = {},
-                onSpeakerClick = {},
                 isEnabled = isEnabled
             )
         }

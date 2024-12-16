@@ -14,6 +14,7 @@ import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.navigation.ReadingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.reading.ReadingUiState
+import com.github.rezita.homelearning.ui.screens.reading.ReadingUserEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,7 +41,14 @@ class ReadingViewModel(
         load()
     }
 
-    fun load() {
+    fun onEvent(event: ReadingUserEvent){
+        when(event){
+            ReadingUserEvent.OnLoad -> load()
+            is ReadingUserEvent.OnChangeColorDisplay ->setColorDisplay(event.visible)
+        }
+    }
+
+    private fun load() {
         when (sheetAction) {
             SheetAction.READ_READING_CEW -> getCEWWords()
             SheetAction.READ_READING_WORDS -> getReadingWords()
@@ -48,7 +56,7 @@ class ReadingViewModel(
         }
     }
 
-    fun setColorDisplay(value: Boolean) {
+    private fun setColorDisplay(value: Boolean) {
         isColourDisplay = value
     }
 

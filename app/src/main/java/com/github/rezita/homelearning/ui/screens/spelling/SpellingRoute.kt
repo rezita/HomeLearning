@@ -30,28 +30,19 @@ fun SpellingRoute(
 
     SpellingScreen(
         state = spellingUiState,
-        onItemValueChange = viewModel::updateWordStatus,
-        onItemReset = viewModel::resetWordStatus,
-        onItemEdit = viewModel::setForEditing,
-        onEditItemValueChange = viewModel::modifyEditedWord,
-        onLoadCallback = viewModel::load,
-        onSaveCallback = viewModel::saveSpellingResults,
         rbContentType = rbContentType,
-        addNewCallback = addNewCallback,
-        saveCallback = viewModel::saveSpellingResults,
-        onEditCancelCallback = viewModel::discardEditing,
-        onEditSubmitCallback = viewModel::saveEditing,
-        onSpeakerClick = viewModel::speakAloud,
         scope = scope,
         snackBarHostState = snackBarHostState,
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp,
-        modifier = modifier
+        addNewCallback = addNewCallback,
+        onUserEvent = viewModel::onUserEvent,
+        modifier = modifier,
     )
 }
 
 @Composable
-fun getRadioButtonType(windowSize: HomeLearningWidthClass): RadioButtonContentType {
+internal fun getRadioButtonType(windowSize: HomeLearningWidthClass): RadioButtonContentType {
     val fontScale = LocalDensity.current.fontScale
     return when (windowSize) {
         HomeLearningWidthClass.XSMALL -> RadioButtonContentType.BUTTONS_SECOND_LINE

@@ -22,9 +22,7 @@ fun ReadingRoute(
     viewModel: ReadingViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val readingState by viewModel.readingUIState.collectAsState()
-    var isTopAppBarShown by remember {
-        mutableStateOf(true)
-    }
+    var showTopAppBar by remember { mutableStateOf(true) }
     val configuration = LocalConfiguration.current
 
     ReadingScreen(
@@ -32,12 +30,11 @@ fun ReadingRoute(
         windowSize = windowSize,
         orientation = configuration.orientation,
         canNavigateBack = canNavigateBack,
-        navigateUp = navigateUp,
-        onLoadCallback = viewModel::load,
-        isTopAppBarShown = isTopAppBarShown,
-        onChangeTopAppBarVisibility = { isTopAppBarShown = !isTopAppBarShown },
+        showTopAppBar = showTopAppBar,
         isColorDisplay = viewModel.isColourDisplay,
-        colorDisplayChange = viewModel::setColorDisplay,
+        navigateUp = navigateUp,
+        onChangeTopAppBarVisibility = { showTopAppBar = !showTopAppBar },
+        onUserEvent = viewModel::onEvent,
         modifier = modifier
 
     )

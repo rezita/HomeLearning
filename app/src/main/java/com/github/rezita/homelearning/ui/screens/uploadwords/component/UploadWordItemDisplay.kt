@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords
+package com.github.rezita.homelearning.ui.screens.uploadwords.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column

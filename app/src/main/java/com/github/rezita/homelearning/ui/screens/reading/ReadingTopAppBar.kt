@@ -18,10 +18,9 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 fun ReadingTopAppBar(
     state: ReadingUiState,
     canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    colorDisplayCallback: (Boolean) -> Unit,
-    redoCallback: () -> Unit,
     isColorDisplay: Boolean,
+    navigateUp: () -> Unit,
+    onUserEvent: (ReadingUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -33,7 +32,7 @@ fun ReadingTopAppBar(
             if (state is ReadingUiState.Downloaded && LocalConfiguration.current.orientation != Configuration.ORIENTATION_PORTRAIT) {
                 // Change how to display the words (simple black / colorful)
                 if (isColorDisplay) {
-                    IconButton(onClick = { colorDisplayCallback(false) }) {
+                    IconButton(onClick = { onUserEvent(ReadingUserEvent.OnChangeColorDisplay(false)) }) {
                         Icon(
                             painterResource(id = R.drawable.ic_menu_black),
                             contentDescription = stringResource(id = R.string.reading_black_display),
@@ -41,7 +40,7 @@ fun ReadingTopAppBar(
                         )
                     }
                 } else {
-                    IconButton(onClick = { colorDisplayCallback(true) }) {
+                    IconButton(onClick = { onUserEvent(ReadingUserEvent.OnChangeColorDisplay(true)) }) {
                         Icon(
                             painterResource(id = R.drawable.ic_menu_colors),
                             contentDescription = stringResource(id = R.string.reading_colour_display),
@@ -50,7 +49,7 @@ fun ReadingTopAppBar(
                     }
                 }
                 //reload icon
-                IconButton(onClick = { redoCallback() }) {
+                IconButton(onClick = { onUserEvent(ReadingUserEvent.OnLoad) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_refresh),
                         contentDescription = stringResource(id = R.string.menu_reload),
@@ -73,8 +72,7 @@ private fun ReadingTopAppBarBlackPreview_downloaded() {
             state = ReadingUiState.Downloaded(emptyList()),
             canNavigateBack = true,
             navigateUp = {},
-            colorDisplayCallback = {},
-            redoCallback = {},
+            onUserEvent = {},
             isColorDisplay = false
         )
     }
@@ -89,8 +87,7 @@ private fun ReadingTopAppBarColorPreview_loading() {
             state = ReadingUiState.Loading,
             canNavigateBack = false,
             navigateUp = {},
-            colorDisplayCallback = {},
-            redoCallback = {},
+            onUserEvent = {},
             isColorDisplay = true
         )
     }
@@ -105,8 +102,7 @@ private fun ReadingTopAppBarColorPreview_error() {
             state = ReadingUiState.LoadingError(12),
             canNavigateBack = false,
             navigateUp = {},
-            colorDisplayCallback = {},
-            redoCallback = {},
+            onUserEvent = {},
             isColorDisplay = true
         )
     }

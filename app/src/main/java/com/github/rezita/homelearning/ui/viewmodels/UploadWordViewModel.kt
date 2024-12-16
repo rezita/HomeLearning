@@ -12,6 +12,7 @@ import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.navigation.Upload
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
+import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
 import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
 import com.github.rezita.homelearning.utils.toListBySeparator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,6 +61,21 @@ class UploadWordViewModel(
         initCategories()
     }
 
+    fun onUserEvent(event: UploadWordUserEvent) {
+        when (event) {
+            UploadWordUserEvent.OnSave -> saveSpellingWords()
+            UploadWordUserEvent.OnLoad -> initCategories()
+            UploadWordUserEvent.OnAddNew -> setForEditing(null)
+            UploadWordUserEvent.OnCancelEditing -> resetEditing()
+            UploadWordUserEvent.OnSaveEditedWord -> updateWordsAfterEditing()
+            is UploadWordUserEvent.OnRemoveWord -> removeWord(event.index)
+            is UploadWordUserEvent.OnPrepareForEditing -> setForEditing(event.index)
+            is UploadWordUserEvent.OnEditedWordWordChange -> updateEditedWordWord(event.word)
+            is UploadWordUserEvent.OnEditedWordCategoryChange -> updateEditedWordCategory(event.category)
+            is UploadWordUserEvent.OnEditedWordCommentChange -> updateEditedWordComment(event.comment)
+        }
+    }
+
     /**after saving and before new word will be added*/
     private fun resetViewModelState() {
         if (viewModelState.value.state == UploadState.SAVED) {
@@ -76,7 +92,7 @@ class UploadWordViewModel(
         }
     }
 
-    fun initCategories() {
+    private fun initCategories() {
         when (sheetAction) {
             SheetAction.SAVE_ERIK_WORDS -> loadErikCategories()
             SheetAction.SAVE_MARK_WORDS -> loadMarkCategories()
@@ -116,7 +132,7 @@ class UploadWordViewModel(
     }
 
 
-    fun saveSpellingWords() {
+    private fun saveSpellingWords() {
         when (sheetAction) {
             SheetAction.SAVE_ERIK_WORDS -> saveErikSpellingWords()
             SheetAction.SAVE_MARK_WORDS -> saveMarkSpellingWords()
@@ -182,7 +198,7 @@ class UploadWordViewModel(
         return viewModelState.value.words.find { it.word == word }
     }
 
-    fun setForEditing(index: Int? = null) {
+    private fun setForEditing(index: Int? = null) {
         if (viewModelState.value.state == UploadState.SAVED) {
             resetViewModelState()
         }
@@ -216,11 +232,7 @@ class UploadWordViewModel(
         }
     }
 
-    fun cancelUpdate() {
-        resetEditing()
-    }
-
-    fun updateWords() {
+    private fun updateWordsAfterEditing() {
         if (!validateWord()) {
             return
         }
@@ -246,16 +258,28 @@ class UploadWordViewModel(
         resetEditing()
     }
 
-    fun removeWord(indexSelected: Int) {
+    private fun removeWord(indexSelected: Int) {
         viewModelState.update {
             it.copy(
                 words = it.words.filterIndexed { index, _ -> index != indexSelected })
         }
     }
 
-    fun updateCurrentWord(word: SpellingWord) {
+    private fun updateEditedWordWord(word: String) {
         viewModelState.update {
-            it.copy(editState = it.editState.copy(word = word))
+            it.copy(editState = it.editState.copy(word = it.editState.word.copy(word = word)))
+        }
+    }
+
+    private fun updateEditedWordCategory(category: String) {
+        viewModelState.update {
+            it.copy(editState = it.editState.copy(word = it.editState.word.copy(category = category)))
+        }
+    }
+
+    private fun updateEditedWordComment(comment: String) {
+        viewModelState.update {
+            it.copy(editState = it.editState.copy(word = it.editState.word.copy(comment = comment)))
         }
     }
 

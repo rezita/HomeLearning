@@ -63,7 +63,7 @@ fun ReadingContent(
     windowSize: HomeLearningWindowSizeClass,
     state: ReadingUiState,
     isColorDisplay: Boolean = false,
-    onLoadCallback: () -> Unit,
+    onUserEvent: (ReadingUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -77,7 +77,7 @@ fun ReadingContent(
 
         is ReadingUiState.LoadingError -> ErrorDisplayInColumn(
             message = stringResource(id = state.errorMessage),
-            callback = onLoadCallback,
+            callback = { onUserEvent(ReadingUserEvent.OnLoad) },
             modifier = modifier
         )
     }
@@ -239,13 +239,13 @@ private fun getFontSize(
 @Preview(
     name = "small min 1f",
     showBackground = true,
-    device = "spec:shape=Normal,width=600,height=320,unit=dp,dpi=160",
+    device = "spec:width=600dp,height=320dp,dpi=160",
     showSystemUi = false
 )
 @Preview(
     name = "small min 2f",
     showBackground = true,
-    device = "spec:shape=Normal,width=600,height=320,unit=dp,dpi=160",
+    device = "spec:width=600dp,height=320dp,dpi=160",
     fontScale = 2f,
     showSystemUi = false
 )

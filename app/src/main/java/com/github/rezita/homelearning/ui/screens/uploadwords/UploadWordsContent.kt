@@ -9,28 +9,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.github.rezita.homelearning.R
-import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
+import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsSaveErrorContent
+import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsSavedContent
+import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsViewContent
 import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun UploadWordsContent(
     state: UploadUiState,
-    onLoadCallback: () -> Unit,
-    onSaveCallback: () -> Unit,
-    onWordEditCallback: (Int) -> Unit,
-    onRemoveWordCallback: (Int) -> Unit,
-    onWordSaveCallback: () -> Unit,
-    onCancelEditCallback: () -> Unit,
-    onWordChangeCallback: (SpellingWord) -> Unit,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
+    onUserEvent: (UploadWordUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -45,7 +41,7 @@ fun UploadWordsContent(
             )
             ErrorDisplayInColumn(
                 message = stringResource(id = state.errorMessage!!),
-                callback = onLoadCallback,
+                callback = { onUserEvent(UploadWordUserEvent.OnLoad) },
                 modifier = modifier
             )
         }
@@ -57,7 +53,7 @@ fun UploadWordsContent(
             )
             ErrorDisplayWithContent(
                 message = stringResource(id = state.errorMessage!!),
-                callback = onSaveCallback,
+                callback = { onUserEvent(UploadWordUserEvent.OnSave) },
                 content = {
                     UploadWordsSaveErrorContent(
                         state = state
@@ -71,9 +67,7 @@ fun UploadWordsContent(
         is UploadUiState.Editing -> {
             EditScreen(
                 state = state,
-                saveCallback = onWordSaveCallback,
-                cancelCallback = onCancelEditCallback,
-                onWordChangeCallback = onWordChangeCallback,
+                onUserEvent = onUserEvent,
                 modifier = modifier
             )
         }
@@ -81,8 +75,7 @@ fun UploadWordsContent(
         is UploadUiState.HasWords ->
             UploadWordsViewContent(
                 state = state,
-                onWordEdit = onWordEditCallback,
-                onWordDelete = onRemoveWordCallback,
+                onUserEvent = onUserEvent,
                 modifier = modifier
             )
 

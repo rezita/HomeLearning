@@ -14,6 +14,7 @@ import com.github.rezita.homelearning.navigation.SpellingDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.tts.HLTextToSpeech
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingUiState
+import com.github.rezita.homelearning.ui.screens.spelling.SpellingUserEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -30,7 +31,7 @@ class SpellingViewModel(
     savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
     private val tts: HLTextToSpeech
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val sheetAction: SheetAction =
         savedStateHandle.toRoute<SpellingDestination>().sheetAction
@@ -52,7 +53,21 @@ class SpellingViewModel(
         load()
     }
 
-    fun load() {
+    fun onUserEvent(event: SpellingUserEvent) {
+        when (event) {
+            SpellingUserEvent.OnDiscardEditing -> discardEditing()
+            SpellingUserEvent.OnLoad -> load()
+            SpellingUserEvent.OnSave -> saveSpellingResults()
+            SpellingUserEvent.OnSaveEditing -> saveEditing()
+            is SpellingUserEvent.OnEditItemChange -> modifyEditedWord(event.value)
+            is SpellingUserEvent.OnItemStatusChange -> updateWordStatus(event.index, event.value)
+            is SpellingUserEvent.OnPrepareForEditing -> setForEditing(event.index)
+            is SpellingUserEvent.OnSpeakerClicked -> tts.speak(event.value, TextToSpeech.QUEUE_ADD)
+            is SpellingUserEvent.OnValueReset -> resetWordStatus(event.index)
+        }
+    }
+
+    private fun load() {
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> getErikSpellingWords()
             SheetAction.READ_MARK_SPELLING_WORDS -> getMarkSpellingWords()
@@ -102,7 +117,7 @@ class SpellingViewModel(
         }
     }
 
-    fun saveSpellingResults() {
+    private fun saveSpellingResults() {
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> saveErikSpellingResults()
             SheetAction.READ_MARK_SPELLING_WORDS -> saveMarkSpellingResults()
@@ -156,7 +171,7 @@ class SpellingViewModel(
         }
     }
 
-    fun updateWordStatus(index: Int, status: WordStatus) {
+    private fun updateWordStatus(index: Int, status: WordStatus) {
         viewModelState.update {
             it.copy(
                 words = it.words.toMutableList()
@@ -165,7 +180,7 @@ class SpellingViewModel(
         }
     }
 
-    fun resetWordStatus(index: Int) {
+    private fun resetWordStatus(index: Int) {
         viewModelState.update {
             it.copy(
                 words = it.words.toMutableList()
@@ -174,7 +189,7 @@ class SpellingViewModel(
         }
     }
 
-    fun setForEditing(index: Int) {
+    private fun setForEditing(index: Int) {
         viewModelState.update {
             it.copy(
                 state = SpellingState.EDITING,
@@ -187,7 +202,7 @@ class SpellingViewModel(
         }
     }
 
-    fun discardEditing() {
+    private fun discardEditing() {
         viewModelState.update {
             it.copy(
                 state = SpellingState.LOADED,
@@ -197,7 +212,7 @@ class SpellingViewModel(
         }
     }
 
-    fun modifyEditedWord(word: String) {
+    private fun modifyEditedWord(word: String) {
         if (this.viewModelState.value.state !in listOf(
                 SpellingState.EDITING,
                 SpellingState.EDIT_ERROR
@@ -215,7 +230,7 @@ class SpellingViewModel(
         }
     }
 
-    fun saveEditing() {
+    private fun saveEditing() {
         //save
         when (sheetAction) {
             SheetAction.READ_ERIK_SPELLING_WORDS -> saveEditedErikSpellingWord()
@@ -283,10 +298,6 @@ class SpellingViewModel(
                 }
             }
         }
-    }
-
-    fun speakAloud(text: String){
-        tts.speak(text, TextToSpeech.QUEUE_ADD)
     }
 }
 

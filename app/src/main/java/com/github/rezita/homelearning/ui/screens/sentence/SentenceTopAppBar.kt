@@ -22,8 +22,7 @@ fun SentenceTopAppBar(
     state: SentenceUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    saveCallback: () -> Unit,
-    redoCallback: () -> Unit,
+    onUserEvent: (SentenceUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
@@ -33,7 +32,7 @@ fun SentenceTopAppBar(
 
         actions = {
             if (state.isSavable()) {
-                IconButton(onClick = { saveCallback() }) {
+                IconButton(onClick = { onUserEvent(SentenceUserEvent.OnSave) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_check),
                         contentDescription = stringResource(id = R.string.sentences_check_and_save),
@@ -42,7 +41,7 @@ fun SentenceTopAppBar(
                 }
             }
             if (state is SentenceUiState.Saved) {
-                IconButton(onClick = { redoCallback() }) {
+                IconButton(onClick = { onUserEvent(SentenceUserEvent.OnLoad) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_redo),
                         contentDescription = stringResource(id = R.string.menu_redo),
@@ -68,8 +67,7 @@ private fun SentenceTopAppBar_success_can_navBack(
             state = SentenceUiState.Loaded(sentences = emptyList()),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }
@@ -94,8 +92,7 @@ private fun SentenceTopAppBar_success_notSavable(
             state = SentenceUiState.Loaded(sentences = sentences),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }
@@ -112,8 +109,7 @@ private fun SentenceTopAppBar_loading(
             state = SentenceUiState.Loading,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }
@@ -130,8 +126,7 @@ private fun SentenceTopAppBar_error(
             state = SentenceUiState.LoadingError(errorMessage = 12),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }
@@ -157,8 +152,7 @@ private fun SentenceTopAppBar_saved(
             state = SentenceUiState.Saved(sentences = sentences),
             canNavigateBack = canNavigateBack,
             navigateUp = {},
-            saveCallback = {},
-            redoCallback = {}
+            onUserEvent = {}
         )
     }
 }
