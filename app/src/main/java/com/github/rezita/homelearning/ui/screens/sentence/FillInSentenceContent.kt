@@ -21,6 +21,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
@@ -64,13 +66,12 @@ fun SentenceContent(
             LoadingProgressBar(modifier = modifier)
         }
 
-        is SentenceUiState.Loaded ->
-            SentenceItems(
-                sentences = state.sentences,
-                isAllAnswered = state.isSavable(),
-                onUserEvent = onUserEvent,
-                modifier = modifier.imePadding()
-            )
+        is SentenceUiState.Loaded -> SentenceItems(
+            sentences = state.sentences,
+            isAllAnswered = state.isSavable(),
+            onUserEvent = onUserEvent,
+            modifier = modifier.imePadding()
+        )
 
         is SentenceUiState.LoadingError -> {
             LoadingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
@@ -107,21 +108,34 @@ fun SentenceItems(
     onUserEvent: (SentenceUserEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val openConfirmDialog = remember { mutableStateOf(false) }
+
     val focusManager = LocalFocusManager.current
     val kc = LocalSoftwareKeyboardController.current
+
+    when {
+        openConfirmDialog.value -> SaveConfirmDialog(
+            onDismissRequest = {
+                openConfirmDialog.value = false
+            },
+            onConfirmation = {
+                onUserEvent(SentenceUserEvent.OnSave)
+                openConfirmDialog.value = false
+            },
+        )
+    }
+
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
             val (prefix, suffix) = item.splitBySeparatorWithSuggestion()
             val prefixWithIndex = "${getIndexPrefix(index)} $prefix"
-            PartiallyEditableText(
-                prefix = prefixWithIndex,
+            PartiallyEditableText(prefix = prefixWithIndex,
                 suffix = suffix,
                 value = item.answer,
                 onValueChange = { value ->
                     onUserEvent(
                         SentenceUserEvent.OnValueChange(
-                            index,
-                            value
+                            index, value
                         )
                     )
                 },
@@ -133,17 +147,15 @@ fun SentenceItems(
                     keyboardType = KeyboardType.Text,
                     imeAction = if (isAllAnswered) ImeAction.Done else ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions(
-                    onNext = {
-                        // Pressing Ime button would move the text indicator's focus to the next field (or the first textField)
-                        focusManager.moveFocus(FocusDirection.Next)
-                    },
+                keyboardActions = KeyboardActions(onNext = {
+                    // Pressing Ime button would move the text indicator's focus to the next field (or the first textField)
+                    focusManager.moveFocus(FocusDirection.Next)
+                },
                     // Pressing Ime button would call the onDoneCallback
                     onDone = {
                         kc?.hide()
-                        onUserEvent(SentenceUserEvent.OnSave)
-                    }
-                ),
+                        openConfirmDialog.value = true
+                    }),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.Transparent,
                     unfocusedContainerColor = Color.Transparent,
@@ -162,9 +174,7 @@ fun SentenceItems(
                     errorSuffixColor = MaterialTheme.colorScheme.onSurface,
                     disabledSuffixColor = MaterialTheme.colorScheme.onSurface,
                 ),
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
+                modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -195,9 +205,7 @@ private fun getScores(sentences: List<FillInSentence>): String {
     val nrOfCorrect = sentences.filter { it.status == WordStatus.CORRECT }.size
     val ratio = if (nrOfQuestions == 0) 0 else nrOfCorrect * 100 / nrOfQuestions
     return stringResource(
-        R.string.irregular_verb_result, nrOfCorrect,
-        nrOfQuestions,
-        ratio
+        R.string.irregular_verb_result, nrOfCorrect, nrOfQuestions, ratio
     )
 }
 
@@ -232,14 +240,11 @@ fun SentenceResultItems(
                 }
                 Text(
                     text = getResultWithIndex(
-                        index,
-                        item.getWithResult(
+                        index, item.getWithResult(
                             sentence_correct,
                             sentence_incorrect,
                         )
-                    ),
-                    textAlign = TextAlign.Left,
-                    modifier = Modifier.padding(
+                    ), textAlign = TextAlign.Left, modifier = Modifier.padding(
                         start = dimensionResource(id = R.dimen.padding_small),
                         end = dimensionResource(id = R.dimen.padding_medium),
                         top = dimensionResource(id = R.dimen.padding_medium)
@@ -275,19 +280,12 @@ fun SentenceItemsPreview() {
         answer = "trod",
         tense = "present",
     )
-    val sentence2 =
-        FillInSentence(
-            sentence = "I have never $£ to Italy.",
-            suggestion = "be",
-            solutions = listOf("been")
-        )
+    val sentence2 = FillInSentence(
+        sentence = "I have never $£ to Italy.", suggestion = "be", solutions = listOf("been")
+    )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
-        SentenceItems(
-            sentences = sentences,
-            isAllAnswered = false,
-            onUserEvent = {}
-        )
+        SentenceItems(sentences = sentences, isAllAnswered = false, onUserEvent = {})
     }
 }
 
@@ -302,13 +300,12 @@ fun SentenceResultPreview() {
         answer = "trod",
         tense = "present",
     )
-    val sentence2 =
-        FillInSentence(
-            sentence = "I have never $£ to Italy.",
-            suggestion = "be",
-            solutions = listOf("been"),
-            answer = "did",
-        )
+    val sentence2 = FillInSentence(
+        sentence = "I have never $£ to Italy.",
+        suggestion = "be",
+        solutions = listOf("been"),
+        answer = "did",
+    )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
         Scaffold {
@@ -328,18 +325,16 @@ fun SentenceUploadErrorPreview() {
         answer = "trod",
         tense = "present",
     )
-    val sentence2 =
-        FillInSentence(
-            sentence = "I have never $£ to Italy.",
-            suggestion = "be",
-            solutions = listOf("been"),
-            answer = "did",
-        )
+    val sentence2 = FillInSentence(
+        sentence = "I have never $£ to Italy.",
+        suggestion = "be",
+        solutions = listOf("been"),
+        answer = "did",
+    )
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
         Scaffold {
-            ErrorDisplayWithContent(
-                message = "This will be the error message",
+            ErrorDisplayWithContent(message = "This will be the error message",
                 callback = {},
                 content = { SentenceResultScreen(sentences = sentences) },
                 modifier = Modifier.padding(it)

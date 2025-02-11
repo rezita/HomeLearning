@@ -1,8 +1,8 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords.component
+package com.github.rezita.homelearning.ui.screens.sentence
 
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,29 +14,29 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun DeleteConfirmDialog(
+fun SaveConfirmDialog(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit
 ) {
     AlertDialog(
         icon = {
             Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(id = R.string.confirm_remove_title)
+                imageVector = Icons.Outlined.Save,
+                contentDescription = stringResource(id = R.string.confirm_save_title)
             )
         },
         title = {
-            Text(text = stringResource(id = R.string.confirm_remove_title))
+            Text(text = stringResource(id = R.string.confirm_save_title))
         },
         text = {
-            Text(text = stringResource(id = R.string.confirm_remove_upload_word))
+            Text(text = stringResource(id = R.string.confirm_save_sentence))
         },
         onDismissRequest = {
             onDismissRequest()
         },
         confirmButton = {
             TextButton(onClick = { onConfirmation() }) {
-                Text(text = stringResource(id = R.string.confirm_remove_ok))
+                Text(text = stringResource(id = R.string.confirm_save_ok))
             }
         },
         dismissButton = {
@@ -45,17 +45,19 @@ fun DeleteConfirmDialog(
                     onDismissRequest()
                 }
             ) {
-                Text(text = stringResource(id = R.string.confirm_remove_cancel))
+                Text(text = stringResource(id = R.string.confirm_save_cancel))
             }
         }
     )
+
 }
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun DeleteConfirmDialogPreview() {
+private fun SaveConfirmDialogPreview() {
     HomeLearningTheme {
-        DeleteConfirmDialog(onDismissRequest = { }, onConfirmation = {})
+        SaveConfirmDialog(onDismissRequest = { }, onConfirmation = {})
     }
 }

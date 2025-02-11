@@ -137,7 +137,10 @@
     <string name="sentences_message_after_update">Results are saved.</string>
     <string name="sentences_result_correct">Correct</string>
     <string name="sentences_result_incorrect">Incorrect</string>
-
+    <string name="confirm_save_sentence">Are you sure you want to save your answers?</string>
+    <string name="confirm_save_title">Save answers</string>
+    <string name="confirm_save_ok">Confirm</string>
+    <string name="confirm_save_cancel">Cancel</string>
 
     <!-- Irregular Verbs words / Spelling / Reading words -->
     <string name="loading_fail_text">Loading words failed.</string>
