@@ -10,6 +10,7 @@ import com.github.rezita.homelearning.navigation.SentenceDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.rules.TestDispatcherRule
 import com.github.rezita.homelearning.ui.screens.sentence.SentenceUiState
+import com.github.rezita.homelearning.ui.screens.sentence.SentenceUserEvent
 import com.github.rezita.homelearning.ui.viewmodels.FillInSentenceViewModel
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -79,7 +80,9 @@ class FillInSentenceViewModelTest {
         //setting answer for the sentences
         runTest {
             for (i in sentences.indices) {
-                fillInSentenceViewModel.updateAnswer(i, answer)
+                fillInSentenceViewModel.onEvent(SentenceUserEvent.OnValueChange(i, answer))
+
+                //fillInSentenceViewModel.updateAnswer(i, answer)
                 newSentences[i] = sentences[i].copy(answer = answer)
             }
         }
@@ -123,7 +126,8 @@ class FillInSentenceViewModelTest {
         val index = 0
         val answer = "answer"
         runTest {
-            fillInSentenceViewModel.updateAnswer(index, answer)
+            fillInSentenceViewModel.onEvent(SentenceUserEvent.OnValueChange(index, answer))
+            //fillInSentenceViewModel.updateAnswer(index, answer)
         }
         val newSentences =
             sentences.toMutableList().apply { this[index] = this[index].copy(answer = answer) }
@@ -136,7 +140,8 @@ class FillInSentenceViewModelTest {
         val index = 3
         val answer = "answer"
         Assert.assertThrows(IllegalArgumentException::class.java) {
-            fillInSentenceViewModel.updateAnswer(index, answer)
+            fillInSentenceViewModel.onEvent(SentenceUserEvent.OnValueChange(index, answer))
+            //fillInSentenceViewModel.updateAnswer(index, answer)
 
         }
 
@@ -157,7 +162,8 @@ class FillInSentenceViewModelTest {
     @Test
     fun save_sentences_not_all_answered_test() {
         runTest {
-            fillInSentenceViewModel.saveSentences()
+            fillInSentenceViewModel.onEvent(SentenceUserEvent.OnSave)
+//            fillInSentenceViewModel.saveSentences()
         }
         val stateAfterSave = fillInSentenceViewModel.uiState.value
         assertEquals(stateAfterSave, SentenceUiState.Loaded(sentences = sentences))
@@ -168,7 +174,8 @@ class FillInSentenceViewModelTest {
     fun save_sentences_save_all_answered_test() {
         val newSentences = answerAllQuestions()
         runTest {
-            fillInSentenceViewModel.saveSentences()
+            fillInSentenceViewModel.onEvent(SentenceUserEvent.OnSave)
+//            fillInSentenceViewModel.saveSentences()
         }
 
         val stateAfterSave = fillInSentenceViewModel.uiState.value

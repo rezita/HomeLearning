@@ -42,8 +42,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -87,8 +86,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -132,8 +130,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -191,8 +188,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -250,8 +246,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -310,8 +305,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -370,8 +364,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -415,8 +408,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -461,8 +453,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -507,8 +498,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -552,8 +542,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -597,8 +586,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -643,8 +631,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -697,8 +684,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -751,8 +737,7 @@ class SentenceTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }

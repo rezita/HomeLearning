@@ -45,8 +45,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -89,8 +88,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -132,8 +130,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -176,8 +173,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -219,8 +215,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -263,8 +258,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -321,8 +315,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -380,8 +373,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -449,8 +441,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -514,8 +505,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -573,8 +563,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -633,8 +622,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -676,8 +664,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -720,8 +707,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -763,8 +749,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -807,8 +792,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -865,8 +849,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -924,8 +907,7 @@ class UploadTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
-                    addNewCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -952,6 +934,4 @@ class UploadTopAppBarTest {
                 useUnmergedTree = true
             ).assertDoesNotExist()
     }
-
-
 }

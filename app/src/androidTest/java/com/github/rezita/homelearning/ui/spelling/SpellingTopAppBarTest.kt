@@ -43,9 +43,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -93,9 +92,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -142,9 +140,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -192,9 +189,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -256,9 +252,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -321,9 +316,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -385,9 +379,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -450,9 +443,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -514,9 +506,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -579,9 +570,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -628,9 +618,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -678,9 +667,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -727,9 +715,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -777,9 +764,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -826,9 +812,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }
@@ -876,9 +861,8 @@ class SpellingTopAppBarTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    saveCallback = {},
                     addNewCallback = {},
-                    redoCallback = {}
+                    onUserEvent = {}
                 )
             }
         }

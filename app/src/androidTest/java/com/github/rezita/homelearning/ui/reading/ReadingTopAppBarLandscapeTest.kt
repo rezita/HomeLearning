@@ -57,9 +57,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { },
-                    redoCallback = {},
-                    isColorDisplay = false
+                    isColorDisplay = false,
+                    onUserEvent = {}
                 )
             }
         }
@@ -110,9 +109,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { isColorDisplay = !isColorDisplay },
-                    redoCallback = {},
-                    isColorDisplay = isColorDisplay
+                    isColorDisplay = isColorDisplay,
+                    onUserEvent = {}
                 )
             }
         }
@@ -165,9 +163,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { isColorDisplay = !isColorDisplay },
-                    redoCallback = {},
-                    isColorDisplay = isColorDisplay
+                    isColorDisplay = isColorDisplay,
+                    onUserEvent = {}
                 )
             }
         }
@@ -220,9 +217,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { isColorDisplay = !isColorDisplay },
-                    redoCallback = {},
-                    isColorDisplay = isColorDisplay
+                    isColorDisplay = isColorDisplay,
+                    onUserEvent = {}
                 )
             }
         }
@@ -294,9 +290,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { isColorDisplay = !isColorDisplay },
-                    redoCallback = {},
-                    isColorDisplay = isColorDisplay
+                    isColorDisplay = isColorDisplay,
+                    onUserEvent = {}
                 )
             }
         }
@@ -367,9 +362,8 @@ class ReadingTopAppBarLandscapeTest {
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
-                    colorDisplayCallback = { },
-                    redoCallback = {},
-                    isColorDisplay = false
+                    isColorDisplay = false,
+                    onUserEvent = {}
                 )
             }
         }
