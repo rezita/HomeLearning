@@ -37,7 +37,7 @@ function doGet(e) {
       case actions.getAllErikSpellingWords:
         const allSpellingErikWords = getAllSpellingWords(sheets.spellingErik);
         return createJSONResponse({ items: allSpellingErikWords.items, message: "" });
-        
+
 
       case actions.getMarkSpellingWords:
         const spellingMarkWords = getSpellingWords(sheets.spellingMark, markSpellingCategoryRules);
@@ -69,6 +69,14 @@ function doGet(e) {
         const homophones = getSentences(sheets.homophones, nrOfHomophonesExercises);
         return createJSONResponse({ items: homophones.items, message: "" });
 
+      case actions.getSpanishWordsZita:
+        const words = getSpanishWords(sheets.spanishZita, nrOfSpanishWords);
+        return createJSONResponse({ items: words.items, message: "" });
+
+      case actions.getWeekSpanishWords:
+        const weekWords = getWeekSpanishWords(sheets.spanishZita);
+        return createJSONResponse({ items: weekWords.items, message: "" });
+
       default:
         insertLog(sheets.error_logs, `${responseMessages.wrongAction}: ${action}`, "");
         return createJSONResponse(
@@ -92,7 +100,6 @@ function doPost(e) {
     - optional: userName
   */
 
-
   const parameter = JSON.parse(e.postData.contents)
   const action = parameter.action;
   //return createTextResponse(`${JSON.stringify(action)}`);
@@ -102,51 +109,63 @@ function doPost(e) {
 
   if (action == null) {
     //return createTextResponse(`${responseMessages.actionMissing}`);
-    return createJSONResponse({result: "", message: `${responseMessages.actionMissing}`});
+    return createJSONResponse({ result: "", message: `${responseMessages.actionMissing}` });
   }
   if (spreadSheetID == null) {
     //return createTextResponse(`${responseMessages.spreadShIdMissing}`);
-    return createJSONResponse({result: "", message: `${responseMessages.spreadShIdMissing}`});
+    return createJSONResponse({ result: "", message: `${responseMessages.spreadShIdMissing}` });
   }
 
   setUserName(parameter.userName);
   switch (action) {
     case actions.updateErikSpellingWords:
       //return createTextResponse(updateSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs));
-      return createJSONResponse({result: updateSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs), message: ""});
+      return createJSONResponse({ result: updateSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs), message: "" });
 
     case actions.updateMarkSpellingWords:
       //return createTextResponse(updateSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs));
-      return createJSONResponse({result: updateSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs), message: ""});
+      return createJSONResponse({ result: updateSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs), message: "" });
 
     case actions.insertErikSpellingWords:
       //return createTextResponse(insertSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs));
-      return createJSONResponse({result: insertSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs), message: ""});
+      return createJSONResponse({ result: insertSpellingWords(parameter.items, sheets.spellingErik, sheets.spellingErik_logs), message: "" });
 
     case actions.insertMarkSpellingWords:
       //return createTextResponse(insertSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs));
-      return createJSONResponse({result: insertSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs), message: ""});
+      return createJSONResponse({ result: insertSpellingWords(parameter.items, sheets.spellingMark, sheets.spellingMark_logs), message: "" });
 
     case actions.updateIrregularVerbs:
       //return createTextResponse(updateSentences(parameter.items, sheets.irregVerbs, sheets.irregular_logs));
-      return createJSONResponse({result: updateSentences(parameter.items, sheets.irregVerbs, sheets.irregular_logs), message: ""});
+      return createJSONResponse({ result: updateSentences(parameter.items, sheets.irregVerbs, sheets.irregular_logs), message: "" });
 
     case actions.updateHomophones:
       //return createTextResponse(updateSentences(parameter.items, sheets.homophones, sheets.homophones_logs));
-      return createJSONResponse({result: updateSentences(parameter.items, sheets.homophones, sheets.homophones_logs), message: ""});
+      return createJSONResponse({ result: updateSentences(parameter.items, sheets.homophones, sheets.homophones_logs), message: "" });
 
     case actions.restoreErikSpellingFromLogs:
       //return createTextResponse(restoreSpellingFromLogs());
-      return createJSONResponse({result: restoreSpellingFromLogs(), message: ""});
+      return createJSONResponse({ result: restoreSpellingFromLogs(), message: "" });
 
     case actions.modifyErikSpellingWord:
-      return createJSONResponse({result: updateSpellingWord(sheets.spellingErik, sheets.spellingErik_logs, parameter.items[0], parameter.items[1]), message: ""});
+      return createJSONResponse({ result: modifySpellingWord(sheets.spellingErik, sheets.spellingErik_logs, parameter.items[0], parameter.items[1]), message: "" });
 
     case actions.modifyMarkSpellingWord:
-      return createJSONResponse({result: updateSpellingWord(sheets.spellingMark, sheets.spellingMark_logs, parameter.items[0], parameter.items[1]), message: ""});
+      return createJSONResponse({ result: modifySpellingWord(sheets.spellingMark, sheets.spellingMark_logs, parameter.items[0], parameter.items[1]), message: "" });
+
+    case actions.insertSpanishWordsZita:
+      return createJSONResponse({ result: insertSpanishWord(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });
+
+    case actions.setWeekSpanishWords:
+      return createJSONResponse({ result: setWeekSpanishWords(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });
+
+    case actions.updateSpanishWords:
+      return createJSONResponse({ result: updateSpanishWords(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });
+
+    case actions.modifySpanishWord:
+      return createJSONResponse({ result: modifySpanishWord(sheets.spanishZita, sheets.spanishZita, parameter.items[0], parameter.items[1]), message: "" });
 
     default:
       //return createTextResponse(`${responseMessages.wrongAction}: ${action}, ${spreadSheetID} `);
-      return createJSONResponse({result:"", message: `${responseMessages.wrongAction}: ${action}`});
+      return createJSONResponse({ result: "", message: `${responseMessages.wrongAction}: ${action}` });
   }
 }

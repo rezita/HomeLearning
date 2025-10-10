@@ -7,7 +7,16 @@ const logAction = {
   recreateFromLogs: "Recreate From Logs",
   updateSentence: "Update sentence",
   sentenceNotFound: "Sentence not found",
+}
 
+const spanishLogAction = {
+  insertSpanishWord: "Insert Spanish word",
+  updateSpanishWord: "Update Spanish word",
+  repeatSpanishWord: "Repeat Spanish word",
+  modifySpanishWord: "Modify Spanish word",
+  wordNotFound: "Spanish word not found",
+  removeWeekTags: "Week tag removed from words",
+  setWeekTag: "Week tag set of word",
 }
 
 const logSpellingResult = { correct: 1, incorrect: -1, unchecked: 0 }
@@ -16,7 +25,7 @@ const logSpellingResult = { correct: 1, incorrect: -1, unchecked: 0 }
 function insertLog(logSheetName, args){
   const loggerSheet = getOrCreateDataSheet(logSheetName)
   if (loggerSheet== null){
-    spreadSheetID.instertSheet()
+    spreadSheetID.insertSheet(logSheetName)
   }
   const content = [getFormattedDate(), userName].concat(args)
   loggerSheet.appendRow(content);
@@ -25,9 +34,6 @@ function insertLog(logSheetName, args){
 
 function insertLog(logSheetName, logAction, logObject) {
   const loggerSheet = getOrCreateDataSheet(logSheetName)
-  if (loggerSheet == null) {
-    spreadSheetID.instertSheet()
-  }
   const content = [getFormattedDate(), userName, logAction, JSON.stringify(logObject)]
   loggerSheet.appendRow(content);
 }
@@ -44,9 +50,6 @@ function getLogResultForUpdateResult(result) {
   }
   return getLogResultForUpdateResult(0);
 }
-
-
-
 
 //**RESTORE SPELLING FROM LOGS */
 function restoreSpellingFromLogs() {

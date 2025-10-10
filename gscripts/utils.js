@@ -29,6 +29,7 @@ function getOrCreateDataSheet(sheetName){
     - required: spreadSheetId, sheetName
   */
   const ss = SpreadsheetApp.openById(spreadSheetID);
+
   let sheet = ss.getSheetByName(sheetName);
   if (sheet == null){
     ss.insertSheet(sheetName);
@@ -55,6 +56,8 @@ function getRandomNumber(minNr, maxNr) {
 }
 
 function createJSONResponse(response){
+  Logger.log("response");
+  Logger.log(response);
   return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -62,10 +65,10 @@ function createTextResponse(message){
   return ContentService.createTextOutput(message).setMimeType(ContentService.MimeType.TEXT);
 }
 
-function getIndexForValue(dataSheet, value){
-  const range = dataSheet.getRange('A2:A').getDisplayValues().map(r => r[0]);
-  const index = range.indexOf(value);
-  //if the word not in reange -> rerun -1, else index+2 (range starts with the 2nd row)
+function getIndexForValue(dataSheet, value, range = 'A2:A'){
+  const dataRange = dataSheet.getRange(range).getDisplayValues().map(r => r[0]);
+  const index = dataRange.indexOf(value);
+  //if the word not in the given reange -> rerun -1, else index+2 (range starts with the 2nd row)
   return (index == -1) ? index : index + 2;
 }
 

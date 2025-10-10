@@ -24,21 +24,21 @@ function getSelectedSpellingWords(allWords, rules){
 
 function getSelectedSpellingWordsByCategory(allWords, rule){
   var result = [];
-  var repeatedWordsByCategory = [];
-  var notRepeatedWordsByCategory = [];
-  if (rule[0] == "") {
-    repeatedWordsByCategory = allWords.filter(word => word[spellingIdxs.repeat[0]] == 1);
-    notRepeatedWordsByCategory = allWords.filter(word => word[spellingIdxs.repeat[0]] == 0);
-  }else {
-    repeatedWordsByCategory = allWords.filter(word => word[spellingIdxs.category[0]] == rule[0] && word[spellingIdxs.repeat[0]] == 1);
-    notRepeatedWordsByCategory = allWords.filter(word => word[spellingIdxs.category[0]] == rule[0] && word[spellingIdxs.repeat[0]] == 0);
-  }
   
+  const repeatedWordsByCategory = (rule[0] == "") ? allWords.filter(word => word[spellingIdxs.repeat[0]] == 1) : allWords.filter(word => word[spellingIdxs.category[0]] == rule[0] && word[spellingIdxs.repeat[0]] == 1)
+  
+  result = result.concat(repeatedWordsByCategory);
+
   const nrOfRemained = rule[1] - repeatedWordsByCategory.length;
-  const randomWords = getRandomWordsByWeight(notRepeatedWordsByCategory, nrOfRemained);
-  //Logger.log(`Repeated: ${repeatedWordsByCategory.length}`);
-  //Logger.log(`Random: ${randomWords.length}`);  
-  result = result.concat(repeatedWordsByCategory).concat(randomWords);
+  
+  //if the repeated words less than the required nr of words
+  if (nrOfRemained > 0){
+    const notRepeatedWordsByCategory = (rule[0] == "") ? allWords.filter(word => word[spellingIdxs.repeat[0]] == 0) : allWords.filter(word => word[spellingIdxs.category[0]] == rule[0] && word[spellingIdxs.repeat[0]] == 0);
+
+    const randomWords = getRandomWordsByWeight(notRepeatedWordsByCategory, nrOfRemained);
+    result = result.concat(randomWords);
+  }
+   
   return result;
 }
 
