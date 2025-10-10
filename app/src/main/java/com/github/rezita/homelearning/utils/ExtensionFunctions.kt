@@ -25,3 +25,7 @@ fun String.toListBySeparator(separator: String): List<String> {
 
 @Composable
 fun TextUnit.toDp() = with(LocalDensity.current) { toDp() }
+
+fun String.simplify() :String {
+    return this.replace(Regex("[!?¡¿.]"), "").trim()
+}

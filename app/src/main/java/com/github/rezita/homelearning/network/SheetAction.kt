@@ -24,7 +24,15 @@ enum class SheetAction(val value: String) {
     SAVE_MARK_WORDS("insertMarkSpellingWords"),
     READ_MARK_SPELLING_WORDS("getMarkSpellingWords"),
     READ_MARK_SPELLING_CATEGORIES("getMarkSpellingCategories"),
-    MODIFY_MARK_SPELLING_WORD("modifyMarkSpellingWord");
+    MODIFY_MARK_SPELLING_WORD("modifyMarkSpellingWord"),
+
+    //Spanish
+    READ_ZITA_SPANISH_WORDS("getSpanishWordsZita"),
+    READ_WEEK_SPANISH_WORDS("getWeekSpanishWords"),
+    SAVE_ZITA_SPANISH_WORDS("insertSpanishWordsZita"),
+    SET_WEEK_SPANISH_WORDS("setWeekSpanishWords"),
+    UPDATE_ZITA_SPANISH_WORDS("updateSpanishWordsZita"),
+    MODIFY_ZITA_SPANISH_WORD("modifySpanishWordZita");
 
     //TODO
     //RESTORE_ERIK_SPELLING_FROM_LOG("restoreErikSpellingFromLogs"),

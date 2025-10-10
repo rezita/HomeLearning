@@ -11,10 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
@@ -44,6 +40,7 @@ import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayWithContent
 import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
+import com.github.rezita.homelearning.ui.screens.common.ResultIcon
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
@@ -110,9 +107,6 @@ fun SentenceItems(
 ) {
     val openConfirmDialog = remember { mutableStateOf(false) }
 
-    val focusManager = LocalFocusManager.current
-    val kc = LocalSoftwareKeyboardController.current
-
     when {
         openConfirmDialog.value -> SaveConfirmDialog(
             onDismissRequest = {
@@ -127,9 +121,12 @@ fun SentenceItems(
 
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
+            val focusManager = LocalFocusManager.current
+            val kc = LocalSoftwareKeyboardController.current
             val (prefix, suffix) = item.splitBySeparatorWithSuggestion()
             val prefixWithIndex = "${getIndexPrefix(index)} $prefix"
-            PartiallyEditableText(prefix = prefixWithIndex,
+            PartiallyEditableText(
+                prefix = prefixWithIndex,
                 suffix = suffix,
                 value = item.answer,
                 onValueChange = { value ->
@@ -147,10 +144,11 @@ fun SentenceItems(
                     keyboardType = KeyboardType.Text,
                     imeAction = if (isAllAnswered) ImeAction.Done else ImeAction.Next
                 ),
-                keyboardActions = KeyboardActions(onNext = {
-                    // Pressing Ime button would move the text indicator's focus to the next field (or the first textField)
-                    focusManager.moveFocus(FocusDirection.Next)
-                },
+                keyboardActions = KeyboardActions(
+                    onNext = {
+                        // Pressing Ime button would move the text indicator's focus to the next field (or the first textField)
+                        focusManager.moveFocus(FocusDirection.Next)
+                    },
                     // Pressing Ime button would call the onDoneCallback
                     onDone = {
                         kc?.hide()
@@ -174,7 +172,8 @@ fun SentenceItems(
                     errorSuffixColor = MaterialTheme.colorScheme.onSurface,
                     disabledSuffixColor = MaterialTheme.colorScheme.onSurface,
                 ),
-                modifier = Modifier.fillMaxWidth())
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -217,27 +216,13 @@ fun SentenceResultItems(
     LazyColumn(modifier = modifier.fillMaxSize()) {
         itemsIndexed(sentences) { index, item ->
             Row(modifier = modifier.fillMaxSize()) {
-                if (item.status == WordStatus.CORRECT) {
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = stringResource(id = R.string.sentences_result_correct),
-                        tint = sentence_correct,
-                        modifier = Modifier.padding(
-                            start = dimensionResource(id = R.dimen.padding_small),
-                            top = dimensionResource(id = R.dimen.padding_medium)
-                        )
+                ResultIcon(
+                    item.status,
+                    modifier = Modifier.padding(
+                        start = dimensionResource(id = R.dimen.padding_small),
+                        top = dimensionResource(id = R.dimen.padding_medium)
                     )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(id = R.string.sentences_result_incorrect),
-                        tint = sentence_incorrect,
-                        modifier = Modifier.padding(
-                            start = dimensionResource(id = R.dimen.padding_small),
-                            top = dimensionResource(id = R.dimen.padding_medium)
-                        )
-                    )
-                }
+                )
                 Text(
                     text = getResultWithIndex(
                         index, item.getWithResult(
@@ -334,7 +319,8 @@ fun SentenceUploadErrorPreview() {
     val sentences = listOf(sentence1, sentence2)
     HomeLearningTheme {
         Scaffold {
-            ErrorDisplayWithContent(message = "This will be the error message",
+            ErrorDisplayWithContent(
+                message = "This will be the error message",
                 callback = {},
                 content = { SentenceResultScreen(sentences = sentences) },
                 modifier = Modifier.padding(it)

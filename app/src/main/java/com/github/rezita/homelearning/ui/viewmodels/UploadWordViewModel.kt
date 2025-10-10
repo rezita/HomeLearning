@@ -9,7 +9,7 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
-import com.github.rezita.homelearning.navigation.Upload
+import com.github.rezita.homelearning.navigation.UploadDestination
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
@@ -41,7 +41,7 @@ class UploadWordViewModel(
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction = savedStateHandle.toRoute<Upload>().sheetAction
+    private val sheetAction: SheetAction = savedStateHandle.toRoute<UploadDestination>().sheetAction
 
 
     private val viewModelState = MutableStateFlow(

@@ -1,7 +1,5 @@
 package com.github.rezita.homelearning.model
 
-import android.util.Log
-
 fun ApiSpellingWord.asSpellingWord(): SpellingWord {
     return SpellingWord(
         word = word,

@@ -10,6 +10,10 @@
     <string name="start_homophones">Homophones</string>
     <string name="start_mark_spelling">Mark spelling</string>
     <string name="upload_mark_words">Upload Mark words</string>
+    <string name="start_en_to_sp">English To Spanish</string>
+    <string name="start_sp_to_en">Spanish To English</string>
+    <string name="start_rand_spanish">Mixed Spanish</string>
+    <string name="start_spanish_week_words">Spanish Week Words</string>
 
     <!-- destination titles-->
     <string name="spelling_title">Spelling</string>
@@ -17,9 +21,12 @@
     <string name="homophones_title">Homophones</string>
     <string name="verbs_title">Irregular verbs</string>
     <string name="upload_title">Add words</string>
+    <string name="spanish_title">Spanish</string>
+    <string name="spanish_week_title">Week Words</string>
     <!-- tabs -->
     <string name="tab_Erik">Erik</string>
     <string name="tab_Mark">Mark</string>
+    <string name="tab_Zita">Zita</string>
     <!-- <string name="main_activity_tab3">Admin</string> -->
 
 
@@ -154,4 +161,12 @@
 
     <!--Reading -->
     <string name="reading_counter">%1$d/%2$d</string>
+
+    <!--Spanish -->
+    <string name="answer">Answer:</string>
+    <string name="result_correct">Correct</string>
+    <string name="result_incorrect">Incorrect</string>
+    <string name="correct_aswer">The correct answer: %1$s</string>
+
+
 </resources>

@@ -4,12 +4,15 @@ import android.util.Log
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.PostApiParameter
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.model.SpanishWord
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.model.asAPISellingWord
 import com.github.rezita.homelearning.model.asAPISentence
+import com.github.rezita.homelearning.model.asApiSpanishWord
 import com.github.rezita.homelearning.model.asFillInSentence
 import com.github.rezita.homelearning.model.asReadingWord
+import com.github.rezita.homelearning.model.asSpanishWord
 import com.github.rezita.homelearning.model.asSpellingWord
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsApiService
@@ -37,12 +40,16 @@ WordRepository {
     suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
     suspend fun saveErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
-
     suspend fun saveMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String>
 
     suspend fun modifyErikSpellingWord(wordOld: String, wordNew: String): RepositoryResult<String>
-
     suspend fun modifyMarkSpellingWord(wordOld: String, wordNew: String): RepositoryResult<String>
+
+    //Spanish
+    suspend fun getZitaSpanishWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>>
+    suspend fun getWeekSpanishWords(): RepositoryResult<List<SpanishWord>>
+
+    suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String>
 
     //suspend fun restoreSpellingWordsFromLogs(): RepositoryResult<SpellingWord>
 }
@@ -134,7 +141,6 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                 }
             }
             .onFailure {
-                Log.e("onFailure", it.message.toString())
                 return RepositoryResult.Error(it.message.toString())
             }
         return RepositoryResult.Error("Error")
@@ -145,7 +151,6 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             sheetAction = SheetAction.UPDATE_HOMOPHONES,
             sentences = sentences
         )
-        Log.i("result01", result.toString())
         return result
     }
 
@@ -199,6 +204,40 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         wordOld = wordOld,
         wordNew = wordNew
     )
+
+    override suspend fun getZitaSpanishWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>> {
+        return getSpanishWords(SheetAction.READ_ZITA_SPANISH_WORDS, enToSp)
+    }
+
+    override suspend fun getWeekSpanishWords(): RepositoryResult<List<SpanishWord>> {
+        return getSpanishWords(SheetAction.READ_WEEK_SPANISH_WORDS, true)
+    }
+
+    override suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String> {
+        return updateSpanishWords(
+            sheetAction = SheetAction.UPDATE_ZITA_SPANISH_WORDS,
+            words = words
+        )
+    }
+
+    private suspend fun getSpanishWords(
+        sheetAction: SheetAction,
+        enToSp: Boolean?
+    ): RepositoryResult<List<SpanishWord>> {
+        wordsAPIService.getSpanishWords(action = sheetAction.value)
+            .onSuccess { response ->
+                return if (response.items.isNotEmpty()) {
+                    RepositoryResult.Success(data = response.items.map { it.asSpanishWord(enToSp) })
+                } else {
+                    RepositoryResult.Error(message = response.message)
+                }
+            }
+            .onFailure {
+                Log.e("onFailure", it.message.toString())
+                return RepositoryResult.Error(message = it.message.toString())
+            }
+        return RepositoryResult.Error(message = "Error")
+    }
 
     private suspend fun saveSpellingWords(
         sheetAction: SheetAction,
@@ -303,6 +342,42 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                 )
             }
         return RepositoryResult.Error(message = "Error")
+    }
+
+    private suspend fun updateSpanishWords(
+        sheetAction: SheetAction,
+        words: List<SpanishWord>
+    ): RepositoryResult<String> {
+        val wordsParam = words
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asApiSpanishWord() }
+
+        if (wordsParam.isNotEmpty()) {
+            val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+            val params = PostApiParameter(
+                items = wordsParam,
+                action = sheetAction.value
+            )
+            wordsAPIService.updateData(
+                parameter = json.encodeToJsonElement(params)
+            )
+                .onSuccess { response ->
+                    return if (response.result.isNotEmpty()) {
+                        RepositoryResult.Success(data = response.result)
+                    } else {
+                        RepositoryResult.Error(message = response.message)
+                    }
+                }
+                .onFailure {
+                    Log.e("onFailure", it.message.toString())
+                    return RepositoryResult.Error(
+                        message = it.message.toString()
+                    )
+                }
+            return RepositoryResult.Error(message = "Error")
+        } else {
+            return RepositoryResult.Error(message = "No data has given")
+        }
     }
 
 

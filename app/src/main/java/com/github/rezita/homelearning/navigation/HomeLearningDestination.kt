@@ -18,4 +18,11 @@ data class SentenceDestination(val sheetAction: SheetAction) : HomeLearningDesti
 data class ReadingDestination(val sheetAction: SheetAction) : HomeLearningDestination
 
 @Serializable
-data class Upload(val sheetAction: SheetAction) : HomeLearningDestination
+data class UploadDestination(val sheetAction: SheetAction) : HomeLearningDestination
+
+@Serializable
+data class SpanishDestination(val sheetAction: SheetAction, val enToSp: Boolean?) :
+    HomeLearningDestination
+
+//@Serializable
+//data class SpanishUploadDestination(val sheetAction: SheetAction) : HomeLearningDestination

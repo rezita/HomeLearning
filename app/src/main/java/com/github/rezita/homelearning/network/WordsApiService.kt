@@ -3,6 +3,7 @@ package com.github.rezita.homelearning.network
 import com.github.rezita.homelearning.BuildConfig
 import com.github.rezita.homelearning.model.ApiFillInSentence
 import com.github.rezita.homelearning.model.ApiReadingWord
+import com.github.rezita.homelearning.model.ApiSpanishWord
 import com.github.rezita.homelearning.model.ApiSpellingWord
 import com.github.rezita.homelearning.model.Category
 import com.github.rezita.homelearning.model.GetRequestApiItems
@@ -37,6 +38,9 @@ interface WordsApiService {
     @Headers("Content-Type: application/json")
     @POST(POST_PARAM_URL)
     suspend fun updateData(@Body parameter: JsonElement): Result<PostResponse>
+
+    @GET(GET_PARAM_URL)
+    suspend fun getSpanishWords(@Query("action") action: String): Result<GetRequestApiItems<ApiSpanishWord>>
 
     /*
         @Headers("Content-Type: application/json")

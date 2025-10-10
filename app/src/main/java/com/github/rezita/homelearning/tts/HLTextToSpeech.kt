@@ -2,6 +2,7 @@ package com.github.rezita.homelearning.tts
 
 import android.content.Context
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import java.util.Locale
 
 
@@ -27,10 +28,15 @@ class HLTextToSpeech(private val context: Context) {
         }
     }
 
-    fun speak(text: String, queueMode: Int) {
-        val utterance = utteranceManager.create(text, queueMode)
-        speak(textToSpeech, utterance)
-
+    fun speak(text: String, queueMode: Int, locale: Locale? = null) {
+        val result = setLocale(locale)
+        if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+            Log.e("TTS", "Lang not supported")
+            ttsStatus = TtsStatus.Error("Locale not supported: ${locale.toString()}")
+        }else {
+            val utterance = utteranceManager.create(text, queueMode)
+            speak(textToSpeech, utterance)
+        }
     }
 
     private fun speak(tts: TextToSpeech, utterance: Utterance) {
@@ -50,6 +56,11 @@ class HLTextToSpeech(private val context: Context) {
             return Locale.US
         }
         return null
+    }
+
+    private fun setLocale(locale: Locale? = null): Int {
+        val availableLocale = locale ?: availableLocale()
+        return textToSpeech.setLanguage(availableLocale)
     }
 }
 

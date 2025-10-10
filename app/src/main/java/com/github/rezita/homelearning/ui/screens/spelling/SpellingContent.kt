@@ -17,10 +17,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Done
-import androidx.compose.material.icons.rounded.RecordVoiceOver
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
@@ -58,6 +56,7 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
+import com.github.rezita.homelearning.ui.screens.common.SpeakerIconButton
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.sentence_correct
@@ -512,20 +511,6 @@ private fun getScores(words: List<SpellingWord>): String {
         nrOfQuestions,
         ratio
     )
-}
-
-@Composable
-private fun SpeakerIconButton(
-    onClickCallback: () -> Unit
-) {
-    IconButton(
-        onClick = { onClickCallback() }
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.RecordVoiceOver,
-            contentDescription = stringResource(id = R.string.spelling_text_to_speech)
-        )
-    }
 }
 
 

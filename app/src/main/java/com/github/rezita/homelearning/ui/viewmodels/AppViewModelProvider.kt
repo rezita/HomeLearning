@@ -34,6 +34,16 @@ object AppViewModelProvider {
                 homeLearningApplication().container.wordRepository
             )
         }
+
+        // Initializer for SpanishViewModel
+        initializer {
+            SpanishViewModel(
+                this.createSavedStateHandle(),
+                homeLearningApplication().container.wordRepository,
+                homeLearningApplication().textToSpeech
+            )
+        }
+
         // Initializer for UploadWordViewModel
         initializer {
             UploadWordViewModel(

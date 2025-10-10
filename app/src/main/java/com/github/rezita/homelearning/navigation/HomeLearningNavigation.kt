@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,7 @@ import com.github.rezita.homelearning.ui.screens.home.TabButton
 import com.github.rezita.homelearning.ui.screens.home.TabWithButtons
 import com.github.rezita.homelearning.ui.screens.reading.ReadingRoute
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceRoute
+import com.github.rezita.homelearning.ui.screens.spanish.SpanishRoute
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingRoute
 import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsRoute
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
@@ -47,6 +49,17 @@ fun HomeLearningNavigation(
 
     val erikTabButtons = listOf(
         TabButton(
+            titleId = R.string.start_spanish_week_words,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_WEEK_SPANISH_WORDS,
+                        true
+                    )
+                )
+            }
+        ),
+        TabButton(
             titleId = R.string.start_erik_spelling,
             onClick = { navController.navigate(route = SpellingDestination(SheetAction.READ_ERIK_SPELLING_WORDS)) }
         ),
@@ -60,7 +73,7 @@ fun HomeLearningNavigation(
         ),
         TabButton(
             titleId = R.string.upload_erik_words,
-            onClick = { navController.navigate(Upload(SheetAction.SAVE_ERIK_WORDS)) }
+            onClick = { navController.navigate(UploadDestination(SheetAction.SAVE_ERIK_WORDS)) }
         )
     )
 
@@ -80,12 +93,48 @@ fun HomeLearningNavigation(
         ),
         TabButton(
             titleId = R.string.upload_mark_words,
-            onClick = { navController.navigate(Upload(SheetAction.SAVE_MARK_WORDS)) }
+            onClick = { navController.navigate(UploadDestination(SheetAction.SAVE_MARK_WORDS)) }
         )
     )
 
+    val zitaTabButtons = listOf(
+        TabButton(
+            titleId = R.string.start_en_to_sp,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_ZITA_SPANISH_WORDS,
+                        true
+                    )
+                )
+            }
+        ),
+        TabButton(
+            titleId = R.string.start_sp_to_en,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_ZITA_SPANISH_WORDS,
+                        false
+                    )
+                )
+            }
+        ),
+        TabButton(
+            titleId = R.string.start_rand_spanish,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_ZITA_SPANISH_WORDS,
+                        null
+                    )
+                )
+            }
+        ),
+    )
+
     val erikTabValues = HomeLearningTabItem(
-        name = "Erik",
+        name = stringResource(R.string.tab_Erik),
         content = { TabWithButtons(erikTabButtons) },
         onSelected = {
             navController.navigateStartDestinationWithoutBack()
@@ -93,15 +142,20 @@ fun HomeLearningNavigation(
     )
     val markTabValues =
         HomeLearningTabItem(
-            name = "Mark",
+            name = stringResource(R.string.tab_Mark),
             content = {
                 TabWithButtons(markTabButtons)
             },
             onSelected = { navController.navigate(route = Home(1)) }
         )
 
-    val tabs = listOf(erikTabValues, markTabValues)
+    val zitaTabValues = HomeLearningTabItem(
+        name = stringResource(R.string.tab_Zita),
+        content = { TabWithButtons(zitaTabButtons) },
+        onSelected = { navController.navigate(route = Home(2)) }
+    )
 
+    val tabs = listOf(erikTabValues, markTabValues, zitaTabValues)
 
     NavHost(navController = navController, startDestination = startDestination) {
 
@@ -122,7 +176,7 @@ fun HomeLearningNavigation(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 addNewCallback = {
-                    navController.navigate(Upload(getUploadSheetAction(spelling.sheetAction)))
+                    navController.navigate(UploadDestination(getUploadSheetAction(spelling.sheetAction)))
                 },
                 windowSize = windowSizeClass,
                 modifier = modifier,
@@ -138,7 +192,7 @@ fun HomeLearningNavigation(
             )
         }
 
-        composable<Upload> {
+        composable<UploadDestination> {
             UploadWordsRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
@@ -155,6 +209,22 @@ fun HomeLearningNavigation(
             }
 
             FillInSentenceSentenceRoute(
+                titleId = titleId,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                modifier = modifier
+            )
+        }
+
+        composable<SpanishDestination> { navBackStackEntry ->
+            val spanish: SentenceDestination = navBackStackEntry.toRoute()
+            val titleId = if (spanish.sheetAction == SheetAction.READ_ZITA_SPANISH_WORDS) {
+                R.string.spanish_title
+            } else {
+                R.string.spanish_week_title
+            }
+
+            SpanishRoute(
                 titleId = titleId,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },

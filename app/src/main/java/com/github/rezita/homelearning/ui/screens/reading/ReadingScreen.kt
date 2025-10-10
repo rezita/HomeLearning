@@ -24,7 +24,6 @@ fun ReadingScreen(
     onChangeTopAppBarVisibility: () -> Unit,
     onUserEvent: (ReadingUserEvent) -> Unit,
     modifier: Modifier = Modifier
-
 ) {
     Scaffold(
         modifier = modifier.pointerInput(Unit) {
