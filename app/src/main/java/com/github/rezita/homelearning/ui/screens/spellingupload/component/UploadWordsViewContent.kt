@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords.component
+package com.github.rezita.homelearning.ui.screens.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -30,14 +30,14 @@ import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
 fun UploadWordsViewContent(
-    state: UploadUiState.HasWords,
-    onUserEvent: (UploadWordUserEvent) -> Unit,
+    state: SpellingUploadUiState.HasWords,
+    onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -51,8 +51,8 @@ fun UploadWordsViewContent(
         itemsIndexed(state.words) { index, item ->
             UploadItemDisplay(
                 word = item,
-                onDeleteCallback = { onUserEvent(UploadWordUserEvent.OnRemoveWord(index)) },
-                onEditCallback = { onUserEvent(UploadWordUserEvent.OnPrepareForEditing(index)) },
+                onDeleteCallback = { onUserEvent(SpellingUploadUserEvent.OnRemoveSpelling(index)) },
+                onEditCallback = { onUserEvent(SpellingUploadUserEvent.OnPrepareForEditing(index)) },
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -146,7 +146,7 @@ private fun UploadWordsViewContentPreview() {
         status = WordStatus.CORRECT
     )
 
-    val state = UploadUiState.HasWords(
+    val state = SpellingUploadUiState.HasWords(
         words = listOf(spellingWord1, spellingWord2)
     )
     HomeLearningTheme {

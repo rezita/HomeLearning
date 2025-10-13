@@ -11,9 +11,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsTopAppBar
-import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadTopAppBar
+import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.util.buttonWithImageAndDescription
 import com.github.rezita.homelearning.ui.util.withRole
@@ -36,12 +36,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_state_test() {
-        val state = UploadUiState.Loading
+        val state = SpellingUploadUiState.Loading
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -79,12 +79,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_state_with_navBack_test() {
-        val state = UploadUiState.Loading
+        val state = SpellingUploadUiState.Loading
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -121,12 +121,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_saving_state_test() {
-        val state = UploadUiState.Saving
+        val state = SpellingUploadUiState.Saving
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -164,12 +164,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_saving_state_with_navBack_test() {
-        val state = UploadUiState.Saving
+        val state = SpellingUploadUiState.Saving
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -206,12 +206,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_noWords_state_test() {
-        val state = UploadUiState.NoWords
+        val state = SpellingUploadUiState.NoWords
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -249,12 +249,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_noWords_state_with_navBack_test() {
-        val state = UploadUiState.NoWords
+        val state = SpellingUploadUiState.NoWords
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -306,12 +306,12 @@ class UploadTopAppBarTest {
                 status = WordStatus.INCORRECT
             )
         val words = listOf(spelling1, spelling2)
-        val state = UploadUiState.HasWords(words)
+        val state = SpellingUploadUiState.HasWords(words)
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -364,12 +364,12 @@ class UploadTopAppBarTest {
                 status = WordStatus.INCORRECT
             )
         val words = listOf(spelling1, spelling2)
-        val state = UploadUiState.HasWords(words)
+        val state = SpellingUploadUiState.HasWords(words)
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -432,12 +432,12 @@ class UploadTopAppBarTest {
             spelling1,
             spelling2,
         )
-        val state = UploadUiState.HasWords(words)
+        val state = SpellingUploadUiState.HasWords(words)
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -496,12 +496,12 @@ class UploadTopAppBarTest {
             spelling1, spelling2,
             spelling1, spelling2,
         )
-        val state = UploadUiState.HasWords(words)
+        val state = SpellingUploadUiState.HasWords(words)
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -554,12 +554,12 @@ class UploadTopAppBarTest {
             )
         val words = listOf(spelling1, spelling2)
         val response = listOf(Pair(spelling1, "Success"), Pair(spelling2, "Existed"))
-        val state = UploadUiState.Saved(words, response)
+        val state = SpellingUploadUiState.Saved(words, response)
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -613,12 +613,12 @@ class UploadTopAppBarTest {
             )
         val words = listOf(spelling1, spelling2)
         val response = listOf(Pair(spelling1, "Success"), Pair(spelling2, "Existed"))
-        val state = UploadUiState.Saved(words, response)
+        val state = SpellingUploadUiState.Saved(words, response)
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -655,12 +655,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_editing_state_test() {
-        val state = UploadUiState.Editing(EditState(), listOf("home", "school"))
+        val state = SpellingUploadUiState.Editing(EditState(), listOf("home", "school"))
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -698,12 +698,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_editing_state_with_navBack_test() {
-        val state = UploadUiState.Editing(EditState(), listOf("home", "school"))
+        val state = SpellingUploadUiState.Editing(EditState(), listOf("home", "school"))
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -740,12 +740,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_error_state_test() {
-        val state = UploadUiState.LoadingError(R.string.loading_fail_text)
+        val state = SpellingUploadUiState.LoadingError(R.string.loading_fail_text)
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -783,12 +783,12 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_error_state_with_navBack_test() {
-        val state = UploadUiState.LoadingError(R.string.loading_fail_text)
+        val state = SpellingUploadUiState.LoadingError(R.string.loading_fail_text)
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -840,12 +840,12 @@ class UploadTopAppBarTest {
                 status = WordStatus.INCORRECT
             )
         val words = listOf(spelling1, spelling2)
-        val state = UploadUiState.SavingError(words, R.string.loading_fail_text)
+        val state = SpellingUploadUiState.SavingError(words, R.string.loading_fail_text)
         val canNavigateBack = false
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },
@@ -898,12 +898,12 @@ class UploadTopAppBarTest {
                 status = WordStatus.INCORRECT
             )
         val words = listOf(spelling1, spelling2)
-        val state = UploadUiState.SavingError(words, R.string.loading_fail_text)
+        val state = SpellingUploadUiState.SavingError(words, R.string.loading_fail_text)
         val canNavigateBack = true
 
         composeTestRule.setContent {
             HomeLearningTheme {
-                UploadWordsTopAppBar(
+                SpellingUploadTopAppBar(
                     state = state,
                     canNavigateBack = canNavigateBack,
                     navigateUp = { },

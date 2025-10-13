@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords
+package com.github.rezita.homelearning.ui.screens.spellingupload
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -15,45 +15,45 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
-import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsSaveErrorContent
-import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsSavedContent
-import com.github.rezita.homelearning.ui.screens.uploadwords.component.UploadWordsViewContent
-import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditScreen
+import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsSaveErrorContent
+import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsSavedContent
+import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsViewContent
+import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
-fun UploadWordsContent(
-    state: UploadUiState,
+fun SpellingUploadContent(
+    state: SpellingUploadUiState,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
-    onUserEvent: (UploadWordUserEvent) -> Unit,
+    onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        is UploadUiState.Loading -> LoadingProgressBar(modifier = modifier)
-        is UploadUiState.Saving -> LoadingProgressBar(modifier = modifier)
-        is UploadUiState.NoWords -> NoWordsContent(modifier = modifier)
+        is SpellingUploadUiState.Loading -> LoadingProgressBar(modifier = modifier)
+        is SpellingUploadUiState.Saving -> LoadingProgressBar(modifier = modifier)
+        is SpellingUploadUiState.NoWords -> NoWordsContent(modifier = modifier)
 
-        is UploadUiState.LoadingError -> {
+        is SpellingUploadUiState.LoadingError -> {
             LoadingErrorSnackbar(
                 scope = scope,
                 snackbarHostState = snackBarHostState
             )
             ErrorDisplayInColumn(
                 message = stringResource(id = state.errorMessage!!),
-                callback = { onUserEvent(UploadWordUserEvent.OnLoad) },
+                callback = { onUserEvent(SpellingUploadUserEvent.OnLoad) },
                 modifier = modifier
             )
         }
 
-        is UploadUiState.SavingError -> {
+        is SpellingUploadUiState.SavingError -> {
             SavingErrorSnackbar(
                 scope = scope,
                 snackbarHostState = snackBarHostState
             )
             ErrorDisplayWithContent(
                 message = stringResource(id = state.errorMessage!!),
-                callback = { onUserEvent(UploadWordUserEvent.OnSave) },
+                callback = { onUserEvent(SpellingUploadUserEvent.OnSave) },
                 content = {
                     UploadWordsSaveErrorContent(
                         state = state
@@ -64,7 +64,7 @@ fun UploadWordsContent(
 
         }
 
-        is UploadUiState.Editing -> {
+        is SpellingUploadUiState.Editing -> {
             EditScreen(
                 state = state,
                 onUserEvent = onUserEvent,
@@ -72,14 +72,14 @@ fun UploadWordsContent(
             )
         }
 
-        is UploadUiState.HasWords ->
+        is SpellingUploadUiState.HasWords ->
             UploadWordsViewContent(
                 state = state,
                 onUserEvent = onUserEvent,
                 modifier = modifier
             )
 
-        is UploadUiState.Saved -> {
+        is SpellingUploadUiState.Saved -> {
             SavingSuccessSnackbar(
                 scope = scope,
                 snackbarHostState = snackBarHostState

@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords.edit
+package com.github.rezita.homelearning.ui.screens.spellingupload.edit
 
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord

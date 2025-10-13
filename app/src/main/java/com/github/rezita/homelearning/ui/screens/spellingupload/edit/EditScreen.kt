@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords.edit
+package com.github.rezita.homelearning.ui.screens.spellingupload.edit
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -41,16 +41,16 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorText
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.viewmodels.MAX_COMMENT_LENGTH
 import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 
 @Composable
 fun EditScreen(
-    state: UploadUiState.Editing,
-    onUserEvent: (UploadWordUserEvent) -> Unit,
+    state: SpellingUploadUiState.Editing,
+    onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -65,16 +65,16 @@ fun EditScreen(
             onUserEvent = onUserEvent
         )
         EditWordButtons(
-            saveCallback = { onUserEvent(UploadWordUserEvent.OnSaveEditedWord) },
-            cancelCallback = { onUserEvent(UploadWordUserEvent.OnCancelEditing) }
+            saveCallback = { onUserEvent(SpellingUploadUserEvent.OnSaveEditedSpelling) },
+            cancelCallback = { onUserEvent(SpellingUploadUserEvent.OnCancelEditing) }
         )
     }
 }
 
 @Composable
 fun EditWordForm(
-    state: UploadUiState.Editing,
-    onUserEvent: (UploadWordUserEvent) -> Unit,
+    state: SpellingUploadUiState.Editing,
+    onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -83,14 +83,14 @@ fun EditWordForm(
     ) {
         EditTextField(
             value = state.editState.word.word,
-            onValueChange = { onUserEvent(UploadWordUserEvent.OnEditedWordWordChange(it)) },
+            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnEditedWordChangeSpelling(it)) },
             labelId = R.string.upload_word_label,
             error = state.editState.getWordError(),
             maxLength = MAX_WORD_LENGTH
         )
         EditTextField(
             value = state.editState.word.comment,
-            onValueChange = { onUserEvent(UploadWordUserEvent.OnEditedWordCommentChange(it)) },
+            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnEditedCommentChangeSpelling(it)) },
             labelId = R.string.upload_comment_label,
             error = state.editState.getCommentError(),
             maxLength = MAX_COMMENT_LENGTH
@@ -101,7 +101,7 @@ fun EditWordForm(
             selectedItem = state.editState.word.category,
             onOptionSelected = {
                 if (it != null) {
-                    onUserEvent(UploadWordUserEvent.OnEditedWordCategoryChange(it))
+                    onUserEvent(SpellingUploadUserEvent.OnEditedCategoryChangeSpelling(it))
                 }
             },
             modifier = Modifier
@@ -291,7 +291,7 @@ private fun SpellingItemPreview() {
     HomeLearningTheme {
         Scaffold {
             EditScreen(
-                state = UploadUiState.Editing(
+                state = SpellingUploadUiState.Editing(
                     EditState(word = spelling1),
                     categories = categories
                 ),

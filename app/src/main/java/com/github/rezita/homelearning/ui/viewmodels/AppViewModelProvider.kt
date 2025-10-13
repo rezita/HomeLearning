@@ -46,7 +46,7 @@ object AppViewModelProvider {
 
         // Initializer for UploadWordViewModel
         initializer {
-            UploadWordViewModel(
+            SpellingUploadViewModel(
                 this.createSavedStateHandle(),
                 homeLearningApplication().container.wordRepository
             )

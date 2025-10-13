@@ -21,7 +21,7 @@ import com.github.rezita.homelearning.ui.screens.reading.ReadingRoute
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceRoute
 import com.github.rezita.homelearning.ui.screens.spanish.SpanishRoute
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingRoute
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordsRoute
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadRoute
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 
 val start_destination = Home(0)
@@ -73,7 +73,7 @@ fun HomeLearningNavigation(
         ),
         TabButton(
             titleId = R.string.upload_erik_words,
-            onClick = { navController.navigate(UploadDestination(SheetAction.SAVE_ERIK_WORDS)) }
+            onClick = { navController.navigate(SpellingUploadDestination(SheetAction.SAVE_ERIK_WORDS)) }
         )
     )
 
@@ -93,7 +93,7 @@ fun HomeLearningNavigation(
         ),
         TabButton(
             titleId = R.string.upload_mark_words,
-            onClick = { navController.navigate(UploadDestination(SheetAction.SAVE_MARK_WORDS)) }
+            onClick = { navController.navigate(SpellingUploadDestination(SheetAction.SAVE_MARK_WORDS)) }
         )
     )
 
@@ -176,7 +176,7 @@ fun HomeLearningNavigation(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 addNewCallback = {
-                    navController.navigate(UploadDestination(getUploadSheetAction(spelling.sheetAction)))
+                    navController.navigate(SpellingUploadDestination(getSpellingUploadSheetAction(spelling.sheetAction)))
                 },
                 windowSize = windowSizeClass,
                 modifier = modifier,
@@ -192,8 +192,8 @@ fun HomeLearningNavigation(
             )
         }
 
-        composable<UploadDestination> {
-            UploadWordsRoute(
+        composable<SpellingUploadDestination> {
+            SpellingUploadRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier
@@ -234,7 +234,7 @@ fun HomeLearningNavigation(
     }
 }
 
-private fun getUploadSheetAction(currentSheetAction: SheetAction): SheetAction {
+private fun getSpellingUploadSheetAction(currentSheetAction: SheetAction): SheetAction {
     return when (currentSheetAction) {
         SheetAction.READ_ERIK_SPELLING_WORDS -> SheetAction.SAVE_ERIK_WORDS
         SheetAction.READ_MARK_SPELLING_WORDS -> SheetAction.SAVE_MARK_WORDS

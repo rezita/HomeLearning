@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords
+package com.github.rezita.homelearning.ui.screens.spellingupload
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -10,21 +10,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
-import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
+import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun UploadWordsTopAppBar(
-    state: UploadUiState,
+fun SpellingUploadTopAppBar(
+    state: SpellingUploadUiState,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
-    onUserEvent: (UploadWordUserEvent) -> Unit,
+    onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
         title =
         when (state) {
-            is UploadUiState.Editing -> ("")
+            is SpellingUploadUiState.Editing -> ("")
             else -> stringResource(id = R.string.activity_upload_words)
 
         },
@@ -33,7 +33,7 @@ fun UploadWordsTopAppBar(
 
         actions = {
             if (state.isSavable()) {
-                IconButton(onClick = { onUserEvent(UploadWordUserEvent.OnSave) }) {
+                IconButton(onClick = { onUserEvent(SpellingUploadUserEvent.OnSave) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_save_result),
                         contentDescription = stringResource(id = R.string.upload_saving_words),
@@ -42,7 +42,7 @@ fun UploadWordsTopAppBar(
                 }
             }
             if (state.isExpandable()) {
-                IconButton(onClick = { onUserEvent(UploadWordUserEvent.OnAddNew) }) {
+                IconButton(onClick = { onUserEvent(SpellingUploadUserEvent.OnAddNew) }) {
                     Icon(
                         painterResource(id = R.drawable.ic_menu_add),
                         contentDescription = stringResource(id = R.string.upload_add_new),
@@ -59,8 +59,8 @@ fun UploadWordsTopAppBar(
 @Composable
 private fun UploadWordsTopAppBar_downloaded() {
     HomeLearningTheme {
-        UploadWordsTopAppBar(
-            state = UploadUiState.NoWords,
+        SpellingUploadTopAppBar(
+            state = SpellingUploadUiState.NoWords,
             canNavigateBack = true,
             navigateUp = {},
             onUserEvent = {},
@@ -72,8 +72,8 @@ private fun UploadWordsTopAppBar_downloaded() {
 @Composable
 private fun UploadWordsTopAppBar_hasWords() {
     HomeLearningTheme {
-        UploadWordsTopAppBar(
-            state = UploadUiState.HasWords(words = emptyList()),
+        SpellingUploadTopAppBar(
+            state = SpellingUploadUiState.HasWords(words = emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             onUserEvent = {},
@@ -85,8 +85,8 @@ private fun UploadWordsTopAppBar_hasWords() {
 @Composable
 private fun UploadWordsTopAppBar_editing() {
     HomeLearningTheme {
-        UploadWordsTopAppBar(
-            state = UploadUiState.Editing(EditState(), emptyList()),
+        SpellingUploadTopAppBar(
+            state = SpellingUploadUiState.Editing(EditState(), emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             onUserEvent = {},

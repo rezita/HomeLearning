@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.uploadwords.component
+package com.github.rezita.homelearning.ui.screens.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 
 @Composable
 fun UploadWordsSaveErrorContent(
-    state: UploadUiState.SavingError,
+    state: SpellingUploadUiState.SavingError,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -64,7 +64,7 @@ private fun UploadErrorItemPreview() {
         status = WordStatus.CORRECT
     )
 
-    val state = UploadUiState.SavingError(
+    val state = SpellingUploadUiState.SavingError(
         words = listOf(spellingWord1, spellingWord2),
         errorMessage = null
     )

@@ -9,11 +9,11 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
-import com.github.rezita.homelearning.navigation.UploadDestination
+import com.github.rezita.homelearning.navigation.SpellingUploadDestination
 import com.github.rezita.homelearning.network.SheetAction
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadUiState
-import com.github.rezita.homelearning.ui.screens.uploadwords.UploadWordUserEvent
-import com.github.rezita.homelearning.ui.screens.uploadwords.edit.EditState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
+import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditState
 import com.github.rezita.homelearning.utils.toListBySeparator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,16 +36,16 @@ enum class UploadState {
 }
 
 
-class UploadWordViewModel(
+class SpellingUploadViewModel(
     savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction = savedStateHandle.toRoute<UploadDestination>().sheetAction
+    private val sheetAction: SheetAction = savedStateHandle.toRoute<SpellingUploadDestination>().sheetAction
 
 
     private val viewModelState = MutableStateFlow(
-        UploadViewModelState(state = UploadState.LOADING)
+        SpellingUploadViewModelState(state = UploadState.LOADING)
     )
 
     // UI state exposed to the UI
@@ -61,18 +61,18 @@ class UploadWordViewModel(
         initCategories()
     }
 
-    fun onUserEvent(event: UploadWordUserEvent) {
+    fun onUserEvent(event: SpellingUploadUserEvent) {
         when (event) {
-            UploadWordUserEvent.OnSave -> saveSpellingWords()
-            UploadWordUserEvent.OnLoad -> initCategories()
-            UploadWordUserEvent.OnAddNew -> setForEditing(null)
-            UploadWordUserEvent.OnCancelEditing -> resetEditing()
-            UploadWordUserEvent.OnSaveEditedWord -> updateWordsAfterEditing()
-            is UploadWordUserEvent.OnRemoveWord -> removeWord(event.index)
-            is UploadWordUserEvent.OnPrepareForEditing -> setForEditing(event.index)
-            is UploadWordUserEvent.OnEditedWordWordChange -> updateEditedWordWord(event.word)
-            is UploadWordUserEvent.OnEditedWordCategoryChange -> updateEditedWordCategory(event.category)
-            is UploadWordUserEvent.OnEditedWordCommentChange -> updateEditedWordComment(event.comment)
+            SpellingUploadUserEvent.OnSave -> saveSpellingWords()
+            SpellingUploadUserEvent.OnLoad -> initCategories()
+            SpellingUploadUserEvent.OnAddNew -> setForEditing(null)
+            SpellingUploadUserEvent.OnCancelEditing -> resetEditing()
+            SpellingUploadUserEvent.OnSaveEditedSpelling -> updateWordsAfterEditing()
+            is SpellingUploadUserEvent.OnRemoveSpelling -> removeWord(event.index)
+            is SpellingUploadUserEvent.OnPrepareForEditing -> setForEditing(event.index)
+            is SpellingUploadUserEvent.OnEditedWordChangeSpelling -> updateEditedWordWord(event.word)
+            is SpellingUploadUserEvent.OnEditedCategoryChangeSpelling -> updateEditedWordCategory(event.category)
+            is SpellingUploadUserEvent.OnEditedCommentChangeSpelling -> updateEditedWordComment(event.comment)
         }
     }
 
@@ -308,7 +308,7 @@ class UploadWordViewModel(
 
 }
 
-data class UploadViewModelState(
+data class SpellingUploadViewModelState(
     val state: UploadState,
     val editState: EditState = EditState(),
     val categories: List<String> = emptyList(),
@@ -318,43 +318,43 @@ data class UploadViewModelState(
     val savingResponse: List<Pair<SpellingWord, String>> = emptyList()
 ) {
     /**
-     * Converts this [UploadViewModelState] into a more strongly typed [UploadUiState] for driving
+     * Converts this [SpellingUploadViewModelState] into a more strongly typed [SpellingUploadUiState] for driving
      * the ui.
      */
-    fun toUiState(): UploadUiState =
+    fun toUiState(): SpellingUploadUiState =
         when (state) {
             UploadState.LOADING ->
-                UploadUiState.Loading
+                SpellingUploadUiState.Loading
 
             UploadState.VIEWING -> {
                 if (words.isEmpty())
-                    UploadUiState.NoWords
+                    SpellingUploadUiState.NoWords
                 else
-                    UploadUiState.HasWords(words = words)
+                    SpellingUploadUiState.HasWords(words = words)
             }
 
             UploadState.EDITING ->
-                UploadUiState.Editing(
+                SpellingUploadUiState.Editing(
                     editState = editState,
                     categories = categories,
                 )
 
             UploadState.SAVED ->
-                UploadUiState.Saved(
+                SpellingUploadUiState.Saved(
                     words = words,
                     savingResult = savingResponse
                 )
 
             UploadState.SAVING ->
-                UploadUiState.Saving
+                SpellingUploadUiState.Saving
 
             UploadState.LOAD_ERROR ->
-                UploadUiState.LoadingError(
+                SpellingUploadUiState.LoadingError(
                     errorMessage = errorMessage,
                 )
 
             UploadState.SAVING_ERROR ->
-                UploadUiState.SavingError(
+                SpellingUploadUiState.SavingError(
                     words = words,
                     errorMessage = errorMessage
                 )
