@@ -147,31 +147,36 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     }
 
     override suspend fun updateHomophones(sentences: List<FillInSentence>): RepositoryResult<String> {
-        val result = updateFillInSentences(
-            sheetAction = SheetAction.UPDATE_HOMOPHONES,
-            sentences = sentences
-        )
-        return result
+        val sentenceParam = sentences
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asAPISentence() }
+
+        return updateData(SheetAction.UPDATE_HOMOPHONES, sentenceParam)
     }
 
-    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String> =
-        updateFillInSentences(
-            sheetAction = SheetAction.UPDATE_IRREGULAR_VERBS,
-            sentences = sentences
-        )
+    override suspend fun updateIrregularVerbs(sentences: List<FillInSentence>): RepositoryResult<String> {
+        val sentenceParam = sentences
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asAPISentence() }
+
+        return updateData(SheetAction.UPDATE_IRREGULAR_VERBS, sentenceParam)
+    }
 
     override suspend fun updateErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
-        return updateSpellingWords(
-            sheetAction = SheetAction.UPDATE_ERIK_SPELLING_WORDS,
-            words = words
-        )
+        val wordsParam = words
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asAPISellingWord() }
+
+        return updateData(SheetAction.UPDATE_ERIK_SPELLING_WORDS, wordsParam)
     }
 
-    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String> =
-        updateSpellingWords(
-            sheetAction = SheetAction.UPDATE_MARK_SPELLING_WORDS,
-            words = words
-        )
+    override suspend fun updateMarkSpellingWords(words: List<SpellingWord>): RepositoryResult<String> {
+        val wordsParam = words
+            .filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asAPISellingWord() }
+
+        return updateData(SheetAction.UPDATE_MARK_SPELLING_WORDS, wordsParam)
+    }
 
     override suspend fun saveErikSpellingWords(words: List<SpellingWord>): RepositoryResult<String> =
         saveSpellingWords(
@@ -195,7 +200,6 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             wordNew = wordNew
         )
 
-
     override suspend fun modifyMarkSpellingWord(
         wordOld: String,
         wordNew: String
@@ -214,10 +218,9 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
     }
 
     override suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String> {
-        return updateSpanishWords(
-            sheetAction = SheetAction.UPDATE_ZITA_SPANISH_WORDS,
-            words = words
-        )
+        val itemsToUpdate = words.filter { it.status != WordStatus.UNCHECKED }
+            .map { it.asApiSpanishWord() }
+        return updateData(SheetAction.UPDATE_ZITA_SPANISH_WORDS, itemsToUpdate)
     }
 
     private suspend fun getSpanishWords(
@@ -270,61 +273,23 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
                     message = it.message.toString()
                 )
             }
-        return return RepositoryResult.Error(
+        return RepositoryResult.Error(
             message = "Error"
         )
     }
 
-    private suspend fun updateSpellingWords(
+    private suspend inline fun <reified T> updateData(
         sheetAction: SheetAction,
-        words: List<SpellingWord>
+        itemsToUpdate: List<T>
     ): RepositoryResult<String> {
-        val wordsParam = words
-            .filter { it.status != WordStatus.UNCHECKED }
-            .map { it.asAPISellingWord() }
-
-        if (wordsParam.isNotEmpty()) {
-            val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
-            val params = PostApiParameter(
-                items = wordsParam,
-                action = sheetAction.value
-            )
-            wordsAPIService.updateData(
-                parameter = json.encodeToJsonElement(params)
-            )
-                .onSuccess { response ->
-                    return if (response.result.isNotEmpty()) {
-                        RepositoryResult.Success(data = response.result)
-                    } else {
-                        RepositoryResult.Error(message = response.message)
-                    }
-                }
-                .onFailure {
-                    Log.e("onFailure", it.message.toString())
-                    return RepositoryResult.Error(
-                        message = it.message.toString()
-                    )
-                }
-            return RepositoryResult.Error(message = "Error")
-        } else {
+        if (itemsToUpdate.isEmpty()) {
             return RepositoryResult.Error(message = "No data has given")
         }
-    }
 
-    private suspend fun updateFillInSentences(
-        sheetAction: SheetAction,
-        sentences: List<FillInSentence>
-    ): RepositoryResult<String> {
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
-        val sentenceParam = sentences
-            .filter { it.status != WordStatus.UNCHECKED }
-            .map { it.asAPISentence() }
+        val params = PostApiParameter(itemsToUpdate, sheetAction.value)
 
-        val params = PostApiParameter(
-            items = sentenceParam,
-            action = sheetAction.value
-        )
         wordsAPIService.updateData(
             parameter = json.encodeToJsonElement(params)
         )
@@ -343,43 +308,6 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             }
         return RepositoryResult.Error(message = "Error")
     }
-
-    private suspend fun updateSpanishWords(
-        sheetAction: SheetAction,
-        words: List<SpanishWord>
-    ): RepositoryResult<String> {
-        val wordsParam = words
-            .filter { it.status != WordStatus.UNCHECKED }
-            .map { it.asApiSpanishWord() }
-
-        if (wordsParam.isNotEmpty()) {
-            val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
-            val params = PostApiParameter(
-                items = wordsParam,
-                action = sheetAction.value
-            )
-            wordsAPIService.updateData(
-                parameter = json.encodeToJsonElement(params)
-            )
-                .onSuccess { response ->
-                    return if (response.result.isNotEmpty()) {
-                        RepositoryResult.Success(data = response.result)
-                    } else {
-                        RepositoryResult.Error(message = response.message)
-                    }
-                }
-                .onFailure {
-                    Log.e("onFailure", it.message.toString())
-                    return RepositoryResult.Error(
-                        message = it.message.toString()
-                    )
-                }
-            return RepositoryResult.Error(message = "Error")
-        } else {
-            return RepositoryResult.Error(message = "No data has given")
-        }
-    }
-
 
     private suspend fun modifySpellingWord(
         sheetAction: SheetAction,
