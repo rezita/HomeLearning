@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class SpanishWord(
     val wordEn: String,
     val wordSp: String,
+    val comment: String,
     val isWeekWord: Boolean,
     val answer: String = "",
     val enToSp: Boolean = true//translate from English To Spanish
@@ -28,7 +29,7 @@ data class SpanishWord(
         }
     }
 
-    val solution = if(enToSp) wordSp else wordEn
+    val solution = if (enToSp) wordSp else wordEn
 }
 
 
@@ -36,6 +37,7 @@ data class SpanishWord(
 data class ApiSpanishWord(
     val en: String,
     val sp: String,
+    val comment: String,
     val isWeekWord: Int = 0,
     val result: String = "0",
 )

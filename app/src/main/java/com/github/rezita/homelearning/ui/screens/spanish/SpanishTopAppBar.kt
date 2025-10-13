@@ -83,6 +83,7 @@ private fun SpanishTopAppBar_success_notSavable(
             SpanishWord(
                 wordEn = "Hello",
                 wordSp = "Hola",
+                comment = "",
                 answer = "Hola",
                 isWeekWord = false,
                 enToSp = true,
@@ -142,6 +143,7 @@ private fun SpanishTopAppBar_saved(
         SpanishWord(
             wordEn = "Hello",
             wordSp = "Hola",
+            comment = "",
             answer = "Hola",
             isWeekWord = false,
             enToSp = true,

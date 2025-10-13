@@ -6,6 +6,7 @@ fun ApiSpanishWord.asSpanishWord(enToSp: Boolean?): SpanishWord {
     return SpanishWord(
         wordEn = en,
         wordSp = sp,
+        comment = comment,
         isWeekWord = (isWeekWord == 1),
         enToSp = enToSp ?: Random.nextBoolean(),
     )
@@ -15,6 +16,7 @@ fun SpanishWord.asApiSpanishWord(): ApiSpanishWord {
     return ApiSpanishWord(
         en = wordEn,
         sp = wordSp,
+        comment = comment,
         result = status.value.toString()
     )
 }

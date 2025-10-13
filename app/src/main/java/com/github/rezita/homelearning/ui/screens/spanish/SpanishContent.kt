@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
@@ -82,7 +83,6 @@ fun SpanishContent(
 
         is SpanishUiState.Saved -> {
             SavingSuccessSnackbar(scope = scope, snackbarHostState = snackBarHostState)
-            SpanishResultContent(state.words)
             SpanishItems(
                 words = state.words,
                 isAllAnswered = true,
@@ -94,7 +94,6 @@ fun SpanishContent(
 
         is SpanishUiState.SavingError -> {
             SavingErrorSnackbar(scope = scope, snackbarHostState = snackBarHostState)
-            SpanishResultContent(state.words)
             ErrorDisplayWithContent(
                 message = stringResource(id = state.errorMessage),
                 callback = { onUserEvent(SpanishUserEvent.OnSave) },
@@ -134,35 +133,38 @@ fun SpanishItems(
             },
         )
     }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        if (showResults) {
+            SpanishResultContent(words)
+        }
+        LazyColumn(modifier = modifier.fillMaxSize()) {
+            itemsIndexed(words) { index, item ->
+                val focusManager = LocalFocusManager.current
+                val kc = LocalSoftwareKeyboardController.current
 
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        itemsIndexed(words) { index, item ->
-            val focusManager = LocalFocusManager.current
-            val kc = LocalSoftwareKeyboardController.current
+                val keyboardActions = KeyboardActions(
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Next)
+                    },
+                    // Pressing Ime button would call the onDoneCallback
+                    onDone = {
+                        kc?.hide()
+                        openConfirmDialog.value = true
+                    })
 
-            val keyboardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                },
-                // Pressing Ime button would call the onDoneCallback
-                onDone = {
-                    kc?.hide()
-                    openConfirmDialog.value = true
-                })
-
-            HorizontalDivider()
-
-            SpanishItem(
-                index, item, showResults, imeAction, keyboardActions,
-                onSpeakerClicked = {
-                    onUserEvent(SpanishUserEvent.OnSpeakerClicked(it))
-                },
-                onValueChange = {
-                    onUserEvent(
-                        SpanishUserEvent.OnValueChange(index, it)
-                    )
-                }
-            )
+                HorizontalDivider()
+                SpanishItem(
+                    index, item, showResults, imeAction, keyboardActions,
+                    onSpeakerClicked = {
+                        onUserEvent(SpanishUserEvent.OnSpeakerClicked(it))
+                    },
+                    onValueChange = {
+                        onUserEvent(
+                            SpanishUserEvent.OnValueChange(index, it)
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -260,8 +262,9 @@ fun SpanishItem(
 @Composable
 fun TextWithSpeaker(index: Int, word: SpanishWord, onSpeakerClicked: (String) -> Unit) {
     val wordText = if (word.enToSp) word.wordEn else word.wordSp
+    val commentText = if (word.comment.isNotEmpty()) " (${word.comment})" else ""
     if (word.enToSp) {
-        Text(text = wordWithIndex(index, wordText))
+        Text(text = wordWithIndexAndComment(index, wordText, commentText))
     } else {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -269,14 +272,13 @@ fun TextWithSpeaker(index: Int, word: SpanishWord, onSpeakerClicked: (String) ->
         ) {
             Text("${index + 1}.")
             SpeakerIconButton({ onSpeakerClicked(wordText) })
-            Text(wordText)
-
+            Text("$wordText$commentText")
         }
     }
 }
 
-fun wordWithIndex(index: Int, word: String): String {
-    return "${index + 1}. $word"
+fun wordWithIndexAndComment(index: Int, word: String, comment: String): String {
+    return "${index + 1}. $word$comment"
 }
 
 @Preview(showBackground = true)
@@ -287,20 +289,30 @@ fun SpanishItemsPreview_not_show_result() {
         SpanishWord(
             wordEn = "Hello",
             wordSp = "Hola",
+            comment = "",
             answer = "Hola",
             isWeekWord = false,
             enToSp = true,
         ),
         SpanishWord(
-            wordEn = "Hello",
-            wordSp = "Hola",
-            answer = "Hola",
+            wordEn = "the tomato",
+            wordSp = "el tomate",
+            comment = "with article",
+            answer = "el tomare",
             isWeekWord = false,
             enToSp = false,
         )
     )
     HomeLearningTheme {
-        SpanishItems(words = words, isAllAnswered = false, onUserEvent = {}, showResults = false)
+        Scaffold() {
+            SpanishItems(
+                words = words,
+                isAllAnswered = false,
+                onUserEvent = {},
+                showResults = false,
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
 
@@ -312,19 +324,29 @@ fun SpanishItemsPreview_show_result() {
         SpanishWord(
             wordEn = "Hello",
             wordSp = "Hola",
+            comment = "",
             answer = "Hola",
             isWeekWord = false,
             enToSp = true,
         ),
         SpanishWord(
-            wordEn = "Hello",
-            wordSp = "Hola",
-            answer = "Hola",
+            wordEn = "the tomato",
+            wordSp = "el tomate",
+            comment = "with comment",
+            answer = "el tomare",
             isWeekWord = false,
             enToSp = false,
         )
     )
     HomeLearningTheme {
-        SpanishItems(words = words, isAllAnswered = false, onUserEvent = {}, showResults = true)
+        Scaffold() {
+            SpanishItems(
+                words = words,
+                isAllAnswered = false,
+                onUserEvent = {},
+                showResults = true,
+                modifier = Modifier.padding(it)
+            )
+        }
     }
 }
