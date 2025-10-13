@@ -133,11 +133,11 @@ fun SpanishItems(
             },
         )
     }
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = modifier.fillMaxWidth()) {
         if (showResults) {
             SpanishResultContent(words)
         }
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(words) { index, item ->
                 val focusManager = LocalFocusManager.current
                 val kc = LocalSoftwareKeyboardController.current
@@ -271,7 +271,7 @@ fun TextWithSpeaker(index: Int, word: SpanishWord, onSpeakerClicked: (String) ->
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text("${index + 1}.")
-            SpeakerIconButton({ onSpeakerClicked(wordText) })
+            SpeakerIconButton { onSpeakerClicked(wordText) }
             Text("$wordText$commentText")
         }
     }
@@ -304,7 +304,7 @@ fun SpanishItemsPreview_not_show_result() {
         )
     )
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             SpanishItems(
                 words = words,
                 isAllAnswered = false,
@@ -339,7 +339,7 @@ fun SpanishItemsPreview_show_result() {
         )
     )
     HomeLearningTheme {
-        Scaffold() {
+        Scaffold {
             SpanishItems(
                 words = words,
                 isAllAnswered = false,
