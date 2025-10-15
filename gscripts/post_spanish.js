@@ -18,23 +18,24 @@ function insertSpanishWords(words, sheetName, logSheetName) {
     if (word.sp == null || word.sp == "") {
       return `${responseMessages.insertFailed}: ${responseMessages.spWordMissing}`;
     }
-  
+    
     const dataSheet = getDataSheet(sheetName);
     const indexEn = getIndexForValue(dataSheet, word.en);
     const indexSp = getIndexForValue(dataSheet, word.es, 'B2:B');
   
     //if new word
     if (indexEn == -1 && indexSp == -1) {
-      dataSheet.appendRow([word.en, word.sp, 0, 0, 0, 0]);
+      //en, sp, comment, isWeekWord, repeat, attempt, inCorrect
+      dataSheet.appendRow([word.en, word.sp, word.comment, 0, 0, 0, 0]);
       insertLog(logSheetName, spanishLogAction.insertSpanishWord, word);
-      return `${word.word}:${responseMessages.success}`;
+      return `${word.en}:${responseMessages.success}`;
     } else {
       //it the word (the English or Spanish version) is exists on the sheet:
       //return the exists response
-      return `${word.word}:${responseMessages.wordAlreadyExist}`;
+      return `${word.en}:${responseMessages.wordAlreadyExist}`;
     }
   }
-  
+    
   /******RESET WEEK OF SPANISH WORDS **** */
   function resetWeekSpanisWords(sheetName, logSheetName) {
     const dataSheet = getDataSheet(sheetName);
