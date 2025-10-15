@@ -23,7 +23,7 @@ fun SpanishUploadWordItem(word: SpanishWord, modifier: Modifier = Modifier) {
                     end = dimensionResource(id = R.dimen.padding_small),
                     top = dimensionResource(id = R.dimen.padding_small)
                 ),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.bodyLarge
         )
         Text(
             text = getCommentText(word),
