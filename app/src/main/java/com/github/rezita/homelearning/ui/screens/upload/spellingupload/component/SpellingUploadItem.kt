@@ -15,7 +15,7 @@ import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun SpellingUploadItemDisplay(word: SpellingWord, modifier: Modifier = Modifier) {
+fun SpellingUploadItem(word: SpellingWord, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
             text = word.word,
@@ -52,7 +52,7 @@ private fun UploadWordItemPreview() {
         status = WordStatus.CORRECT
     )
     HomeLearningTheme {
-        SpellingUploadItemDisplay(
+        SpellingUploadItem(
             word = spellingWord
         )
     }

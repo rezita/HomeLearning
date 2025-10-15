@@ -10,7 +10,9 @@ data class SpanishWord(
     val isWeekWord: Boolean,
     val answer: String = "",
     val enToSp: Boolean = true//translate from English To Spanish
-) {
+) : Uploadable {
+    val solution = if (enToSp) wordSp else wordEn
+
     val status: WordStatus = when (answer.simplify().lowercase()) {
         "" -> {
             WordStatus.UNCHECKED
@@ -29,7 +31,9 @@ data class SpanishWord(
         }
     }
 
-    val solution = if (enToSp) wordSp else wordEn
+    override fun getDisplayedFields(): List<String> = listOf(wordEn, wordSp, comment)
+
+    override fun getBaseProperty(): String = wordEn
 }
 
 

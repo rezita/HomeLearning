@@ -44,7 +44,15 @@ object AppViewModelProvider {
             )
         }
 
-        // Initializer for UploadWordViewModel
+        // Initializer for SpanishUploadViewModel
+        initializer {
+            SpanishUploadViewModel(
+                this.createSavedStateHandle(),
+                homeLearningApplication().container.wordRepository
+            )
+        }
+
+        // Initializer for SpellingUploadViewModel
         initializer {
             SpellingUploadViewModel(
                 this.createSavedStateHandle(),

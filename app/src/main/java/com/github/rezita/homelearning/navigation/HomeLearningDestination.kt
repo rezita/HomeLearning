@@ -24,5 +24,5 @@ data class SpellingUploadDestination(val sheetAction: SheetAction) : HomeLearnin
 data class SpanishDestination(val sheetAction: SheetAction, val enToSp: Boolean?) :
     HomeLearningDestination
 
-//@Serializable
-//data class SpanishUploadDestination(val sheetAction: SheetAction) : HomeLearningDestination
+@Serializable
+data class SpanishUploadDestination(val sheetAction: SheetAction) : HomeLearningDestination

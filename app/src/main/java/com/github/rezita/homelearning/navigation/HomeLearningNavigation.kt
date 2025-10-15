@@ -21,7 +21,8 @@ import com.github.rezita.homelearning.ui.screens.reading.ReadingRoute
 import com.github.rezita.homelearning.ui.screens.sentence.FillInSentenceSentenceRoute
 import com.github.rezita.homelearning.ui.screens.spanish.SpanishRoute
 import com.github.rezita.homelearning.ui.screens.spelling.SpellingRoute
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadRoute
+import com.github.rezita.homelearning.ui.screens.upload.spanishupload.SpanishUploadRoute
+import com.github.rezita.homelearning.ui.screens.upload.spellingupload.SpellingUploadRoute
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 
 val start_destination = Home(0)
@@ -131,6 +132,16 @@ fun HomeLearningNavigation(
                 )
             }
         ),
+        TabButton(
+            titleId = R.string.upload_spanish,
+            onClick = {
+                navController.navigate(
+                    SpanishUploadDestination(
+                        SheetAction.SAVE_ZITA_SPANISH_WORDS
+                    )
+                )
+            }
+        ),
     )
 
     val erikTabValues = HomeLearningTabItem(
@@ -176,7 +187,13 @@ fun HomeLearningNavigation(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 addNewCallback = {
-                    navController.navigate(SpellingUploadDestination(getSpellingUploadSheetAction(spelling.sheetAction)))
+                    navController.navigate(
+                        SpellingUploadDestination(
+                            getSpellingUploadSheetAction(
+                                spelling.sheetAction
+                            )
+                        )
+                    )
                 },
                 windowSize = windowSizeClass,
                 modifier = modifier,
@@ -217,7 +234,7 @@ fun HomeLearningNavigation(
         }
 
         composable<SpanishDestination> { navBackStackEntry ->
-            val spanish: SentenceDestination = navBackStackEntry.toRoute()
+            val spanish: SpanishDestination = navBackStackEntry.toRoute()
             val titleId = if (spanish.sheetAction == SheetAction.READ_ZITA_SPANISH_WORDS) {
                 R.string.spanish_title
             } else {
@@ -226,6 +243,14 @@ fun HomeLearningNavigation(
 
             SpanishRoute(
                 titleId = titleId,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() },
+                modifier = modifier
+            )
+        }
+
+        composable<SpanishUploadDestination> { navBackStackEntry ->
+            SpanishUploadRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
                 modifier = modifier

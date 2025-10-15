@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.upload.spellingupload
+package com.github.rezita.homelearning.ui.screens.upload.common.components
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -10,28 +10,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.model.Uploadable
 import com.github.rezita.homelearning.ui.screens.common.LearningAppBar
-import com.github.rezita.homelearning.ui.screens.upload.common.SpellingUploadUiState
-import com.github.rezita.homelearning.ui.screens.upload.common.UploadUserEvent
 import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUserEvent
 import com.github.rezita.homelearning.ui.screens.upload.common.edit.EditState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun SpellingUploadTopAppBar(
-    state: SpellingUploadUiState,
+fun <T : Uploadable> UploadTopAppBar(
+    state: UploadUiState<T>,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     onUserEvent: (UploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LearningAppBar(
-        title =
-            when (state) {
-                is SpellingUploadUiState.Editing -> ("")
-                else -> stringResource(id = R.string.activity_upload_words)
-            },
-        canNavigateBack = canNavigateBack,
+        title = stringResource(id = R.string.activity_upload_words),
+        canNavigateBack = canNavigateBack && state.canNavBack(),
         navigateUp = navigateUp,
 
         actions = {
@@ -62,7 +58,7 @@ fun SpellingUploadTopAppBar(
 @Composable
 private fun UploadWordsTopAppBar_downloaded() {
     HomeLearningTheme {
-        SpellingUploadTopAppBar(
+        UploadTopAppBar(
             state = UploadUiState.NoWords,
             canNavigateBack = true,
             navigateUp = {},
@@ -75,8 +71,8 @@ private fun UploadWordsTopAppBar_downloaded() {
 @Composable
 private fun UploadWordsTopAppBar_hasWords() {
     HomeLearningTheme {
-        SpellingUploadTopAppBar(
-            state = SpellingUploadUiState.HasWords(words = emptyList()),
+        UploadTopAppBar(
+            state = UploadUiState.HasWords(words = emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             onUserEvent = {},
@@ -88,8 +84,8 @@ private fun UploadWordsTopAppBar_hasWords() {
 @Composable
 private fun UploadWordsTopAppBar_editing() {
     HomeLearningTheme {
-        SpellingUploadTopAppBar(
-            state = SpellingUploadUiState.Editing(EditState(SpellingWord("", "", "")), emptyList()),
+        UploadTopAppBar(
+            state = UploadUiState.Editing(EditState(SpellingWord("", "", "")), emptyList()),
             canNavigateBack = true,
             navigateUp = {},
             onUserEvent = {},

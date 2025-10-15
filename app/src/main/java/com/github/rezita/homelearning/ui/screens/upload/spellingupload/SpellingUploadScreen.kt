@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -6,11 +6,15 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.github.rezita.homelearning.model.SpellingWord
+import com.github.rezita.homelearning.ui.screens.upload.common.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.components.UploadTopAppBar
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpellingUploadScreen(
-    state: SpellingUploadUiState,
+    state: UploadUiState<SpellingWord>,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     canNavigateBack: Boolean,
@@ -22,7 +26,7 @@ fun SpellingUploadScreen(
         modifier = modifier,
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
-            SpellingUploadTopAppBar(
+            UploadTopAppBar(
                 state = state,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,

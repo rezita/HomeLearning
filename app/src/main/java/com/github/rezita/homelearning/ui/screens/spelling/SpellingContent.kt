@@ -57,11 +57,11 @@ import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
 import com.github.rezita.homelearning.ui.screens.common.SavingErrorSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.screens.common.SpeakerIconButton
+import com.github.rezita.homelearning.ui.screens.upload.common.MAX_WORD_LENGTH
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 import com.github.rezita.homelearning.ui.theme.sentence_correct
 import com.github.rezita.homelearning.ui.theme.sentence_incorrect
-import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 import com.github.rezita.homelearning.utils.toDp
 import kotlinx.coroutines.CoroutineScope
 

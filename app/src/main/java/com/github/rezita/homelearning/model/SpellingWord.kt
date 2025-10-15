@@ -8,7 +8,10 @@ data class SpellingWord(
     val comment: String,
     val status: WordStatus = WordStatus.UNCHECKED,
     val repeated: Boolean = false
-)
+) : Uploadable {
+    override fun getDisplayedFields(): List<String> = listOf(word, category, comment)
+    override fun getBaseProperty(): String = word
+}
 
 @Serializable
 data class ApiSpellingWord(

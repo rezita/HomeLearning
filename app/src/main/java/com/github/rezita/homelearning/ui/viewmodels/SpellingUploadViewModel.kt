@@ -11,10 +11,15 @@ import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.navigation.SpellingUploadDestination
 import com.github.rezita.homelearning.network.SheetAction
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
-import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditState
-import com.github.rezita.homelearning.utils.toListBySeparator
+import com.github.rezita.homelearning.ui.screens.upload.common.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.commentPattern
+import com.github.rezita.homelearning.ui.screens.upload.common.edit.EditState
+import com.github.rezita.homelearning.ui.screens.upload.common.isValidText
+import com.github.rezita.homelearning.ui.screens.upload.common.parseResponse
+import com.github.rezita.homelearning.ui.screens.upload.common.wordPattern
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -22,27 +27,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-const val MAX_NR_OF_WORDS = 10
-const val MAX_WORD_LENGTH = 30
-const val MAX_COMMENT_LENGTH = 25
-const val RESPONSE_SEPARATOR = ","
-const val RESPONSE_INNER_SEPARATOR = ":"
-
-private val wordPattern = Regex("^[a-zA-Z][a-zA-Z\\s'-()]{1,35}")
-private val commentPattern = Regex("[\\w\\s-']{1,35}")
-
-enum class UploadState {
-    LOADING, VIEWING, EDITING, SAVED, LOAD_ERROR, SAVING, SAVING_ERROR
-}
-
-
 class SpellingUploadViewModel(
     savedStateHandle: SavedStateHandle,
     private val wordRepository: WordRepository,
 ) : ViewModel() {
 
-    private val sheetAction: SheetAction = savedStateHandle.toRoute<SpellingUploadDestination>().sheetAction
-
+    private val sheetAction: SheetAction =
+        savedStateHandle.toRoute<SpellingUploadDestination>().sheetAction
 
     private val viewModelState = MutableStateFlow(
         SpellingUploadViewModelState(state = UploadState.LOADING)
@@ -63,16 +54,16 @@ class SpellingUploadViewModel(
 
     fun onUserEvent(event: SpellingUploadUserEvent) {
         when (event) {
-            SpellingUploadUserEvent.OnSave -> saveSpellingWords()
+            UploadUserEvent.OnSave -> saveSpellingWords()
+            UploadUserEvent.OnAddNew -> setForEditing(null)
+            UploadUserEvent.OnCancelEditing -> resetEditing()
+            UploadUserEvent.OnSaveEditedWord -> updateWordsAfterEditing()
             SpellingUploadUserEvent.OnLoad -> initCategories()
-            SpellingUploadUserEvent.OnAddNew -> setForEditing(null)
-            SpellingUploadUserEvent.OnCancelEditing -> resetEditing()
-            SpellingUploadUserEvent.OnSaveEditedSpelling -> updateWordsAfterEditing()
-            is SpellingUploadUserEvent.OnRemoveSpelling -> removeWord(event.index)
-            is SpellingUploadUserEvent.OnPrepareForEditing -> setForEditing(event.index)
-            is SpellingUploadUserEvent.OnEditedWordChangeSpelling -> updateEditedWordWord(event.word)
-            is SpellingUploadUserEvent.OnEditedCategoryChangeSpelling -> updateEditedWordCategory(event.category)
-            is SpellingUploadUserEvent.OnEditedCommentChangeSpelling -> updateEditedWordComment(event.comment)
+            is UploadUserEvent.OnRemoveWord -> removeWord(event.index)
+            is UploadUserEvent.OnPrepareForEditing -> setForEditing(event.index)
+            is SpellingUploadUserEvent.OnWordChangeForEditedWord -> updateEditedWord(event.word)
+            is SpellingUploadUserEvent.OnCategoryChangeForEditedWord -> updateCategory(event.category)
+            is SpellingUploadUserEvent.OnCommentChangeForEditedWord -> updateComment(event.comment)
         }
     }
 
@@ -82,7 +73,7 @@ class SpellingUploadViewModel(
             viewModelState.update {
                 it.copy(
                     state = UploadState.VIEWING,
-                    editState = EditState(),
+                    editState = EditState(SpellingWord("", "", "")),
                     words = emptyList(),
                     selectedIndex = null,
                     errorMessage = null,
@@ -131,7 +122,6 @@ class SpellingUploadViewModel(
         }
     }
 
-
     private fun saveSpellingWords() {
         when (sheetAction) {
             SheetAction.SAVE_ERIK_WORDS -> saveErikSpellingWords()
@@ -162,7 +152,7 @@ class SpellingUploadViewModel(
                 when (result) {
                     is RepositoryResult.Success -> it.copy(
                         state = UploadState.SAVED,
-                        savingResponse = parseResponse(result.data),
+                        savingResponse = parseResponse(result.data, viewModelState.value.words),
                         errorMessage = null,
                     )
 
@@ -175,29 +165,6 @@ class SpellingUploadViewModel(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun parseResponse(response: String): List<Pair<SpellingWord, String>> {
-        Log.i("Response", response)
-
-        val result: ArrayList<Pair<SpellingWord, String>> = ArrayList()
-        val wordsList = response.toListBySeparator(RESPONSE_SEPARATOR)
-        for (word in wordsList) {
-            if (word.contains(RESPONSE_INNER_SEPARATOR)) {
-                val pair =
-                    word.split(RESPONSE_INNER_SEPARATOR)
-                        .let { Pair(findWordInList(it[0]), it.getOrNull(1) ?: "") }
-                pair.takeIf { it.first != null }
-                    .let { result.add(pair as Pair<SpellingWord, String>) }
-            }
-        }
-        Log.i("Result", result.toString())
-        return result
-    }
-
-    private fun findWordInList(word: String): SpellingWord? {
-        return viewModelState.value.words.find { it.word == word }
-    }
-
     private fun setForEditing(index: Int? = null) {
         if (viewModelState.value.state == UploadState.SAVED) {
             resetViewModelState()
@@ -206,9 +173,10 @@ class SpellingUploadViewModel(
         val editWordState = if (index == null) {
             //set the category for the drop down menu
             if (viewModelState.value.categories.isNotEmpty()) {
-                EditState(viewModelState.value.categories[0])
+                val category = viewModelState.value.categories[0]
+                EditState(SpellingWord("", category, ""))
             } else {
-                EditState()
+                EditState(SpellingWord("", "", ""))
             }
         } else {
             EditState(word = viewModelState.value.words[index])
@@ -226,7 +194,7 @@ class SpellingUploadViewModel(
         viewModelState.update {
             it.copy(
                 state = UploadState.VIEWING,
-                editState = EditState(),
+                editState = EditState(SpellingWord("", "", "")),
                 selectedIndex = null
             )
         }
@@ -265,19 +233,19 @@ class SpellingUploadViewModel(
         }
     }
 
-    private fun updateEditedWordWord(word: String) {
+    private fun updateEditedWord(word: String) {
         viewModelState.update {
             it.copy(editState = it.editState.copy(word = it.editState.word.copy(word = word)))
         }
     }
 
-    private fun updateEditedWordCategory(category: String) {
+    private fun updateCategory(category: String) {
         viewModelState.update {
             it.copy(editState = it.editState.copy(word = it.editState.word.copy(category = category)))
         }
     }
 
-    private fun updateEditedWordComment(comment: String) {
+    private fun updateComment(comment: String) {
         viewModelState.update {
             it.copy(editState = it.editState.copy(word = it.editState.word.copy(comment = comment)))
         }
@@ -302,15 +270,12 @@ class SpellingUploadViewModel(
         return invalidFields.isEmpty()
     }
 
-    private fun isValidText(text: String, pattern: Regex): Boolean {
-        return pattern.matches(text)
-    }
 
 }
 
 data class SpellingUploadViewModelState(
     val state: UploadState,
-    val editState: EditState = EditState(),
+    val editState: EditState<SpellingWord> = EditState(SpellingWord("", "", "")),
     val categories: List<String> = emptyList(),
     val words: List<SpellingWord> = emptyList(),
     val selectedIndex: Int? = null,
@@ -318,43 +283,43 @@ data class SpellingUploadViewModelState(
     val savingResponse: List<Pair<SpellingWord, String>> = emptyList()
 ) {
     /**
-     * Converts this [SpellingUploadViewModelState] into a more strongly typed [SpellingUploadUiState] for driving
+     * Converts this [SpellingUploadViewModelState] into a more strongly typed [UploadUiState] for driving
      * the ui.
      */
-    fun toUiState(): SpellingUploadUiState =
+    fun toUiState(): UploadUiState<SpellingWord> =
         when (state) {
             UploadState.LOADING ->
-                SpellingUploadUiState.Loading
+                UploadUiState.Loading
 
             UploadState.VIEWING -> {
                 if (words.isEmpty())
-                    SpellingUploadUiState.NoWords
+                    UploadUiState.NoWords
                 else
-                    SpellingUploadUiState.HasWords(words = words)
+                    UploadUiState.HasWords(words = words)
             }
 
             UploadState.EDITING ->
-                SpellingUploadUiState.Editing(
+                UploadUiState.Editing(
                     editState = editState,
                     categories = categories,
                 )
 
             UploadState.SAVED ->
-                SpellingUploadUiState.Saved(
+                UploadUiState.Saved(
                     words = words,
                     savingResult = savingResponse
                 )
 
             UploadState.SAVING ->
-                SpellingUploadUiState.Saving
+                UploadUiState.Saving
 
             UploadState.LOAD_ERROR ->
-                SpellingUploadUiState.LoadingError(
+                UploadUiState.LoadingError(
                     errorMessage = errorMessage,
                 )
 
             UploadState.SAVING_ERROR ->
-                SpellingUploadUiState.SavingError(
+                UploadUiState.SavingError(
                     words = words,
                     errorMessage = errorMessage
                 )

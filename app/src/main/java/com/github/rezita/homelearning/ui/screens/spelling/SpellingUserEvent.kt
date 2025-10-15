@@ -2,7 +2,7 @@ package com.github.rezita.homelearning.ui.screens.spelling
 
 import com.github.rezita.homelearning.model.WordStatus
 
-interface SpellingUserEvent {
+sealed interface SpellingUserEvent {
     data object OnDiscardEditing : SpellingUserEvent
     data object OnLoad : SpellingUserEvent
     data object OnSave : SpellingUserEvent

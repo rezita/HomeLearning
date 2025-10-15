@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
