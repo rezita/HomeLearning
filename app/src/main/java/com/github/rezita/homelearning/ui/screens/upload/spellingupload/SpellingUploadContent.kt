@@ -18,7 +18,7 @@ import com.github.rezita.homelearning.ui.screens.common.SavingSuccessSnackbar
 import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsSaveErrorContent
 import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsSavedContent
 import com.github.rezita.homelearning.ui.screens.spellingupload.component.UploadWordsViewContent
-import com.github.rezita.homelearning.ui.screens.spellingupload.edit.EditScreen
+import com.github.rezita.homelearning.ui.screens.common.upload.edit.EditScreen
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -30,11 +30,11 @@ fun SpellingUploadContent(
     modifier: Modifier = Modifier
 ) {
     when (state) {
-        is SpellingUploadUiState.Loading -> LoadingProgressBar(modifier = modifier)
-        is SpellingUploadUiState.Saving -> LoadingProgressBar(modifier = modifier)
-        is SpellingUploadUiState.NoWords -> NoWordsContent(modifier = modifier)
+        is UploadUiState.Loading -> LoadingProgressBar(modifier = modifier)
+        is UploadUiState.Saving -> LoadingProgressBar(modifier = modifier)
+        is UploadUiState.NoWords -> NoWordsContent(modifier = modifier)
 
-        is SpellingUploadUiState.LoadingError -> {
+        is UploadUiState.LoadingError -> {
             LoadingErrorSnackbar(
                 scope = scope,
                 snackbarHostState = snackBarHostState
@@ -86,7 +86,6 @@ fun SpellingUploadContent(
             )
             UploadWordsSavedContent(state = state, modifier = modifier)
         }
-
     }
 }
 

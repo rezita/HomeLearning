@@ -1,4 +1,6 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload.edit
+@file:Suppress("UNCHECKED_CAST")
+
+package com.github.rezita.homelearning.ui.screens.upload.common.edit
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -41,15 +43,16 @@ import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.screens.common.ErrorText
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.MAX_COMMENT_LENGTH
+import com.github.rezita.homelearning.ui.screens.upload.common.MAX_WORD_LENGTH
+import com.github.rezita.homelearning.ui.screens.upload.common.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUserEvent
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-import com.github.rezita.homelearning.ui.viewmodels.MAX_COMMENT_LENGTH
-import com.github.rezita.homelearning.ui.viewmodels.MAX_WORD_LENGTH
 
 @Composable
 fun EditScreen(
-    state: SpellingUploadUiState.Editing,
+    state: UploadUiState.Editing<SpellingWord>,
     onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -60,20 +63,20 @@ fun EditScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EditWordForm(
+        SpellingWordEditForm(
             state = state,
             onUserEvent = onUserEvent
         )
         EditWordButtons(
-            saveCallback = { onUserEvent(SpellingUploadUserEvent.OnSaveEditedSpelling) },
-            cancelCallback = { onUserEvent(SpellingUploadUserEvent.OnCancelEditing) }
+            saveCallback = { onUserEvent(UploadUserEvent.OnSaveEditedWord) },
+            cancelCallback = { onUserEvent(UploadUserEvent.OnCancelEditing) }
         )
     }
 }
 
 @Composable
-fun EditWordForm(
-    state: SpellingUploadUiState.Editing,
+fun SpellingWordEditForm(
+    state: UploadUiState.Editing<SpellingWord>,
     onUserEvent: (SpellingUploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -83,16 +86,16 @@ fun EditWordForm(
     ) {
         EditTextField(
             value = state.editState.word.word,
-            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnEditedWordChangeSpelling(it)) },
+            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnWordChangeForEditedWord(it)) },
             labelId = R.string.upload_word_label,
-            error = state.editState.getWordError(),
+            error = state.editState.getErrorFor(EditState.INPUT_WORD.first),
             maxLength = MAX_WORD_LENGTH
         )
         EditTextField(
             value = state.editState.word.comment,
-            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnEditedCommentChangeSpelling(it)) },
+            onValueChange = { onUserEvent(SpellingUploadUserEvent.OnCommentChangeForEditedWord(it)) },
             labelId = R.string.upload_comment_label,
-            error = state.editState.getCommentError(),
+            error = state.editState.getErrorFor(EditState.INPUT_COMMENT.first),
             maxLength = MAX_COMMENT_LENGTH
         )
         CategoryDropDownMenu(
@@ -101,14 +104,14 @@ fun EditWordForm(
             selectedItem = state.editState.word.category,
             onOptionSelected = {
                 if (it != null) {
-                    onUserEvent(SpellingUploadUserEvent.OnEditedCategoryChangeSpelling(it))
+                    onUserEvent(SpellingUploadUserEvent.OnCategoryChangeForEditedWord(it))
                 }
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
 
-            error = state.editState.getCategoryError()
+            error = state.editState.getErrorFor(EditState.INPUT_CATEGORY.first)
         )
     }
 }
@@ -291,7 +294,7 @@ private fun SpellingItemPreview() {
     HomeLearningTheme {
         Scaffold {
             EditScreen(
-                state = SpellingUploadUiState.Editing(
+                state = UploadUiState.Editing(
                     EditState(word = spelling1),
                     categories = categories
                 ),

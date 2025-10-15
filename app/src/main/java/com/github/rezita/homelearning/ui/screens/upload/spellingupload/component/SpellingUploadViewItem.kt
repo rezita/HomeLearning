@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload.component
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -10,12 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -24,20 +19,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUserEvent
+import com.github.rezita.homelearning.ui.screens.upload.common.components.DeleteConfirmDialog
+import com.github.rezita.homelearning.ui.screens.upload.common.components.UserInteractionIcons
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun UploadWordsViewContent(
-    state: SpellingUploadUiState.HasWords,
-    onUserEvent: (SpellingUploadUserEvent) -> Unit,
+fun SpellingUploadViewContent(
+    state: UploadUiState.HasWords<SpellingWord>,
+    onUserEvent: (UploadUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -49,10 +45,10 @@ fun UploadWordsViewContent(
             )
     ) {
         itemsIndexed(state.words) { index, item ->
-            UploadItemDisplay(
+            SpellingUploadViewItemDisplay(
                 word = item,
-                onDeleteCallback = { onUserEvent(SpellingUploadUserEvent.OnRemoveSpelling(index)) },
-                onEditCallback = { onUserEvent(SpellingUploadUserEvent.OnPrepareForEditing(index)) },
+                onDeleteCallback = { onUserEvent(UploadUserEvent.OnRemoveWord(index)) },
+                onEditCallback = { onUserEvent(UploadUserEvent.OnPrepareForEditing(index)) },
             )
             HorizontalDivider(
                 modifier = Modifier
@@ -67,7 +63,7 @@ fun UploadWordsViewContent(
 
 
 @Composable
-private fun UploadItemDisplay(
+private fun SpellingUploadViewItemDisplay(
     word: SpellingWord,
     onDeleteCallback: () -> Unit,
     onEditCallback: () -> Unit,
@@ -94,45 +90,17 @@ private fun UploadItemDisplay(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        UploadWordItemDisplay(word = word, modifier = Modifier.weight(1f))
-        WordManipulationIcons(
+        SpellingUploadItem(word = word, modifier = Modifier.weight(1f))
+        UserInteractionIcons(
             onDeleteCallback = { openConfirmDialog.value = true },
             onEditCallback = { onEditCallback() })
-    }
-}
-
-@Composable
-private fun WordManipulationIcons(
-    onDeleteCallback: () -> Unit,
-    onEditCallback: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
-    ) {
-        IconButton(onClick = onEditCallback) {
-            Icon(
-                imageVector = Icons.Outlined.Create,
-                contentDescription = stringResource(id = R.string.upload_edit_word),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-        }
-        IconButton(onClick = onDeleteCallback) {
-            Icon(
-                imageVector = Icons.Outlined.Delete,
-                contentDescription = stringResource(id = R.string.upload_delete_word),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
-            )
-        }
     }
 }
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun UploadWordsViewContentPreview() {
+private fun SpellingUploadViewContentPreview() {
     val spellingWord1 = SpellingWord(
         word = "appear",
         category = "school",
@@ -146,12 +114,12 @@ private fun UploadWordsViewContentPreview() {
         status = WordStatus.CORRECT
     )
 
-    val state = SpellingUploadUiState.HasWords(
+    val state = UploadUiState.HasWords(
         words = listOf(spellingWord1, spellingWord2)
     )
     HomeLearningTheme {
         Scaffold {
-            UploadWordsViewContent(
+            SpellingUploadViewContent(
                 state = state,
                 onUserEvent = {},
                 modifier = Modifier.padding(it)
@@ -163,7 +131,7 @@ private fun UploadWordsViewContentPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun UploadItemDisplayPreview() {
+private fun SpellingUploadItemDisplayPreview() {
     val spellingWord = SpellingWord(
         word = "appear",
         category = "school",
@@ -172,7 +140,7 @@ private fun UploadItemDisplayPreview() {
     )
     HomeLearningTheme {
         Scaffold {
-            UploadItemDisplay(
+            SpellingUploadViewItemDisplay(
                 word = spellingWord,
                 onDeleteCallback = {},
                 onEditCallback = {},

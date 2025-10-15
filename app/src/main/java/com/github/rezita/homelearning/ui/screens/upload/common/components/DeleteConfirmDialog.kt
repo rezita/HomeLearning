@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload.component
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.material.icons.Icons

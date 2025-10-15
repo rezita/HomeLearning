@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload.component
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
@@ -23,12 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpellingWord
 import com.github.rezita.homelearning.model.WordStatus
-import com.github.rezita.homelearning.ui.screens.spellingupload.SpellingUploadUiState
+import com.github.rezita.homelearning.ui.screens.upload.common.UploadUiState
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun UploadWordsSavedContent(
-    state: SpellingUploadUiState.Saved,
+fun SpellingUploadSavedContent(
+    state: UploadUiState.Saved<SpellingWord>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -40,7 +40,7 @@ fun UploadWordsSavedContent(
             )
     ) {
         items(state.savingResult) { item ->
-            SavedItemDisplay(wordResult = item)
+            SpellingSavedItemDisplay(wordResult = item)
             HorizontalDivider(
                 modifier = Modifier
                     .height(1.dp)
@@ -53,7 +53,7 @@ fun UploadWordsSavedContent(
 }
 
 @Composable
-private fun SavedItemDisplay(
+private fun SpellingSavedItemDisplay(
     wordResult: Pair<SpellingWord, String>,
     modifier: Modifier = Modifier
 ) {
@@ -64,7 +64,7 @@ private fun SavedItemDisplay(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        UploadWordItemDisplay(
+        SpellingUploadItemDisplay(
             word = wordResult.first,
             modifier = Modifier.weight(1f)
         )
@@ -78,7 +78,7 @@ private fun SavedItemDisplay(
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SavedWordsPreview() {
+private fun SpellingUploadSavedContent() {
     val spellingWord1 = SpellingWord(
         word = "appear",
         category = "school",
@@ -92,13 +92,13 @@ private fun SavedWordsPreview() {
         status = WordStatus.CORRECT
     )
 
-    val state = SpellingUploadUiState.Saved(
+    val state = UploadUiState.Saved(
         words = listOf(spellingWord1, spellingWord2),
         savingResult = listOf(Pair(spellingWord1, "Success"), Pair(spellingWord2, "Existed"))
     )
     HomeLearningTheme {
         Scaffold {
-            UploadWordsSavedContent(state = state, modifier = Modifier.padding(it))
+            SpellingUploadSavedContent(state = state, modifier = Modifier.padding(it))
         }
     }
 }
@@ -106,7 +106,7 @@ private fun SavedWordsPreview() {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-private fun SavedItemPreview() {
+private fun SpellingSavedItemPreview() {
     val spellingWord = SpellingWord(
         word = "appear",
         category = "school",
@@ -114,6 +114,6 @@ private fun SavedItemPreview() {
         status = WordStatus.CORRECT
     )
     HomeLearningTheme {
-        SavedItemDisplay(wordResult = Pair(spellingWord, "Success"))
+        SpellingSavedItemDisplay(wordResult = Pair(spellingWord, "Success"))
     }
 }

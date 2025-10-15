@@ -153,7 +153,7 @@ function doPost(e) {
       return createJSONResponse({ result: modifySpellingWord(sheets.spellingMark, sheets.spellingMark_logs, parameter.items[0], parameter.items[1]), message: "" });
 
     case actions.insertSpanishWordsZita:
-      return createJSONResponse({ result: insertSpanishWord(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });
+      return createJSONResponse({ result: insertSpanishWords(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });
 
     case actions.setWeekSpanishWords:
       return createJSONResponse({ result: setWeekSpanishWords(parameter.items, sheets.spanishZita, sheets.spanishZita_logs), message: "" });

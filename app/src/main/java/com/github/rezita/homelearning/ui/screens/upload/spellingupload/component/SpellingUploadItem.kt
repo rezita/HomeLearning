@@ -1,4 +1,4 @@
-package com.github.rezita.homelearning.ui.screens.spellingupload.component
+package com.github.rezita.homelearning.ui.screens.upload.spellingupload.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -15,7 +15,7 @@ import com.github.rezita.homelearning.model.WordStatus
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 
 @Composable
-fun UploadWordItemDisplay(word: SpellingWord, modifier: Modifier = Modifier) {
+fun SpellingUploadItemDisplay(word: SpellingWord, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
             text = word.word,
@@ -52,7 +52,7 @@ private fun UploadWordItemPreview() {
         status = WordStatus.CORRECT
     )
     HomeLearningTheme {
-        UploadWordItemDisplay(
+        SpellingUploadItemDisplay(
             word = spellingWord
         )
     }
