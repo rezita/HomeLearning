@@ -64,9 +64,7 @@ fun SpanishContent(
                                 modifier = modifier,
                                 onPageChange = {
                                     onUserEvent(
-                                        SpanishUserEvent.OnShowTranslateChange(
-                                            false
-                                        )
+                                        SpanishUserEvent.OnShowTranslateChange(false)
                                     )
                                 }
                             ) { page ->
@@ -74,6 +72,10 @@ fun SpanishContent(
                                     windowSize = windowSize,
                                     word = state.words[page],
                                     showTranslate = showTranslate,
+                                    onSpeakerClicked = { onUserEvent(
+                                        SpanishUserEvent.OnSpeakerClicked(
+                                            it
+                                        )) },
                                     modifier = modifier
                                 )
                             }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +31,7 @@ fun SpanishReadingItem(
     windowSize: HomeLearningWindowSizeClass,
     word: SpanishWord,
     showTranslate: Boolean,
+    onSpeakerClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
@@ -58,16 +58,18 @@ fun SpanishReadingItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = modifier.weight(1.5f))
-        Text(
+        SimpleTextWithSpeaker(
             text = text,
+            showSpeaker = !word.enToSp,
             style = textStyle,
-            maxLines = 1,
+            onSpeakerClicked = onSpeakerClicked,
         )
         Spacer(modifier = modifier.weight(1f))
-        Text(
+        SimpleTextWithSpeaker(
             text = translateText,
+            showSpeaker = word.enToSp && showTranslate,
             style = basicFontStyleForTranslate,
-            maxLines = 1,
+            onSpeakerClicked = onSpeakerClicked,
         )
     }
 }
@@ -103,7 +105,8 @@ private fun SpanishWordItemDisplayLongWordPreview_showTranslate(
                     SpanishReadingItem(
                         windowSize = windowSize,
                         word = word,
-                        showTranslate = true
+                        showTranslate = true,
+                        onSpeakerClicked = {}
                     )
                 }
             )
@@ -142,7 +145,8 @@ private fun SpanishWordItemDisplayLongWordPreview_hideTranslate(
                     SpanishReadingItem(
                         windowSize = windowSize,
                         word = word,
-                        showTranslate = false
+                        showTranslate = false,
+                        onSpeakerClicked = {}
                     )
                 }
             )
