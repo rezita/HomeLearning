@@ -1,8 +1,9 @@
 package com.github.rezita.homelearning.ui.screens.spanish.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -54,17 +55,18 @@ fun SpanishReadingItem(
 
     val textStyle = basicTextStyle.copy(fontSize = fontSize)
     Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = modifier.weight(1.5f))
+        Spacer(modifier = modifier.weight(1f))
         SimpleTextWithSpeaker(
             text = text,
             showSpeaker = !word.enToSp,
             style = textStyle,
             onSpeakerClicked = onSpeakerClicked,
         )
-        Spacer(modifier = modifier.weight(1f))
+        Spacer(modifier = modifier.weight(0.5f))
         SimpleTextWithSpeaker(
             text = translateText,
             showSpeaker = word.enToSp && showTranslate,

@@ -1,9 +1,9 @@
 package com.github.rezita.homelearning.ui.screens.spanish.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.LocalTextStyle
@@ -48,9 +48,13 @@ internal fun SimpleTextWithSpeaker(
     style: TextStyle = LocalTextStyle.current,
     onSpeakerClicked: (String) -> Unit,
 ) {
-    val fonstSizeToDp = style.fontSize.toDp()
-    val speakerSize = if (fonstSizeToDp < 48.dp) 48.dp else fonstSizeToDp
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    val fontSizeToDp = style.fontSize.toDp()
+    val speakerSize = if (fontSizeToDp < 48.dp) 48.dp else fontSizeToDp
+    val paddingEnd = if (showSpeaker) speakerSize else 0.dp
+    Row(
+        modifier = Modifier.padding(end = paddingEnd),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         if (showSpeaker) {
             SpeakerIconButton(modifier = Modifier.size(speakerSize)) {
                 onSpeakerClicked(
