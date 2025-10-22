@@ -84,7 +84,7 @@ fun SpanishContent(
                                     onSpeakerClicked = {
                                         onUserEvent(SpanishUserEvent.OnSpeakerClicked(it))
                                     },
-yy                                )
+                                )
                             }
                         }
 
@@ -175,7 +175,7 @@ private fun SpanishContent_reading(
                 scope = rememberCoroutineScope(),
                 snackBarHostState = SnackbarHostState(),
                 onUserEvent = {},
-                modifier= Modifier.padding(it)
+                modifier = Modifier.padding(it)
             )
         }
     }
