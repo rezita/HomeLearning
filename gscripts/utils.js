@@ -65,11 +65,17 @@ function createTextResponse(message) {
   return ContentService.createTextOutput(message).setMimeType(ContentService.MimeType.TEXT);
 }
 
-function getIndexForValue(dataSheet, value, range = 'A2:A') {
+function getIndexForValue(dataSheet, value, range) {
   const dataRange = dataSheet.getRange(range).getDisplayValues().map(r => r[0]);
   const index = dataRange.indexOf(value);
   //if the word not in the given reange -> rerun -1, else index+2 (range starts with the 2nd row)
   return (index == -1) ? index : index + 2;
+}
+
+function getColumnRangeFromIndex(index) {
+  const letters = ['A','B','C','D','E','F','G','H','I','J', 'K', 'L', 'M', 'N'];
+  const columnLetter = letters[index];
+  return `${columnLetter}2:${columnLetter}`;
 }
 
 /*
@@ -120,7 +126,7 @@ function getRepeatIncorrectValue(result) {
 
 function getAttrForWord(word) {
   const dataSheet = getDataSheet(sheets.spellingErik);
-  const indexOfWord = getIndexForValue(dataSheet, word);
+  const indexOfWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spellingIdxs.word[0]));
   if (indexOfWord != -1) {
     return dataSheet.getRange(indexOfWord, spellingIdxs.category[0] + 1).getValue();
   }

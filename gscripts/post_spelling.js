@@ -19,7 +19,7 @@ function insertSpellingWord(word, sheetName, logSheetName) {
 
   const dataSheet = getDataSheet(sheetName);
 
-  const index = getIndexForValue(dataSheet, word.word);
+  const index = getIndexForValue(dataSheet, word.word, getColumnRangeFromIndex(spellingIdxs.word[0]));
   if (index == -1) {
     dataSheet.appendRow([word.word, word.category, word.comment, 0, 0, 0]);
     insertLog(logSheetName, logAction.insertSpellingWord, word);
@@ -61,7 +61,7 @@ function updateSpellingWord(sheetName, word, result) {
   }
 
   const dataSheet = getDataSheet(sheetName);
-  const indexOfWord = getIndexForValue(dataSheet, word);
+  const indexOfWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spellingIdxs.word[0]));
   if (indexOfWord != -1) {
     updateSpellingWordValues(dataSheet, indexOfWord, result);
     return `${responseMessages.success}`
@@ -103,7 +103,7 @@ function modifySpellingWordValues(dataSheet, indexOfWord, attemptMod, nrOfIncorr
 function insertSpellingWordFromLog(word) {
   const dataSheet = getDataSheet(sheets.spellingErik);
 
-  const index = getIndexForValue(dataSheet, word.word);
+  const index = getIndexForValue(dataSheet, word.word, getColumnRangeFromIndex(spellingIdxs.word[0]));
   Logger.log(index);
   if (index == -1) {
     dataSheet.appendRow([word.word, word.category, word.comment, 0, 0, 0]);
@@ -121,7 +121,7 @@ function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
 
   const dataSheet = getDataSheet(sheetName);
 
-  const index = getIndexForValue(dataSheet, oldVersion);
+  const index = getIndexForValue(dataSheet, oldVersion, getColumnRangeFromIndex(spellingIdxs.word[0]));
 
   if (index == -1) {
     return `${responseMessages.modifyWordFailed}: ${responseMessages.wordNotFound}`;
@@ -136,7 +136,7 @@ function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
 
 function modifySpellingWordWord(dataSheet, indexOfWord, word) {
   // words - category - comment  - repeat - attempt -- nrOfIncorrect
-  const indexOfNewWord = getIndexForValue(dataSheet, word);
+  const indexOfNewWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spellingIdxs.word[0]));
 
   var row = dataSheet.getRange(indexOfWord, 1, 1, 6);
   const rowValues = row.getValues()[0];

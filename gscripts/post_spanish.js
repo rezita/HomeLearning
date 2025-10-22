@@ -21,8 +21,8 @@ function insertSpanishWord(word, sheetName, logSheetName) {
   }
   
   const dataSheet = getDataSheet(sheetName);
-  const indexEn = getIndexForValue(dataSheet, word.en, 'B2:B');
-  const indexSp = getIndexForValue(dataSheet, word.es, 'C2:C');
+  const indexEn = getIndexForValue(dataSheet, word.en, getColumnRangeFromIndex(spanishIdxs.en[0]));
+  const indexSp = getIndexForValue(dataSheet, word.es, getColumnRangeFromIndex(spanishIdxs.sp[0]));
 
   //if new word
   if (indexEn == -1 && indexSp == -1) {
@@ -56,8 +56,8 @@ function setWeekSpanishWords(words, sheetName, logSheetName) {
   resetWeekSpanisWords(sheetName, logSheetName)
   const dataSheet = getDataSheet(sheetName);
   words.forEach(function (word) {
-    const indexEn = getIndexForValue(dataSheet, word);
-    const indexSp = getIndexForValue(dataSheet, word, 'B2:B');
+    const indexEn = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spanishIdxs.en[0]));
+    const indexSp = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spanishIdxs.sp[0]));
 
     const index = (indexEn == -1) ? indexSp : indexEn;
     if (index == -1) {
@@ -83,7 +83,7 @@ function modifySpanishWord(sheetName, logSheetName, oldVersion, newVersion) {
 
   const dataSheet = getDataSheet(sheetName);
 
-  const indexSp = getIndexForValue(dataSheet, oldVersion, 'B2:B');
+  const indexSp = getIndexForValue(dataSheet, oldVersion, getColumnRangeFromIndex(spanishIdxs.sp[0]));
   //modify Spanish version
   if (indexSp != -1) {
     const response = modifySpanishWord(dataSheet, indexSp, newVersion, 'sp');
@@ -91,7 +91,7 @@ function modifySpanishWord(sheetName, logSheetName, oldVersion, newVersion) {
     return response
   } else {
     //modify english version
-    const indexEn = getIndexForValue(dataSheet, oldVersion);
+    const indexEn = getIndexForValue(dataSheet, oldVersion, getColumnRangeFromIndex(spanishIdxs.en[0]));
     if (indexEn != -1) {
       const response = modifySpanishWord(dataSheet, indexEn, newVersion, 'en');
       insertLog(logSheetName, spanishLogAction.insertSpanishWord, { oldWord: oldVersion, newWord: newVersion });
@@ -106,7 +106,7 @@ function modifySpanishWord(sheetName, logSheetName, oldVersion, newVersion) {
 function modifySpanishWord(dataSheet, indexOfWord, word, version = 'sp') {
   // en - sp - isWeekWord - repeat - attempt -- nrOfIncorrect
 
-  const indexOfNewWord = (version == 'sp') ? getIndexForValue(dataSheet, word, 'B2:B') : getIndexForValue(dataSheet, word);
+  const indexOfNewWord = (version == 'sp') ? getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spanishIdxs.sp[0])) : getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spanishIdxs.en[0]));
   const colValue = (version == 'sp') ? spanishIdxs.sp[0] + 1 : spanishIdxs.en[0] + 1
 
   var row = dataSheet.getRange(indexOfWord, 1, 1, 6);
@@ -150,7 +150,7 @@ function updateSpanishWord(sheetName, word, result) {
   }
 
   const dataSheet = getDataSheet(sheetName);
-  const indexOfWord = getIndexForValue(dataSheet, word);
+  const indexOfWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spanishIdxs.en[0]));
   if (indexOfWord != -1) {
     updateSpanishgWordValues(dataSheet, indexOfWord, result);
     return `${responseMessages.success}`
