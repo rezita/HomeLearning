@@ -54,11 +54,11 @@ function doGet(e) {
         return createJSONResponse({ categories: getMarkSpellingCategories(), message: "" });
 
       case actions.getReadingWords:
-        const readingWords = getReadingWords(sheets.read);
+        const readingWords = getReadingWords(sheets.read,  readingIdx);
         return createJSONResponse({ items: readingWords.items, message: "" });
 
       case actions.getReadingCEW:
-        const readingCEW = getReadingWords(sheets.cew);
+        const readingCEW = getReadingWords(sheets.cew, readingIdx);
         return createJSONResponse({ items: readingCEW.items, message: "" });
 
       case actions.getIrregularVerbs:
@@ -76,6 +76,10 @@ function doGet(e) {
       case actions.getWeekSpanishWords:
         const weekWords = getWeekSpanishWords(sheets.spanishZita);
         return createJSONResponse({ items: weekWords.items, message: "" });
+
+      case actions.readSpanishWords:
+      const spanishWords = getReadingWords(sheets.spanishZita, spanishIdxs);
+      return createJSONResponse({ items: spanishWords.items, message: "" });
 
       default:
         insertLog(sheets.error_logs, `${responseMessages.wrongAction}: ${action}`, "");

@@ -13,6 +13,8 @@
     <string name="start_en_to_sp">English To Spanish</string>
     <string name="start_sp_to_en">Spanish To English</string>
     <string name="start_rand_spanish">Mixed Spanish</string>
+    <string name="start_read_spanish_en_to_sp">Read Eng To Sp</string>
+    <string name="start_read_spanish_sp_to_en">Read Sp To Eng</string>
     <string name="start_spanish_week_words">Spanish Week Words</string>
     <string name="upload_spanish">Upload Spanish Words</string>
 

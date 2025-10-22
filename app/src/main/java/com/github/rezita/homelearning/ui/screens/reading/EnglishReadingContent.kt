@@ -1,18 +1,9 @@
 package com.github.rezita.homelearning.ui.screens.reading
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,56 +14,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextMeasurer
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.ReadingRule
 import com.github.rezita.homelearning.model.ReadingWord
 import com.github.rezita.homelearning.ui.screens.common.ErrorDisplayInColumn
 import com.github.rezita.homelearning.ui.screens.common.LoadingProgressBar
+import com.github.rezita.homelearning.ui.screens.common.reading.ReadingContent
+import com.github.rezita.homelearning.ui.screens.common.reading.getBasicFontStyleFor
+import com.github.rezita.homelearning.ui.screens.common.reading.getFontSize
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
-import com.github.rezita.homelearning.ui.size.WidthSizeBasedValue
 import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
-import com.github.rezita.homelearning.ui.theme.balsamiq
 import com.github.rezita.homelearning.utils.getDecorated
 import com.github.rezita.homelearning.utils.getOutlineText
 import com.github.rezita.homelearning.utils.getUndecorated
-import com.github.rezita.homelearning.utils.toDp
-import kotlin.math.min
-import kotlin.math.roundToInt
 
 const val MIN_FONT_SIZE = 14
 
 @Composable
-fun ReadingContent(
+fun EnglishReadingContent(
     windowSize: HomeLearningWindowSizeClass,
     state: ReadingUiState,
-    isColorDisplay: Boolean = false,
     onUserEvent: (ReadingUserEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isColorDisplay: Boolean = false,
 ) {
     when (state) {
         is ReadingUiState.Loading -> LoadingProgressBar(modifier = modifier)
-        is ReadingUiState.Downloaded -> ReadingWordItems(
-            windowSize = windowSize,
-            words = state.words,
-            isColorDisplay = isColorDisplay,
-            modifier = modifier
+        is ReadingUiState.Downloaded -> ReadingContent(
+            nrOfPages = state.words.size,
+            modifier = modifier,
+            content = { index ->
+                EnglishReadingItem(
+                    windowSize = windowSize,
+                    word = state.words[index],
+                    isDecorated = isColorDisplay
+                )
+            }
         )
 
         is ReadingUiState.LoadingError -> ErrorDisplayInColumn(
@@ -83,94 +71,18 @@ fun ReadingContent(
     }
 }
 
-@Composable
-private fun ReadingWordItems(
-    windowSize: HomeLearningWindowSizeClass,
-    words: List<ReadingWord>,
-    isColorDisplay: Boolean,
-    modifier: Modifier = Modifier
-) {
-    val nrOfPages = words.size
-    val state = rememberPagerState { nrOfPages }
-    HorizontalPager(
-        state = state,
-        modifier = modifier
-            .fillMaxWidth()
-    ) { page ->
-        ReadingWordItem(
-            windowSize = windowSize,
-            word = words[page],
-            isColorDisplay = isColorDisplay,
-            currentPageNr = page,
-            nrOfPages = nrOfPages
-        )
-    }
-}
 
 @Composable
-private fun ReadingWordItem(
-    windowSize: HomeLearningWindowSizeClass,
-    word: ReadingWord,
-    isColorDisplay: Boolean,
-    currentPageNr: Int,
-    nrOfPages: Int,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        shape = MaterialTheme.shapes.small,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .wrapContentSize(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        )
-        {
-            TextDisplay(windowSize = windowSize, word = word, isDecorated = isColorDisplay)
-        }
-        Column(
-            modifier = Modifier
-                .padding(
-                    end = dimensionResource(id = R.dimen.padding_medium),
-                    bottom = dimensionResource(id = R.dimen.padding_medium)
-                ),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Text(
-                text = stringResource(R.string.reading_counter, currentPageNr + 1, nrOfPages),
-                modifier = Modifier
-                    .fillMaxWidth(),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Right,
-            )
-        }
-    }
-}
-
-@Composable
-private fun TextDisplay(
+private fun EnglishReadingItem(
     windowSize: HomeLearningWindowSizeClass,
     word: ReadingWord,
     isDecorated: Boolean,
     modifier: Modifier = Modifier
 ) {
-    val maxFontSizes = WidthSizeBasedValue(96.sp, 128.sp, 156.sp, 196.sp, 256.sp)
     var size by remember { mutableStateOf(IntSize.Zero) }
     val textMeasurer = rememberTextMeasurer()
 
-    val basicTextStyle = TextStyle(
-        fontSize = maxFontSizes(windowSize.widthClassType2),
-        fontWeight = FontWeight.Normal,
-        fontFamily = balsamiq,
-    )
+    val basicTextStyle = getBasicFontStyleFor(windowSize)
 
     val fontSize = getFontSize(
         text = word.word,
@@ -209,33 +121,6 @@ private fun TextDisplay(
     }
 }
 
-@Composable
-private fun getFontSize(
-    text: String,
-    textMeasurer: TextMeasurer,
-    textStyle: TextStyle,
-    maxWidth: Int
-): TextUnit {
-    if (maxWidth == 0) return textStyle.fontSize
-
-    val actualTextWidth = textMeasurer.measure(text, textStyle).size.width
-    //the text fits
-    if (actualTextWidth <= maxWidth) return textStyle.fontSize
-
-    val newSize = min(
-        (maxWidth * textStyle.fontSize.toDp().value / actualTextWidth).roundToInt(),
-        textStyle.fontSize.toDp().value.toInt() - 1
-    )
-    if (newSize.sp <= MIN_FONT_SIZE.sp) return MIN_FONT_SIZE.sp
-
-    return getFontSize(
-        text = text,
-        textMeasurer = textMeasurer,
-        textStyle = textStyle.copy(fontSize = newSize.sp),
-        maxWidth = maxWidth
-    )
-}
-
 @Preview(
     name = "small min 1f",
     showBackground = true,
@@ -264,13 +149,16 @@ private fun ReadingWordItemDisplayLongWord(
     )
     HomeLearningTheme {
         Scaffold {
-            ReadingWordItem(
-                windowSize = windowSize,
-                word = readingWord,
-                isColorDisplay = false,
-                currentPageNr = 3,
+            ReadingContent(
                 nrOfPages = 107,
-                modifier = Modifier.padding(it)
+                modifier = Modifier.padding(it),
+                content = {
+                    EnglishReadingItem(
+                        windowSize = windowSize,
+                        word = readingWord,
+                        isDecorated = false
+                    )
+                }
             )
         }
     }
@@ -298,12 +186,15 @@ private fun ReadingWordItemDisplay(
     HomeLearningTheme {
         val configuration = LocalConfiguration.current
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-        ReadingWordItem(
-            windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
-            word = readingWord,
-            isColorDisplay = isColorDisplay,
-            currentPageNr = 3,
-            nrOfPages = 107
+        ReadingContent(
+            nrOfPages = 107,
+            content = {
+                EnglishReadingItem(
+                    windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
+                    word = readingWord,
+                    isDecorated = isColorDisplay
+                )
+            }
         )
     }
 }
@@ -335,12 +226,15 @@ private fun ReadingWordItemDisplayManyRules(
     HomeLearningTheme {
         val configuration = LocalConfiguration.current
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-        ReadingWordItem(
-            windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
-            word = readingWord,
-            isColorDisplay = isColorDisplay,
-            currentPageNr = 3,
-            nrOfPages = 107
+        ReadingContent(
+            nrOfPages = 107,
+            content = {
+                EnglishReadingItem(
+                    windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
+                    word = readingWord,
+                    isDecorated = isColorDisplay
+                )
+            }
         )
     }
 }
@@ -387,10 +281,15 @@ private fun ReadingWordItemsReview(
     HomeLearningTheme {
         val configuration = LocalConfiguration.current
         val size = DpSize(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-        ReadingWordItems(
-            windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
-            words,
-            isColorDisplay = isColorDisplay,
+        ReadingContent(
+            nrOfPages = words.size,
+            content = { page ->
+                EnglishReadingItem(
+                    windowSize = HomeLearningWindowSizeClass.calculateFromSize(size),
+                    word = words[page],
+                    isDecorated = isColorDisplay
+                )
+            }
         )
     }
 }

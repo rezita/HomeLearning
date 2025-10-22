@@ -32,7 +32,8 @@ enum class SheetAction(val value: String) {
     SAVE_ZITA_SPANISH_WORDS("insertSpanishWordsZita"),
     SET_WEEK_SPANISH_WORDS("setWeekSpanishWords"),
     UPDATE_ZITA_SPANISH_WORDS("updateSpanishWordsZita"),
-    MODIFY_ZITA_SPANISH_WORD("modifySpanishWordZita");
+    MODIFY_ZITA_SPANISH_WORD("modifySpanishWordZita"),
+    READ_SPANISH_WORDS("readSpanishWords");
 
     //TODO
     //RESTORE_ERIK_SPELLING_FROM_LOG("restoreErikSpellingFromLogs"),

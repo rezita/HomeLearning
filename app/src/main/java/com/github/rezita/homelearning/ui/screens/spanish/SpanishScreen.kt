@@ -7,12 +7,18 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.github.rezita.homelearning.network.SheetAction
+import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpanishScreen(
     state: SpanishUiState,
+    windowSize: HomeLearningWindowSizeClass,
+    orientation: Int,
+    action: SheetAction,
     titleId: Int,
+    showTranslate: Boolean,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     canNavigateBack: Boolean,
@@ -27,6 +33,8 @@ fun SpanishScreen(
             SpanishTopAppBar(
                 titleId = titleId,
                 state = state,
+                action = action,
+                showTranslate = showTranslate,
                 canNavigateBack = canNavigateBack,
                 navigateUp = navigateUp,
                 onUserEvent = onUserEvent
@@ -35,6 +43,10 @@ fun SpanishScreen(
     ) {
         SpanishContent(
             state = state,
+            action = action,
+            showTranslate = showTranslate,
+            windowSize = windowSize,
+            orientation = orientation,
             scope = scope,
             snackBarHostState = snackBarHostState,
             onUserEvent = onUserEvent,

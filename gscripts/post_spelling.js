@@ -35,7 +35,6 @@ function insertSpellingWord(word, sheetName, logSheetName) {
 }
 
 /******UPDATE (LIST OF) SPELLING WORDS **** */
-
 function updateSpellingWords(words, sheetName, logSheetName) {
   //const words = JSON.parse(e.parameter.words);
   response = "";
@@ -73,24 +72,6 @@ function updateSpellingWord(sheetName, word, result) {
 
 
 function updateSpellingWordValues(dataSheet, indexOfWord, result) {
-  // words - category - comment  - repeat - attempt -- nrOfIncorrect
-  /*
-   var row = dataSheet.getRange(indexOfWord, 1, 1, 6);
-   const rowValues = row.getValues()[0];
- 
-   //attempt value -> increase by 1
-   const attempt = getValueAccordingTypeRule(rowValues[spellingIdxs.attempt[0]], spellingIdxs.attempt[1]);
-   dataSheet.getRange(indexOfWord, spellingIdxs.attempt[0] + 1).setValue([attempt + 1]);
- 
-   const resultIncrement = getRepeatIncorrectValue(result);
- 
-   //nrOfIncorrect -> increase by 1 if incorrect, else by 0
-   const nrOfIncorrect = getValueAccordingTypeRule(rowValues[spellingIdxs.nrOfIncorrect[0]], spellingIdxs.nrOfIncorrect[1]);
-   dataSheet.getRange(indexOfWord, spellingIdxs.nrOfIncorrect[0] + 1).setValue([nrOfIncorrect + resultIncrement]);
- 
-   //repeat -> set 1 if incorrect, otherwise 0
-   dataSheet.getRange(indexOfWord, spellingIdxs.repeat[0] + 1).setValue(resultIncrement);
- */
   const resultIncrement = getRepeatIncorrectValue(result);
   modifySpellingWordValues(dataSheet, indexOfWord, 1, resultIncrement, resultIncrement, false)
 }
@@ -132,7 +113,7 @@ function insertSpellingWordFromLog(word) {
 }
 
 
-/****** MODIFY SPELLING WORD **** */
+/****** MODIFY SPELLING WORD *****/
 function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
   if (oldVersion == null || oldVersion == "") {
     return `${responseMessages.modifyWordFailed}: ${responseMessages.wordMissing}`;

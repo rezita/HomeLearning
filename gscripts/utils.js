@@ -1,71 +1,71 @@
-function getFormattedDate(){
-  const date =new Date(Date.now());
-  return date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+ ":"+date.getSeconds()+":"+date.getMilliseconds();
+function getFormattedDate() {
+  const date = new Date(Date.now());
+  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds();
 }
 
 
-function getErikSpellingCategories(){
+function getErikSpellingCategories() {
   //return erikSpellingCategoryRules.map(m => m[0]);
   return erikSpellingCategories;
 }
 
-function getMarkSpellingCategories(){
+function getMarkSpellingCategories() {
   //return markSpellingCategoryRules.map(m => m[0]);
   return markSpellingCategories;
 }
 
 
-function getDataSheet(sheetName){
+function getDataSheet(sheetName) {
   /*parameters: 
     - required: spreadSheetId, sheetName
   */
-  
+
   const ss = SpreadsheetApp.openById(spreadSheetID);
   return ss.getSheetByName(sheetName);
 }
 
-function getOrCreateDataSheet(sheetName){
+function getOrCreateDataSheet(sheetName) {
   /*parameters: 
     - required: spreadSheetId, sheetName
   */
   const ss = SpreadsheetApp.openById(spreadSheetID);
 
   let sheet = ss.getSheetByName(sheetName);
-  if (sheet == null){
+  if (sheet == null) {
     ss.insertSheet(sheetName);
     sheet = ss.getSheetByName(sheetName);
   }
   return sheet;
 }
 
-function setUserName(name){
-    /*parameters: 
-    - optional: userName or null
-  */
-    name? userName = name: userName = "";
+function setUserName(name) {
+  /*parameters: 
+  - optional: userName or null
+*/
+  name ? userName = name : userName = "";
 }
 
-function getAllDataWoHeader(dataSheet){
+function getAllDataWoHeader(dataSheet) {
   //getRange(topRow,LeftColumn, numRows, numColumns) 
-  return dataSheet.getRange(2,1, dataSheet.getLastRow() - 1, dataSheet.getLastColumn()).getValues();
+  return dataSheet.getRange(2, 1, dataSheet.getLastRow() - 1, dataSheet.getLastColumn()).getValues();
 }
 
 function getRandomNumber(minNr, maxNr) {
-    //returns a random number between the given numbers
-    return Math.floor(Math.random() * (maxNr - minNr + 1) + minNr);
+  //returns a random number between the given numbers
+  return Math.floor(Math.random() * (maxNr - minNr + 1) + minNr);
 }
 
-function createJSONResponse(response){
+function createJSONResponse(response) {
   Logger.log("response");
   Logger.log(response);
   return ContentService.createTextOutput(JSON.stringify(response)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function createTextResponse(message){
+function createTextResponse(message) {
   return ContentService.createTextOutput(message).setMimeType(ContentService.MimeType.TEXT);
 }
 
-function getIndexForValue(dataSheet, value, range = 'A2:A'){
+function getIndexForValue(dataSheet, value, range = 'A2:A') {
   const dataRange = dataSheet.getRange(range).getDisplayValues().map(r => r[0]);
   const index = dataRange.indexOf(value);
   //if the word not in the given reange -> rerun -1, else index+2 (range starts with the 2nd row)
@@ -81,24 +81,24 @@ function resetCol(nrOfRowWontChange, sheetName, colNr){
 }
 */
 
-function calculateWeight(nrOfAattempts, nrOfIncorrect){
-  const random =  (Math.random() * (nrOfIncorrect + 1)) / (nrOfAattempts + 1);
+function calculateWeight(nrOfAattempts, nrOfIncorrect) {
+  const random = (Math.random() * (nrOfIncorrect + 1)) / (nrOfAattempts + 1);
   return random
 }
 
-function findMinWeightIndex(weightedWords, weightIndex){
+function findMinWeightIndex(weightedWords, weightIndex) {
   let minIndex = 0;
-  for (let i = 1; i < weightedWords.length; i++){
-    if (weightedWords[i][weightIndex] < weightedWords[minIndex][weightIndex]){
+  for (let i = 1; i < weightedWords.length; i++) {
+    if (weightedWords[i][weightIndex] < weightedWords[minIndex][weightIndex]) {
       minIndex = i;
     }
-  } 
- return minIndex;
+  }
+  return minIndex;
 }
 
-function convertArrayToMap(dataArray, colNames){
+function convertArrayToMap(dataArray, colNames) {
   const result = [];
-  dataArray.forEach(function(row) {
+  dataArray.forEach(function (row) {
     const currentData = {};
     Object.entries(colNames).forEach((entry) => currentData[entry[0]] = getValueAccordingTypeRule(row[entry[1][0]], entry[1][1]));
     result.push(currentData);
@@ -109,31 +109,30 @@ function convertArrayToMap(dataArray, colNames){
 function getValueAccordingTypeRule(value, colTypeValue) {
   if (colTypeValue == isNumber) {
     return (!isNaN(value)) ? value : 0;
-  } 
-  return value;
+  }
+  return value + '';
 }
 
 //using for updateSpellinWords and updateIrregularVerbs
-function getRepeatIncorrectValue(result){
+function getRepeatIncorrectValue(result) {
   return (result == correctResult) ? 0 : 1;
 }
 
-function getAttrForWord(word){
+function getAttrForWord(word) {
   const dataSheet = getDataSheet(sheets.spellingErik);
-  const indexOfWord = getIndexForValue(dataSheet,  word);
+  const indexOfWord = getIndexForValue(dataSheet, word);
   if (indexOfWord != -1) {
     return dataSheet.getRange(indexOfWord, spellingIdxs.category[0] + 1).getValue();
   }
   return "";
 }
 
-function shuffleArray(source){
+function shuffleArray(source) {
   //using Fisher-Yates algorithm
-  for (var index in source)
-  {
+  for (var index in source) {
     const index2 = getRandomNumber(index, source.length - 1);
     const value = source[index];
     source[index] = source[index2];
-    source[index2] = value; 
+    source[index2] = value;
   }
 }

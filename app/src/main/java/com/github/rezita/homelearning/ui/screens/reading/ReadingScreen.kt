@@ -55,12 +55,12 @@ fun ReadingScreen(
                 )
 
             else ->
-                ReadingContent(
+                EnglishReadingContent(
                     windowSize = windowSize,
                     state = readingState,
-                    isColorDisplay = isColorDisplay,
                     onUserEvent = onUserEvent,
-                    modifier = modifier.padding(it)
+                    modifier = modifier.padding(it),
+                    isColorDisplay = isColorDisplay
                 )
         }
     }

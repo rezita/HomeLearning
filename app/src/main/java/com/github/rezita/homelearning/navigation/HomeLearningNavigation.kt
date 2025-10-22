@@ -133,6 +133,29 @@ fun HomeLearningNavigation(
             }
         ),
         TabButton(
+            titleId = R.string.start_read_spanish_en_to_sp,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_SPANISH_WORDS,
+                        true
+                    )
+                )
+            }
+        ),
+        TabButton(
+            titleId = R.string.start_read_spanish_sp_to_en,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_SPANISH_WORDS,
+                        false
+                    )
+                )
+            }
+        ),
+
+        TabButton(
             titleId = R.string.upload_spanish,
             onClick = {
                 navController.navigate(
@@ -235,7 +258,9 @@ fun HomeLearningNavigation(
 
         composable<SpanishDestination> { navBackStackEntry ->
             val spanish: SpanishDestination = navBackStackEntry.toRoute()
-            val titleId = if (spanish.sheetAction == SheetAction.READ_ZITA_SPANISH_WORDS) {
+            val titleId = if (spanish.sheetAction == SheetAction.READ_ZITA_SPANISH_WORDS ||
+                spanish.sheetAction == SheetAction.READ_SPANISH_WORDS
+            ) {
                 R.string.spanish_title
             } else {
                 R.string.spanish_week_title
@@ -245,6 +270,7 @@ fun HomeLearningNavigation(
                 titleId = titleId,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                windowSize = windowSizeClass,
                 modifier = modifier
             )
         }

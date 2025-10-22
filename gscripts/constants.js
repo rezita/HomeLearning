@@ -1,8 +1,3 @@
-//test sheet;
-const test_sheet_id = "1LOXUdBWMVqLFaKVrJeLZHdMEabTtS0UzXEpcnVkeJ7c";
-
-
-//ezt be kellene allitani mindig, a post meg a GET hivaskor.
 //sheets
 const sheets = {
   spellingErik: "spellingErik",
@@ -58,6 +53,7 @@ const actions = {
   setWeekSpanishWords: "setWeekSpanishWords",
   updateSpanishWords: "updateSpanishWordsZita",
   modifySpanishWord: "modifySpanishWordZita",
+  readSpanishWords: "readSpanishWords"
 }
 
 
@@ -87,13 +83,13 @@ const responseMessages = {
 const erikSpellingCategoryRules = [["", 25]];
 const erikSpellingCategories = ["school", "home"];
 
-const markSpellingCategoryRules = [["CEW", 7], ["home", 10]];
+const markSpellingCategoryRules = [["CEW", 10], ["home", 10]];
 const markSpellingCategories = ["CEW", "home"];
 
 
 const nrOfIrregVerbExercises = 5;
 const nrOfHomophonesExercises = 3;
-const nrOfSpanishWords = 5;
+const nrOfSpanishWords = 8;
 const isNumber = 0;
 const notNumber = 1;
 
@@ -132,16 +128,16 @@ const suggestionWithResultsCols = {
 };
 
 const spanishIdxs = {
-  en: [0, notNumber],
-  sp: [1, notNumber],
-  isWeekWord: [2, notNumber],
-  repeat: [3, isNumber],
-  attempt: [4, isNumber],
-  nrOfIncorrect: [5, isNumber],
-  weight: [6, isNumber],
+  isReadable: [0, notNumber],
+  en: [1, notNumber],
+  sp: [2, notNumber],
+  comment: [3, notNumber],
+  isWeekWord: [4, notNumber],
+  repeat: [5, isNumber],
+  attempt: [6, isNumber],
+  nrOfIncorrect: [7, isNumber],
+  weight: [8, isNumber],
 };
-
-
 
 //spellingWordResultValues
 const correctResult = 1;

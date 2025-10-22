@@ -295,3 +295,13 @@ function test_rewriteSpellingWord_alreadyExisted() {
   Logger.log("Index is -1: " + (getIndexForValue(dataSheet, word1word) == -1));
 
 }
+
+function test_getSpellingWordsMark() {
+  spreadSheetID = test_sheet_id;
+  //const param = { parameter: {ssId: test_sheet_id, action: actions.getSpellingWords}};
+  const result = getSpellingWords(sheets.spellingMark, markSpellingCategories);
+  //Logger.log(result["items"]);
+  Logger.log(result['items']);
+  Logger.log(result["items"].length);
+}
+
