@@ -24,7 +24,6 @@ fun SpanishRoute(
     viewModel: SpanishViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val action = viewModel.sheetAction
-    val showTranslate = viewModel.showTranslate
     val spanishUiState by viewModel.uiState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -36,7 +35,6 @@ fun SpanishRoute(
         orientation = configuration.orientation,
         action = action,
         titleId = titleId,
-        showTranslate = showTranslate,
         scope = scope,
         snackBarHostState = snackBarHostState,
         canNavigateBack = canNavigateBack,

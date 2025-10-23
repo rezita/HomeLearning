@@ -18,7 +18,6 @@ fun SpanishScreen(
     orientation: Int,
     action: SheetAction,
     titleId: Int,
-    showTranslate: Boolean,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     canNavigateBack: Boolean,
@@ -30,26 +29,27 @@ fun SpanishScreen(
         modifier = modifier.navigationBarsPadding(),
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
-            SpanishTopAppBar(
-                titleId = titleId,
-                state = state,
-                action = action,
-                showTranslate = showTranslate,
-                canNavigateBack = canNavigateBack,
-                navigateUp = navigateUp,
-                onUserEvent = onUserEvent
-            )
+            if (action != SheetAction.READ_SPANISH_WORDS) {
+                SpanishTopAppBar(
+                    titleId = titleId,
+                    state = state,
+                    action = action,
+                    canNavigateBack = canNavigateBack,
+                    navigateUp = navigateUp,
+                    onUserEvent = onUserEvent
+                )
+            }
         }
     ) {
         SpanishContent(
             state = state,
             action = action,
-            showTranslate = showTranslate,
             windowSize = windowSize,
             orientation = orientation,
             scope = scope,
             snackBarHostState = snackBarHostState,
             onUserEvent = onUserEvent,
+            navigateUp = navigateUp,
             modifier = modifier.padding(it)
         )
     }

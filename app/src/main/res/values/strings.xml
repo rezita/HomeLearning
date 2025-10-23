@@ -63,6 +63,9 @@
     <string name="spelling_save">Save results</string>
     <string name="spelling_add_new_word">Add new word</string>
     <string name="sentences_check_and_save">Check and save</string>
+    <string name="exit_to_menu">Exit to menu</string>
+    <string name="spanish_reading_show_translate">Show translate</string>
+    <string name="spanish_reading_hide_translate">Hide translate</string>
 
     <!-- Action Bar Menu-->
     <string name="menu_save">Save</string>

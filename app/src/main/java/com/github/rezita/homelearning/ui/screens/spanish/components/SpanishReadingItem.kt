@@ -2,9 +2,12 @@ package com.github.rezita.homelearning.ui.screens.spanish.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,11 +17,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.model.SpanishWord
 import com.github.rezita.homelearning.ui.screens.common.reading.ReadingContent
 import com.github.rezita.homelearning.ui.screens.common.reading.getBasicFontStyleForSpanish
@@ -31,10 +37,11 @@ import com.github.rezita.homelearning.ui.theme.HomeLearningTheme
 fun SpanishReadingItem(
     windowSize: HomeLearningWindowSizeClass,
     word: SpanishWord,
-    showTranslate: Boolean,
     onSpeakerClicked: (String) -> Unit,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var showTranslate by remember { mutableStateOf(false) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     val textMeasurer = rememberTextMeasurer()
 
@@ -59,6 +66,32 @@ fun SpanishReadingItem(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            IconButton(onClick = { navigateUp() }) {
+                Icon(
+                    painterResource(id = R.drawable.ic_exit),
+                    contentDescription = stringResource(id = R.string.exit_to_menu),
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            if (showTranslate) {
+                IconButton(onClick = { showTranslate = !showTranslate }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_visibility_off),
+                        contentDescription = stringResource(id = R.string.spanish_reading_hide_translate),
+                    )
+                }
+            } else {
+                IconButton(onClick = {
+                    showTranslate = !showTranslate
+                }) {
+                    Icon(
+                        painterResource(id = R.drawable.ic_visibility),
+                        contentDescription = stringResource(id = R.string.spanish_reading_show_translate),
+                    )
+                }
+            }
+        }
         Spacer(modifier = modifier.weight(1f))
         SimpleTextWithSpeaker(
             text = text,
@@ -107,8 +140,8 @@ private fun SpanishWordItemDisplayLongWordPreview_showTranslate(
                     SpanishReadingItem(
                         windowSize = windowSize,
                         word = word,
-                        showTranslate = true,
-                        onSpeakerClicked = {}
+                        onSpeakerClicked = {},
+                        navigateUp = {}
                     )
                 }
             )
@@ -147,8 +180,8 @@ private fun SpanishWordItemDisplayLongWordPreview_hideTranslate(
                     SpanishReadingItem(
                         windowSize = windowSize,
                         word = word,
-                        showTranslate = false,
-                        onSpeakerClicked = {}
+                        onSpeakerClicked = {},
+                        navigateUp = {}
                     )
                 }
             )

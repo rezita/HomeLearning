@@ -1,9 +1,6 @@
 package com.github.rezita.homelearning.ui.viewmodels
 
 import android.speech.tts.TextToSpeech
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,9 +38,6 @@ class SpanishViewModel(
     private val enToSp: Boolean? =
         savedStateHandle.toRoute<SpanishDestination>().enToSp
 
-    var showTranslate by mutableStateOf(false)
-        private set
-
     private val viewModelState = MutableStateFlow(
         SpanishViewModelState(state = SpanishState.LOADING)
     )
@@ -71,10 +65,6 @@ class SpanishViewModel(
 
             is SpanishUserEvent.OnSpeakerClicked -> {
                 tts.speak(event.word, TextToSpeech.QUEUE_ADD, Locale("es", "ES"))
-            }
-
-            is SpanishUserEvent.OnShowTranslateChange -> {
-                setTranslateVisibility(event.value)
             }
         }
     }
@@ -202,10 +192,6 @@ class SpanishViewModel(
                 }
             }
         }
-    }
-
-    private fun setTranslateVisibility(value: Boolean) {
-        showTranslate = value
     }
 }
 

@@ -34,12 +34,12 @@ import kotlinx.coroutines.CoroutineScope
 fun SpanishContent(
     state: SpanishUiState,
     action: SheetAction,
-    showTranslate: Boolean,
     windowSize: HomeLearningWindowSizeClass,
     orientation: Int,
     scope: CoroutineScope,
     snackBarHostState: SnackbarHostState,
     onUserEvent: (SpanishUserEvent) -> Unit,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     when (state) {
@@ -71,19 +71,14 @@ fun SpanishContent(
                             ReadingContent(
                                 nrOfPages = state.words.size,
                                 modifier = modifier.imePadding(),
-                                onPageChange = {
-                                    onUserEvent(
-                                        SpanishUserEvent.OnShowTranslateChange(false)
-                                    )
-                                }
                             ) { page ->
                                 SpanishReadingItem(
                                     windowSize = windowSize,
                                     word = state.words[page],
-                                    showTranslate = showTranslate,
                                     onSpeakerClicked = {
                                         onUserEvent(SpanishUserEvent.OnSpeakerClicked(it))
                                     },
+                                    navigateUp = navigateUp
                                 )
                             }
                         }
@@ -169,12 +164,12 @@ private fun SpanishContent_reading(
             SpanishContent(
                 state = SpanishUiState.Loaded(words),
                 action = SheetAction.READ_SPANISH_WORDS,
-                showTranslate = true,
                 windowSize = windowSize,
                 orientation = configuration.orientation,
                 scope = rememberCoroutineScope(),
                 snackBarHostState = SnackbarHostState(),
                 onUserEvent = {},
+                navigateUp = {},
                 modifier = Modifier.padding(it)
             )
         }

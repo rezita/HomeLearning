@@ -15,8 +15,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +28,6 @@ import com.github.rezita.homelearning.R
 fun ReadingContent(
     nrOfPages: Int,
     modifier: Modifier = Modifier,
-    onPageChange: (Int) -> Unit = {},
     content: @Composable ColumnScope.(Int) -> Unit
 ) {
     val state = rememberPagerState { nrOfPages }
@@ -39,12 +36,6 @@ fun ReadingContent(
         modifier = modifier
             .fillMaxWidth()
     ) { page ->
-        LaunchedEffect(Unit) {
-            snapshotFlow { state.currentPage }.collect {
-                onPageChange(it)
-            }
-        }
-
         ReadingWordItem(page, nrOfPages) {
             content(page)
         }

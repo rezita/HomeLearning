@@ -7,7 +7,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -25,13 +24,11 @@ fun SpanishTopAppBar(
     @StringRes titleId: Int,
     state: SpanishUiState,
     action: SheetAction,
-    showTranslate: Boolean,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     onUserEvent: (SpanishUserEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     LearningAppBar(
         title = stringResource(id = titleId),
         canNavigateBack = canNavigateBack,
@@ -61,41 +58,6 @@ fun SpanishTopAppBar(
                     }
                 }
 
-                SheetAction.READ_SPANISH_WORDS -> {
-                    if (state is SpanishUiState.Loaded && LocalConfiguration.current.orientation != Configuration.ORIENTATION_PORTRAIT) {
-                        // Change how to display the words (simple black / colorful)
-                        if (showTranslate) {
-                            IconButton(onClick = {
-                                onUserEvent(SpanishUserEvent.OnShowTranslateChange(false))
-                            }) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_visibility_off),
-                                    contentDescription = stringResource(id = R.string.reading_black_display),
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        } else {
-                            IconButton(onClick = {
-                                onUserEvent(SpanishUserEvent.OnShowTranslateChange(true))
-                            }) {
-                                Icon(
-                                    painterResource(id = R.drawable.ic_visibility),
-                                    contentDescription = stringResource(id = R.string.reading_colour_display),
-                                    tint = MaterialTheme.colorScheme.onPrimary
-                                )
-                            }
-                        }
-                        //reload icon
-                        IconButton(onClick = { onUserEvent(SpanishUserEvent.OnLoad) }) {
-                            Icon(
-                                painterResource(id = R.drawable.ic_menu_refresh),
-                                contentDescription = stringResource(id = R.string.menu_reload),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    }
-                }
-
                 else -> {}
             }
         },
@@ -114,7 +76,6 @@ private fun SpanishTopAppBar_success_can_navBack(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Loaded(words = emptyList()),
             action = SheetAction.READ_ZITA_SPANISH_WORDS,
-            showTranslate = true,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -123,7 +84,12 @@ private fun SpanishTopAppBar_success_can_navBack(
 }
 
 @Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.AUTOMOTIVE_1024p,
+    widthDp = 720,
+    heightDp = 360
+)
 @Composable
 private fun SpanishTopAppBar_success_readWords_showTranslate(
     @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
@@ -143,7 +109,6 @@ private fun SpanishTopAppBar_success_readWords_showTranslate(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Loaded(words = words),
             action = SheetAction.READ_SPANISH_WORDS,
-            showTranslate = true,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -152,7 +117,12 @@ private fun SpanishTopAppBar_success_readWords_showTranslate(
 }
 
 @Preview(device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
+@Preview(
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    device = Devices.AUTOMOTIVE_1024p,
+    widthDp = 720,
+    heightDp = 360
+)
 @Composable
 private fun SpanishTopAppBar_success_readWords_NoShowTranslate(
     @PreviewParameter(BooleanPreviewProvider::class) canNavigateBack: Boolean,
@@ -172,7 +142,6 @@ private fun SpanishTopAppBar_success_readWords_NoShowTranslate(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Loaded(words = words),
             action = SheetAction.READ_SPANISH_WORDS,
-            showTranslate = false,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -201,7 +170,6 @@ private fun SpanishTopAppBar_success_notSavable(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Loaded(words = words),
             action = SheetAction.READ_ZITA_SPANISH_WORDS,
-            showTranslate = false,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -220,7 +188,6 @@ private fun SpanishTopAppBar_loading(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Loading,
             action = SheetAction.READ_ZITA_SPANISH_WORDS,
-            showTranslate = false,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -239,7 +206,6 @@ private fun SpanishTopAppBar_error(
             titleId = R.string.spanish_title,
             state = SpanishUiState.LoadingError(errorMessage = 12),
             action = SheetAction.READ_ZITA_SPANISH_WORDS,
-            showTranslate = false,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
@@ -268,7 +234,6 @@ private fun SpanishTopAppBar_saved(
             titleId = R.string.spanish_title,
             state = SpanishUiState.Saved(words),
             action = SheetAction.READ_ZITA_SPANISH_WORDS,
-            showTranslate = false,
             canNavigateBack = canNavigateBack,
             navigateUp = {},
             onUserEvent = {}
