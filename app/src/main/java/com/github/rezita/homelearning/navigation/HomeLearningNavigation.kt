@@ -300,7 +300,7 @@ fun HomeLearningNavigation(
             )
         }
 
-        composable<SpanishUploadDestination> { navBackStackEntry ->
+        composable<SpanishUploadDestination> { _ ->
             SpanishUploadRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },

@@ -80,11 +80,6 @@ fun EditWordButtons(
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun EditScreenPreview() {
-    val spelling1 = SpellingWord(
-        word = "appear", category = "school", comment = "Y3Y4", status = WordStatus.CORRECT
-    )
-
-    val categories = listOf("home", "school")
     HomeLearningTheme {
         Scaffold {
             EditScreen(
