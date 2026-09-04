@@ -50,7 +50,7 @@ fun HomeLearningNavigation(
 
     val erikTabButtons = listOf(
         TabButton(
-            titleId = R.string.start_spanish_week_words,
+            titleId = R.string.spanish_week_words,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -100,7 +100,7 @@ fun HomeLearningNavigation(
 
     val zitaTabButtons = listOf(
         TabButton(
-            titleId = R.string.start_en_to_sp,
+            titleId = R.string.test_en_to_sp,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -111,7 +111,7 @@ fun HomeLearningNavigation(
             }
         ),
         TabButton(
-            titleId = R.string.start_sp_to_en,
+            titleId = R.string.test_sp_to_en,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -122,7 +122,7 @@ fun HomeLearningNavigation(
             }
         ),
         TabButton(
-            titleId = R.string.start_rand_spanish,
+            titleId = R.string.test_rand_spanish,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -133,7 +133,29 @@ fun HomeLearningNavigation(
             }
         ),
         TabButton(
-            titleId = R.string.start_read_spanish_en_to_sp,
+            titleId = R.string.practice_en_to_sp,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_PRACTICE_WORDS,
+                        true
+                    )
+                )
+            }
+        ),
+        TabButton(
+            titleId = R.string.practice_sp_to_en,
+            onClick = {
+                navController.navigate(
+                    SpanishDestination(
+                        SheetAction.READ_PRACTICE_WORDS,
+                        false
+                    )
+                )
+            }
+        ),
+        TabButton(
+            titleId = R.string.read_spanish_en_to_sp,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -144,7 +166,7 @@ fun HomeLearningNavigation(
             }
         ),
         TabButton(
-            titleId = R.string.start_read_spanish_sp_to_en,
+            titleId = R.string.read_spanish_sp_to_en,
             onClick = {
                 navController.navigate(
                     SpanishDestination(
@@ -258,8 +280,11 @@ fun HomeLearningNavigation(
 
         composable<SpanishDestination> { navBackStackEntry ->
             val spanish: SpanishDestination = navBackStackEntry.toRoute()
-            val titleId = if (spanish.sheetAction == SheetAction.READ_ZITA_SPANISH_WORDS ||
-                spanish.sheetAction == SheetAction.READ_SPANISH_WORDS
+            val titleId = if (spanish.sheetAction in listOf(
+                    SheetAction.READ_ZITA_SPANISH_WORDS,
+                    SheetAction.READ_SPANISH_WORDS,
+                    SheetAction.READ_PRACTICE_WORDS
+                )
             ) {
                 R.string.spanish_title
             } else {

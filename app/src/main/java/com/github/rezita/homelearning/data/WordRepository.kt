@@ -49,6 +49,7 @@ WordRepository {
     suspend fun getZitaSpanishWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>>
     suspend fun getWeekSpanishWords(): RepositoryResult<List<SpanishWord>>
     suspend fun getSpanishReadingWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>>
+    suspend fun getSpanishPracticeWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>>
 
     suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String>
 
@@ -219,6 +220,10 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         return getSpanishWords(SheetAction.READ_SPANISH_WORDS, enToSp)
     }
 
+    override suspend fun getSpanishPracticeWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>> {
+        return getSpanishWords(SheetAction.READ_PRACTICE_WORDS, enToSp)
+    }
+
     override suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String> {
         val itemsToUpdate = words.filter { it.status != WordStatus.UNCHECKED }
             .map { it.asApiSpanishWord() }
@@ -238,7 +243,9 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
                     RepositoryResult.Success(data = response.items.map { it.asSpanishWord(enToSp) })
-                } else {
+                } else if (response.message == ""){
+                    RepositoryResult.Success(data = emptyList())
+                }else {
                     RepositoryResult.Error(message = response.message)
                 }
             }

@@ -29,6 +29,7 @@ enum class SheetAction(val value: String) {
     //Spanish
     READ_ZITA_SPANISH_WORDS("getSpanishWordsZita"),
     READ_WEEK_SPANISH_WORDS("getWeekSpanishWords"),
+    READ_PRACTICE_WORDS("getPracticeSpanishWords"),
     SAVE_ZITA_SPANISH_WORDS("insertSpanishWordsZita"),
     SET_WEEK_SPANISH_WORDS("setWeekSpanishWords"),
     UPDATE_ZITA_SPANISH_WORDS("updateSpanishWordsZita"),

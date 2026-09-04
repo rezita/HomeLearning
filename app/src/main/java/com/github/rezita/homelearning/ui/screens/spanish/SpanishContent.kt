@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -49,13 +50,20 @@ fun SpanishContent(
 
         is SpanishUiState.Loaded -> {
             when (action) {
-                SheetAction.READ_ZITA_SPANISH_WORDS, SheetAction.READ_WEEK_SPANISH_WORDS -> {
-                    SpanishQuizContent(
-                        words = state.words,
-                        isAllAnswered = state.isSavable(),
-                        onUserEvent = onUserEvent,
-                        modifier = modifier.imePadding(),
-                    )
+                SheetAction.READ_ZITA_SPANISH_WORDS, SheetAction.READ_WEEK_SPANISH_WORDS, SheetAction.READ_PRACTICE_WORDS -> {
+                    if (state.words.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.msg_no_words),
+                            modifier = modifier.imePadding()
+                        )
+                    } else {
+                        SpanishQuizContent(
+                            words = state.words,
+                            isAllAnswered = state.isSavable(),
+                            onUserEvent = onUserEvent,
+                            modifier = modifier.imePadding(),
+                        )
+                    }
                 }
 
                 SheetAction.READ_SPANISH_WORDS -> {

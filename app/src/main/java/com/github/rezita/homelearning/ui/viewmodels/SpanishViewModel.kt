@@ -74,6 +74,7 @@ class SpanishViewModel(
             SheetAction.READ_ZITA_SPANISH_WORDS -> getZitaWords()
             SheetAction.READ_WEEK_SPANISH_WORDS -> getWeekWords()
             SheetAction.READ_SPANISH_WORDS -> getSpanishReadingWords()
+            SheetAction.READ_PRACTICE_WORDS -> getPracticeWords()
             else -> viewModelState.update {
                 it.copy(
                     state = SpanishState.LOAD_ERROR,
@@ -102,6 +103,9 @@ class SpanishViewModel(
 
     private fun getSpanishReadingWords() =
         getWords { wordRepository.getSpanishReadingWords(enToSp) }
+
+    private fun getPracticeWords() =
+        getWords { wordRepository.getSpanishPracticeWords(enToSp) }
 
     private fun getWords(callback: suspend () -> RepositoryResult<List<SpanishWord>>) {
         resetUiState()
