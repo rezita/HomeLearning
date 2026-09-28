@@ -19,18 +19,20 @@ function insertSpellingWord(word, sheetName, logSheetName) {
 
   const dataSheet = getDataSheet(sheetName);
 
-  const index = getIndexForValue(dataSheet, word.word, getColumnRangeFromIndex(spellingIdxs.word[0]));
+  //check if the word has already been on the sheet
+  const index = getIndexForValue(dataSheet, word.word);
+
   if (index == -1) {
-    dataSheet.appendRow([word.word, word.category, word.comment, 0, 0, 0]);
+    //if the word is new - insert - set repeat to 1 -> it will come out next time
+    dataSheet.appendRow([word.word, word.category, word.comment, 1, 0, 0]);
+    word.repeat = 1;
     insertLog(logSheetName, logAction.insertSpellingWord, word);
     return `${word.word}:${responseMessages.success}`;
   } else {
     //it the word is exists on the sheet:
-    //set the repeat to 1, write into the log and return the exists response
-    dataSheet.getRange(index, spellingIdxs.repeat[0] + 1).setValue(1);
+    //write into the log and return the exists response
     insertLog(logSheetName, logAction.repeatSpellingWord, word.word);
     return `${word.word}:${responseMessages.wordAlreadyExist}`;
-
   }
 }
 
@@ -46,7 +48,6 @@ function updateSpellingWords(words, sheetName, logSheetName) {
   return response;
 }
 
-
 function insertUpdateLog(logSheetName, updatedWord, responseMessage) {
   const clogAction = (responseMessage == responseMessages.success) ? logAction.updateSpellingWord : logAction.wordNotFound;
   insertLog(logSheetName, clogAction, updatedWord);
@@ -61,7 +62,7 @@ function updateSpellingWord(sheetName, word, result) {
   }
 
   const dataSheet = getDataSheet(sheetName);
-  const indexOfWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spellingIdxs.word[0]));
+  const indexOfWord = getIndexForValue(dataSheet, word);
   if (indexOfWord != -1) {
     updateSpellingWordValues(dataSheet, indexOfWord, result);
     return `${responseMessages.success}`
@@ -69,7 +70,6 @@ function updateSpellingWord(sheetName, word, result) {
     return `${responseMessages.wordNotFound}`;
   }
 }
-
 
 function updateSpellingWordValues(dataSheet, indexOfWord, result) {
   const resultIncrement = getRepeatIncorrectValue(result);
@@ -103,7 +103,7 @@ function modifySpellingWordValues(dataSheet, indexOfWord, attemptMod, nrOfIncorr
 function insertSpellingWordFromLog(word) {
   const dataSheet = getDataSheet(sheets.spellingErik);
 
-  const index = getIndexForValue(dataSheet, word.word, getColumnRangeFromIndex(spellingIdxs.word[0]));
+  const index = getIndexForValue(dataSheet, word.word);
   Logger.log(index);
   if (index == -1) {
     dataSheet.appendRow([word.word, word.category, word.comment, 0, 0, 0]);
@@ -111,7 +111,6 @@ function insertSpellingWordFromLog(word) {
   }
   return `${word.word}:${responseMessages.wordAlreadyExist}`;
 }
-
 
 /****** MODIFY SPELLING WORD *****/
 function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
@@ -121,7 +120,7 @@ function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
 
   const dataSheet = getDataSheet(sheetName);
 
-  const index = getIndexForValue(dataSheet, oldVersion, getColumnRangeFromIndex(spellingIdxs.word[0]));
+  const index = getIndexForValue(dataSheet, oldVersion);
 
   if (index == -1) {
     return `${responseMessages.modifyWordFailed}: ${responseMessages.wordNotFound}`;
@@ -136,11 +135,10 @@ function modifySpellingWord(sheetName, logSheetName, oldVersion, newVersion) {
 
 function modifySpellingWordWord(dataSheet, indexOfWord, word) {
   // words - category - comment  - repeat - attempt -- nrOfIncorrect
-  const indexOfNewWord = getIndexForValue(dataSheet, word, getColumnRangeFromIndex(spellingIdxs.word[0]));
+  const indexOfNewWord = getIndexForValue(dataSheet, word);
 
   var row = dataSheet.getRange(indexOfWord, 1, 1, 6);
   const rowValues = row.getValues()[0];
-
 
   //if the new word has not existed yet
   if (indexOfNewWord == -1 || indexOfNewWord == indexOfWord) {

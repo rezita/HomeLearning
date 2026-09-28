@@ -38,7 +38,6 @@ function doGet(e) {
         const allSpellingErikWords = getAllSpellingWords(sheets.spellingErik);
         return createJSONResponse({ items: allSpellingErikWords.items, message: "" });
 
-
       case actions.getMarkSpellingWords:
         const spellingMarkWords = getSpellingWords(sheets.spellingMark, markSpellingCategoryRules);
         return createJSONResponse({ items: spellingMarkWords.items, message: "" });
@@ -54,11 +53,11 @@ function doGet(e) {
         return createJSONResponse({ categories: getMarkSpellingCategories(), message: "" });
 
       case actions.getReadingWords:
-        const readingWords = getReadingWords(sheets.read,  readingIdx);
+        const readingWords = getReadingWords(sheets.read);
         return createJSONResponse({ items: readingWords.items, message: "" });
 
       case actions.getReadingCEW:
-        const readingCEW = getReadingWords(sheets.cew, readingIdx);
+        const readingCEW = getReadingWords(sheets.cew);
         return createJSONResponse({ items: readingCEW.items, message: "" });
 
       case actions.getIrregularVerbs:
@@ -70,16 +69,20 @@ function doGet(e) {
         return createJSONResponse({ items: homophones.items, message: "" });
 
       case actions.getSpanishWordsZita:
-        const words = getSpanishWords(sheets.spanishZita, nrOfSpanishWords);
+        const words = getZitaSpanishWords(sheets.spanishZita, nrOfSpanishWords);
         return createJSONResponse({ items: words.items, message: "" });
 
       case actions.getWeekSpanishWords:
         const weekWords = getWeekSpanishWords(sheets.spanishZita);
         return createJSONResponse({ items: weekWords.items, message: "" });
 
-      case actions.readSpanishWords:
-      const spanishWords = getReadingWords(sheets.spanishZita, spanishIdxs);
-      return createJSONResponse({ items: spanishWords.items, message: "" });
+      case actions.getSpanishWords:
+        const readWords = getReadSpanishWords(sheets.spanishZita);
+        return createJSONResponse({ items: readWords.items, message: "" });
+
+      case actions.getPracticeSpanishWords:
+        const practiceWords = getZitaSpanishWords(sheets.spanishZita, 20);
+        return createJSONResponse({ items: practiceWords.items, message: "" });
 
       default:
         insertLog(sheets.error_logs, `${responseMessages.wrongAction}: ${action}`, "");

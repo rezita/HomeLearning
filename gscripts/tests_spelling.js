@@ -12,12 +12,24 @@ function test_getAllSpellingWords_Mark() {
   Logger.log(result["items"].length);
 }
 
-function test_getSpellingWords() {
+function test_getSpellingWords_Erik() {
   spreadSheetID = test_sheet_id;
   //const param = { parameter: {ssId: test_sheet_id, action: actions.getSpellingWords}};
   const result = getSpellingWords(sheets.spellingErik, erikSpellingCategoryRules);
   //Logger.log(result["items"]);
   Logger.log(result['items']);
+  Logger.log(result["items"].length);
+}
+
+function test_getSpellingWords_Mark() {
+  spreadSheetID = test_sheet_id;
+  //const param = { parameter: {ssId: test_sheet_id, action: actions.getSpellingWords}};
+  const result = getSpellingWords(sheets.spellingMark, markSpellingCategoryRules);
+  //Logger.log(result["items"]);
+  Logger.log(markSpellingCategoryRules);
+  result['items'].forEach(function (item) {
+    Logger.log(item);
+  })
   Logger.log(result["items"].length);
 }
 
@@ -226,11 +238,11 @@ function test1_updateSpellingWords() {
   insertSpellingWord(word3, sheets.spellingErik, sheets.spellingErik_logs);
 
 
-/*
-  const words = [{ "word": `${word1}`, "result": 1 },
-  { "word": `${word2}`, "result": 1 },
-  { "word": `${word3}`, "result": -1 }];
-*/
+  /*
+    const words = [{ "word": `${word1}`, "result": 1 },
+    { "word": `${word2}`, "result": 1 },
+    { "word": `${word3}`, "result": -1 }];
+  */
 
   const result = updateSpellingWords([word1, word2, word3], sheets.spellingErik, sheets.spellingErik_logs);
   Logger.log(result);
@@ -304,4 +316,3 @@ function test_getSpellingWordsMark() {
   Logger.log(result['items']);
   Logger.log(result["items"].length);
 }
-

@@ -48,12 +48,12 @@ const actions = {
 
   getSpanishWordsZita: "getSpanishWordsZita",
   getWeekSpanishWords: "getWeekSpanishWords",
-
+  getPracticeSpanishWords: "getPracticeSpanishWords",
   insertSpanishWordsZita: "insertSpanishWordsZita",
   setWeekSpanishWords: "setWeekSpanishWords",
   updateSpanishWords: "updateSpanishWordsZita",
   modifySpanishWord: "modifySpanishWordZita",
-  readSpanishWords: "readSpanishWords"
+  getSpanishWords: "readSpanishWords",
 }
 
 
@@ -79,17 +79,18 @@ const responseMessages = {
 }
 
 //const spellingCategoryRules = [["school", 18], ["home", 7]];
-//Change in Dec.2023 - don't chach teh categories for Erik
+//Change in Dec.2023 - don't check the categories for Erik
 const erikSpellingCategoryRules = [["", 25]];
 const erikSpellingCategories = ["school", "home"];
 
-const markSpellingCategoryRules = [["CEW", 10], ["home", 10]];
+const markSpellingCategoryRules = [["CEW", 15], ["home", 10]];
+// const markSpellingCategoryRules = [["", 10]];
 const markSpellingCategories = ["CEW", "home"];
 
 
 const nrOfIrregVerbExercises = 5;
 const nrOfHomophonesExercises = 3;
-const nrOfSpanishWords = 8;
+const nrOfSpanishWords = 5;
 const isNumber = 0;
 const notNumber = 1;
 
@@ -128,11 +129,11 @@ const suggestionWithResultsCols = {
 };
 
 const spanishIdxs = {
-  isReadable: [0, notNumber],
-  en: [1, notNumber],
-  sp: [2, notNumber],
-  comment: [3, notNumber],
-  isWeekWord: [4, notNumber],
+  en: [0, notNumber],
+  sp: [1, notNumber],
+  comment: [2, notNumber],
+  isWeekWord: [3, isNumber],
+  isReadable: [4, isNumber],
   repeat: [5, isNumber],
   attempt: [6, isNumber],
   nrOfIncorrect: [7, isNumber],
@@ -142,4 +143,3 @@ const spanishIdxs = {
 //spellingWordResultValues
 const correctResult = 1;
 const inCorrectResult = -1;
-

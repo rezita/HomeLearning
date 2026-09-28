@@ -20,7 +20,7 @@ function modifySentence(sheetName, sentence, result){
   }
 
   const dataSheet = getDataSheet(sheetName);
-  const indexOfSentence = getIndexForValue(dataSheet, sentence, getColumnRangeFromIndex(sentencesIdx.sentence[0]));
+  const indexOfSentence = getIndexForValue(dataSheet, sentence);
 
   if (indexOfSentence != -1) {
     Logger.log(`Index ${indexOfSentence}`);
