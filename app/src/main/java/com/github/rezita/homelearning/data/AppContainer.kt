@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.data
 
+import com.github.rezita.homelearning.config.AppConfigDataRepository
 import com.github.rezita.homelearning.network.ResponseCallAdapterFactory
 import com.github.rezita.homelearning.network.WordsApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -15,9 +16,9 @@ interface AppContainer {
     val wordRepository: WordRepository
 }
 
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(appConfigDataRepository: AppConfigDataRepository) : AppContainer {
     override val wordRepository: WordRepository by lazy {
-        NetworkWordRepository(retrofitService)
+        NetworkWordRepository(retrofitService, appConfigDataRepository)
     }
 
     private val logging: HttpLoggingInterceptor = HttpLoggingInterceptor()

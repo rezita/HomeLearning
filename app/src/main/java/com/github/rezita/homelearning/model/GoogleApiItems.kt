@@ -19,7 +19,7 @@ data class PostResponse(
 data class PostApiParameter<T>(
     val items: List<T>,
     val action: String,
-    val ssId: String = BuildConfig.sheetID
+    val ssId: String
 )
 
 @Serializable

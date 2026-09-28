@@ -4,8 +4,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -13,19 +11,20 @@ import com.github.rezita.homelearning.ui.size.HomeLearningWidthClass
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.SpellingViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpellingRoute(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     addNewCallback: () -> Unit,
     windowSize: HomeLearningWindowSizeClass,
     modifier: Modifier = Modifier,
     viewModel: SpellingViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val spellingUiState by viewModel.uiState.collectAsState()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     val rbContentType = getRadioButtonType(windowSize.widthClassType1)
 
     SpellingScreen(

@@ -1,6 +1,7 @@
 package com.github.rezita.homelearning.data
 
 import android.util.Log
+import com.github.rezita.homelearning.config.AppConfigDataRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.PostApiParameter
 import com.github.rezita.homelearning.model.ReadingWord
@@ -16,6 +17,7 @@ import com.github.rezita.homelearning.model.asSpanishWord
 import com.github.rezita.homelearning.model.asSpellingWord
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.network.WordsApiService
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.encodeToJsonElement
 
@@ -58,8 +60,11 @@ WordRepository {
     //suspend fun restoreSpellingWordsFromLogs(): RepositoryResult<SpellingWord>
 }
 
-class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
-    WordRepository {
+class NetworkWordRepository(
+    private val wordsAPIService: WordsApiService,
+    private val appConfigDataRepository: AppConfigDataRepository
+) : WordRepository {
+
 
     /** Fetches list of ReadingWords from wordsAPIService */
     override suspend fun getReadingWords(): RepositoryResult<List<ReadingWord>> =
@@ -69,7 +74,14 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         getReadingWords(SheetAction.READ_READING_CEW)
 
     private suspend fun getReadingWords(sheetAction: SheetAction): RepositoryResult<List<ReadingWord>> {
-        wordsAPIService.getReadingWords(action = sheetAction.value)
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
+
+        wordsAPIService.getReadingWords(
+            scriptId = scriptId,
+            sheetId = sheetId,
+            action = sheetAction.value
+        )
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
                     RepositoryResult.Success(data = response.items.map { it.asReadingWord() })
@@ -90,7 +102,14 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         getFillInSentences(sheetAction = SheetAction.READ_IRREGULAR_VERBS)
 
     private suspend fun getFillInSentences(sheetAction: SheetAction): RepositoryResult<List<FillInSentence>> {
-        wordsAPIService.getFillInSentences(action = sheetAction.value)
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
+
+        wordsAPIService.getFillInSentences(
+            scriptId = scriptId,
+            sheetId = sheetId,
+            action = sheetAction.value
+        )
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
                     RepositoryResult.Success(response.items.map { it.asFillInSentence() })
@@ -113,7 +132,14 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         getSpellingWords(SheetAction.READ_ERIK_SPELLING_WORDS)
 
     private suspend fun getSpellingWords(sheetAction: SheetAction): RepositoryResult<List<SpellingWord>> {
-        wordsAPIService.getSpellingWords(action = sheetAction.value)
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
+
+        wordsAPIService.getSpellingWords(
+            scriptId = scriptId,
+            sheetId = sheetId,
+            action = sheetAction.value
+        )
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
                     RepositoryResult.Success(data = response.items.map { it.asSpellingWord() })
@@ -136,7 +162,14 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         getCategories(SheetAction.READ_MARK_SPELLING_CATEGORIES)
 
     private suspend fun getCategories(sheetAction: SheetAction): RepositoryResult<List<String>> {
-        wordsAPIService.getCategories(sheetAction.value)
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
+
+        wordsAPIService.getCategories(
+            scriptId = scriptId,
+            sheetId = sheetId,
+            action = sheetAction.value
+        )
             .onSuccess { response ->
                 return if (response.categories.isNotEmpty()) {
                     RepositoryResult.Success(data = response.categories)
@@ -239,13 +272,20 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         sheetAction: SheetAction,
         enToSp: Boolean?
     ): RepositoryResult<List<SpanishWord>> {
-        wordsAPIService.getSpanishWords(action = sheetAction.value)
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
+
+        wordsAPIService.getSpanishWords(
+            scriptId = scriptId,
+            sheetId = sheetId,
+            action = sheetAction.value
+        )
             .onSuccess { response ->
                 return if (response.items.isNotEmpty()) {
                     RepositoryResult.Success(data = response.items.map { it.asSpanishWord(enToSp) })
-                } else if (response.message == ""){
+                } else if (response.message == "") {
                     RepositoryResult.Success(data = emptyList())
-                }else {
+                } else {
                     RepositoryResult.Error(message = response.message)
                 }
             }
@@ -263,13 +303,18 @@ class NetworkWordRepository(private val wordsAPIService: WordsApiService) :
         if (itemsToUpdate.isEmpty()) {
             return RepositoryResult.Error(message = "No data has given")
         }
+        val scriptId = appConfigDataRepository.scriptId.first()
+        val sheetId = appConfigDataRepository.spreadsheetId.first()
 
         val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
 
-        val params = PostApiParameter(itemsToUpdate, sheetAction.value)
+        val params = PostApiParameter(itemsToUpdate, sheetAction.value, sheetId)
 
         wordsAPIService.updateData(
-            parameter = json.encodeToJsonElement(params)
+            scriptId = scriptId,
+            parameter = json.encodeToJsonElement(
+                params
+            )
         )
             .onSuccess { response ->
                 return if (response.result.isNotEmpty()) {

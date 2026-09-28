@@ -28,21 +28,21 @@ fun SpanishWordEditForm(
             value = state.editState.word.wordEn,
             onValueChange = { onUserEvent(SpanishUploadUserEvent.OnWordEnChangeForEditedWord(it)) },
             labelId = R.string.upload_spanish_word_en_label,
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_WORD_EN.first),
+            error = state.editState.getErrorFor(EditState.INPUT_WORD_EN.first),
             maxLength = MAX_WORD_LENGTH_SP
         )
         EditFormTextField(
             value = state.editState.word.wordSp,
             onValueChange = { onUserEvent(SpanishUploadUserEvent.OnWordSpChangeForEditedWord(it)) },
             labelId = R.string.upload_spanish_word_sp_label,
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_WORD_EN.first),
+            error = state.editState.getErrorFor(EditState.INPUT_WORD_EN.first),
             maxLength = MAX_WORD_LENGTH_SP
         )
         EditFormTextField(
             value = state.editState.word.comment,
             onValueChange = { onUserEvent(SpanishUploadUserEvent.OnCommentChangeForEditedWord(it)) },
             labelId = R.string.upload_comment_label,
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_COMMENT.first),
+            error = state.editState.getErrorFor(EditState.INPUT_COMMENT.first),
             maxLength = MAX_COMMENT_LENGTH
         )
     }

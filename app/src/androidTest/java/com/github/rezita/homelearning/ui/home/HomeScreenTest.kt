@@ -1,5 +1,6 @@
 package com.github.rezita.homelearning.ui.home
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +42,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
+            val snackBarHostState = remember { SnackbarHostState() }
             HomeLearningTheme {
-                HomeScreen(tabs = testTabs)
+                HomeScreen(tabs = testTabs, snackBarHostState = snackBarHostState)
             }
         }
 
@@ -73,8 +75,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
+            val snackBarHostState = remember { SnackbarHostState() }
             HomeLearningTheme {
-                HomeScreen(tabs = testTabs, selectedTab = 0)
+                HomeScreen(tabs = testTabs, snackBarHostState = snackBarHostState, selectedTab = 0)
             }
         }
 //        composeTestRule.onRoot(useUnmergedTree = true).printToLog("tree")
@@ -107,8 +110,9 @@ class HomeScreenTest {
         val testTabs = listOf(tab1, tab2)
 
         composeTestRule.setContent {
+            val snackBarHostState = remember { SnackbarHostState() }
             HomeLearningTheme {
-                HomeScreen(tabs = testTabs, selectedTab = 1)
+                HomeScreen(tabs = testTabs, snackBarHostState = snackBarHostState, selectedTab = 1)
             }
         }
 
@@ -129,6 +133,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_select_tab_test() {
         composeTestRule.setContent {
+            val snackBarHostState = remember { SnackbarHostState() }
             var selectedTab by remember { mutableStateOf(0) }
             val tab1 = HomeLearningTabItem(
                 name = "Erik",
@@ -144,7 +149,11 @@ class HomeScreenTest {
             val testTabs = listOf(tab1, tab2)
 
             HomeLearningTheme {
-                HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+                HomeScreen(
+                    tabs = testTabs,
+                    snackBarHostState = snackBarHostState,
+                    selectedTab = selectedTab
+                )
             }
         }
         composeTestRule.onNodeWithText("Home Learning").assertIsDisplayed()
@@ -170,6 +179,7 @@ class HomeScreenTest {
     @Test
     fun homeScreen_select_tab_back_test() {
         composeTestRule.setContent {
+            val snackBarHostState = remember { SnackbarHostState() }
             var selectedTab by remember { mutableStateOf(0) }
             val tab1 = HomeLearningTabItem(
                 name = "Erik",
@@ -183,7 +193,11 @@ class HomeScreenTest {
             )
             val testTabs = listOf(tab1, tab2)
             HomeLearningTheme {
-                HomeScreen(tabs = testTabs, selectedTab = selectedTab)
+                HomeScreen(
+                    tabs = testTabs,
+                    snackBarHostState = snackBarHostState,
+                    selectedTab = selectedTab
+                )
             }
         }
 
@@ -205,8 +219,9 @@ class HomeScreenTest {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
+                val snackBarHostState = remember { SnackbarHostState() }
                 HomeLearningTheme {
-                    HomeScreen(tabs = emptyList())
+                    HomeScreen(tabs = emptyList(), snackBarHostState = snackBarHostState)
                 }
             }
         }
@@ -221,6 +236,7 @@ class HomeScreenTest {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
+                val snackBarHostState = remember { SnackbarHostState() }
                 val tab1 = HomeLearningTabItem(
                     name = "Erik",
                     content = { Text(text = "Erik Tab") },
@@ -233,7 +249,11 @@ class HomeScreenTest {
                 )
                 val testTabs = listOf(tab1, tab2)
                 HomeLearningTheme {
-                    HomeScreen(tabs = testTabs, selectedTab = 2)
+                    HomeScreen(
+                        tabs = testTabs,
+                        snackBarHostState = snackBarHostState,
+                        selectedTab = 2
+                    )
                 }
             }
         }
@@ -248,6 +268,7 @@ class HomeScreenTest {
         Assert.assertThrows(IllegalArgumentException::class.java)
         {
             composeTestRule.setContent {
+                val snackBarHostState = remember { SnackbarHostState() }
                 val tab1 = HomeLearningTabItem(
                     name = "Erik",
                     content = { Text(text = "Erik Tab") },
@@ -260,7 +281,11 @@ class HomeScreenTest {
                 )
                 val testTabs = listOf(tab1, tab2)
                 HomeLearningTheme {
-                    HomeScreen(tabs = testTabs, selectedTab = -1)
+                    HomeScreen(
+                        tabs = testTabs,
+                        snackBarHostState = snackBarHostState,
+                        selectedTab = -1
+                    )
                 }
             }
         }

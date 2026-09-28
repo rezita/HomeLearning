@@ -33,14 +33,14 @@ fun SpellingWordEditForm(
             value = state.editState.word.word,
             onValueChange = { onUserEvent(SpellingUploadUserEvent.OnWordChangeForEditedWord(it)) },
             labelId = R.string.upload_word_label,
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_WORD.first),
+            error = state.editState.getErrorFor(EditState.INPUT_WORD.first),
             maxLength = MAX_WORD_LENGTH
         )
         EditFormTextField(
             value = state.editState.word.comment,
             onValueChange = { onUserEvent(SpellingUploadUserEvent.OnCommentChangeForEditedWord(it)) },
             labelId = R.string.upload_comment_label,
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_COMMENT.first),
+            error = state.editState.getErrorFor(EditState.INPUT_COMMENT.first),
             maxLength = MAX_COMMENT_LENGTH
         )
         EditFormDropDownMenu(
@@ -56,7 +56,7 @@ fun SpellingWordEditForm(
                 .fillMaxWidth()
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
 
-            error = state.editState.getErrorFor(EditState.Companion.INPUT_CATEGORY.first)
+            error = state.editState.getErrorFor(EditState.INPUT_CATEGORY.first)
         )
     }
 }

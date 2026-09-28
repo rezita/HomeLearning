@@ -80,7 +80,7 @@ fun SpanishQuizItem(
             if (showResults) {
                 ResultIconWithText(word.status)
                 if (word.status != WordStatus.CORRECT) {
-                    Text(stringResource(R.string.correct_aswer, word.solution))
+                    Text(stringResource(R.string.correct_answer, word.solution))
                 }
             }
         }

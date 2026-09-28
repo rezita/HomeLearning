@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.10'
+    id("com.google.protobuf") version "0.9.5"
 }
 
 //using reading google sheetID and google ScriptID
@@ -128,6 +129,10 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.8.3"
     //windowsize metrics
     implementation "androidx.window:window:1.3.0"
+//    proto datastore for spreadsheetID and scriptId
+    implementation("androidx.datastore:datastore:1.1.7")
+    implementation("androidx.datastore:datastore-core:1.1.7")
+    implementation("com.google.protobuf:protobuf-kotlin-lite:4.33.0")
 
     // Testing dependencies
     androidTestImplementation "androidx.arch.core:core-testing:2.2.0"
@@ -173,5 +178,21 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:4.33.0"
+    }
+
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                create("java") {
+                    option("lite")
+                }
+            }
+        }
     }
 }

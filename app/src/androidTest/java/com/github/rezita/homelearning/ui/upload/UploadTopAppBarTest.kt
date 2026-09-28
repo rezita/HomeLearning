@@ -655,7 +655,7 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_editing_state_test() {
-        val state = UploadUiState.Editing(EditState(), listOf("home", "school"))
+        val state = UploadUiState.Editing(EditState(SpellingWord("", "", "")), listOf("home", "school"))
         val canNavigateBack = false
 
         composeTestRule.setContent {
@@ -698,7 +698,7 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_editing_state_with_navBack_test() {
-        val state = UploadUiState.Editing(EditState(), listOf("home", "school"))
+        val state = UploadUiState.Editing(EditState(SpellingWord("", "", "")), listOf("home", "school"))
         val canNavigateBack = true
 
         composeTestRule.setContent {
@@ -740,7 +740,7 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_error_state_test() {
-        val state = UploadUiState.LoadingError(R.string.loading_fail_text)
+        val state = UploadUiState.LoadingError<SpellingWord>(R.string.loading_fail_text)
         val canNavigateBack = false
 
         composeTestRule.setContent {
@@ -783,7 +783,7 @@ class UploadTopAppBarTest {
     @SmallTest
     @Test
     fun uploadTopAppBar_loading_error_state_with_navBack_test() {
-        val state = UploadUiState.LoadingError(R.string.loading_fail_text)
+        val state = UploadUiState.LoadingError<SpellingWord>(R.string.loading_fail_text)
         val canNavigateBack = true
 
         composeTestRule.setContent {

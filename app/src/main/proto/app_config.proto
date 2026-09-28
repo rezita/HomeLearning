@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.github.rezita.homelearning.config";
+option java_multiple_files = true;
+
+message AppConfig {
+    string google_spreadsheet_id = 1;
+    string google_script_id = 2;
+}

@@ -1,6 +1,5 @@
 package com.github.rezita.homelearning.ui.screens.home
 
-import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,10 +10,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -38,6 +40,7 @@ data class TabButton(
 @Composable
 fun HomeScreen(
     tabs: List<HomeLearningTabItem>,
+    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     selectedTab: Int = 0
 ) {
@@ -45,6 +48,7 @@ fun HomeScreen(
     require(selectedTab in tabs.indices) { "Invalid tab index" }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             Column {
                 LearningAppBar(
@@ -114,8 +118,8 @@ private fun HomeLearningTabButton(
 
 @Composable
 @Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 fun MainTabsPreview() {
+    val snackBarHostState = remember { SnackbarHostState() }
     HomeLearningTheme {
         val tabWithButtons = listOf(
             TabButton(
@@ -145,7 +149,8 @@ fun MainTabsPreview() {
                     content = { TabWithButtons(tabWithButtons) },
                     onSelected = {})
             ),
-            selectedTab = 0
+            selectedTab = 0,
+            snackBarHostState = snackBarHostState
         )
     }
 }

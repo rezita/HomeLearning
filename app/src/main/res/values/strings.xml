@@ -32,6 +32,7 @@
     <string name="tab_Erik">Erik</string>
     <string name="tab_Mark">Mark</string>
     <string name="tab_Zita">Zita</string>
+    <string name="tab_Settings">Settings</string>
     <!-- <string name="main_activity_tab3">Admin</string> -->
 
 
@@ -180,7 +181,19 @@
     <string name="answer">Answer:</string>
     <string name="result_correct">Correct</string>
     <string name="result_incorrect">Incorrect</string>
-    <string name="correct_aswer">The correct answer: %1$s</string>
+    <string name="correct_answer">The correct answer: %1$s</string>
 
-
+    <!-- scriptId and sheetId settings -->
+    <string name="settings_sheet_id">Sheet Id</string>
+    <string name="settings_script_id">Script Id</string>
+    <string name="settings_restore_defaults">Restore defaults</string>
+    <string name="settings_loading">Loading settings…</string>
+    <string name="settings_saving">Saving…</string>
+    <string name="settings_load_failed">Loading settings failed.</string>
+    <string name="settings_save_failed">Saving settings failed.</string>
+    <string name="settings_copy">Copy</string>
+    <string name="settings_copied">Copied</string>
+    <string name="settings_paste">Paste</string>
+    <string name="settings_pasted">Pasted</string>
+    <string name="settings_clipboard_empty">Clipboard is empty</string>
 </resources>

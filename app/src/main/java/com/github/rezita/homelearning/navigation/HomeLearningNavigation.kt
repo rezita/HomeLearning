@@ -2,7 +2,10 @@ package com.github.rezita.homelearning.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -14,7 +17,8 @@ import androidx.navigation.toRoute
 import com.github.rezita.homelearning.R
 import com.github.rezita.homelearning.network.SheetAction
 import com.github.rezita.homelearning.ui.screens.home.HomeLearningTabItem
-import com.github.rezita.homelearning.ui.screens.home.HomeScreen
+import com.github.rezita.homelearning.ui.screens.home.HomeRoute
+import com.github.rezita.homelearning.ui.screens.home.SettingsRoute
 import com.github.rezita.homelearning.ui.screens.home.TabButton
 import com.github.rezita.homelearning.ui.screens.home.TabWithButtons
 import com.github.rezita.homelearning.ui.screens.reading.ReadingRoute
@@ -47,6 +51,8 @@ fun HomeLearningNavigation(
     startDestination: HomeLearningDestination = start_destination
 ) {
     val navController = rememberNavController()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     val erikTabButtons = listOf(
         TabButton(
@@ -211,18 +217,29 @@ fun HomeLearningNavigation(
         onSelected = { navController.navigate(route = Home(2)) }
     )
 
-    val tabs = listOf(erikTabValues, markTabValues, zitaTabValues)
+    val settingsTabValues = HomeLearningTabItem(
+        name = stringResource(R.string.tab_Settings),
+        content = {
+            SettingsRoute(
+                scope = scope,
+                snackBarHostState = snackBarHostState
+            )
+        },
+        onSelected = { navController.navigate(route = Home(3)) }
+    )
+    val tabs = listOf(erikTabValues, markTabValues, zitaTabValues, settingsTabValues)
 
     NavHost(navController = navController, startDestination = startDestination) {
 
         composable<Home> { navBackStackEntry ->
             val home: Home = navBackStackEntry.toRoute()
-            HomeScreen(
+            HomeRoute(
                 tabs = tabs,
-                selectedTab = home.tab,
+                snackBarHostState = snackBarHostState,
                 modifier = modifier
                     .fillMaxSize()
-                    .padding(dimensionResource(id = R.dimen.padding_big))
+                    .padding(dimensionResource(id = R.dimen.padding_big)),
+                selectedTab = home.tab,
             )
         }
 
@@ -231,6 +248,8 @@ fun HomeLearningNavigation(
             SpellingRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 addNewCallback = {
                     navController.navigate(
                         SpellingUploadDestination(
@@ -258,6 +277,8 @@ fun HomeLearningNavigation(
             SpellingUploadRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 modifier = modifier
             )
         }
@@ -274,6 +295,8 @@ fun HomeLearningNavigation(
                 titleId = titleId,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 modifier = modifier
             )
         }
@@ -295,6 +318,8 @@ fun HomeLearningNavigation(
                 titleId = titleId,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 windowSize = windowSizeClass,
                 modifier = modifier
             )
@@ -304,6 +329,8 @@ fun HomeLearningNavigation(
             SpanishUploadRoute(
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+                scope = scope,
+                snackBarHostState = snackBarHostState,
                 modifier = modifier
             )
         }

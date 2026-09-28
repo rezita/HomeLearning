@@ -3,11 +3,13 @@ package com.github.rezita.homelearning.fake
 import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.model.ApiFillInSentence
 import com.github.rezita.homelearning.model.ApiReadingWord
+import com.github.rezita.homelearning.model.ApiSpanishWord
 import com.github.rezita.homelearning.model.ApiSpellingWord
 import com.github.rezita.homelearning.model.Category
 import com.github.rezita.homelearning.model.GetRequestApiItems
 import com.github.rezita.homelearning.model.asFillInSentence
 import com.github.rezita.homelearning.model.asReadingWord
+import com.github.rezita.homelearning.model.asSpanishWord
 import com.github.rezita.homelearning.model.asSpellingWord
 
 object FakeReadingDataSource {
@@ -115,4 +117,34 @@ object FakeCategoryDataSource {
     val apiCategories = Category(categories = listOf("school", "home"))
 
     val categories = RepositoryResult.Success(listOf("school", "home"))
+}
+
+/**SPANISH*/
+object FakeSpanishDataSource {
+    private val spanishApi1 = ApiSpanishWord(
+        en = "dog", sp = "perro", comment = "animals", isWeekWord = 1
+    )
+    private val spanishApi2 = ApiSpanishWord(
+        en = "cat", sp = "gato", comment = "animals", isWeekWord = 0
+    )
+    private val spanishApi3 = ApiSpanishWord(
+        en = "house", sp = "casa", comment = "home", isWeekWord = 1
+    )
+
+    /** This will be returned when the FakeWordsApiService.getSpanishWords will be called */
+    val apiSpanishWords =
+        GetRequestApiItems(
+            items = listOf(spanishApi1, spanishApi2, spanishApi3),
+            message = ""
+        )
+
+    /**
+     * This is what the repository should return.
+     * Pass enToSp explicitly: null would resolve the direction randomly
+     * (see ApiSpanishWord.asSpanishWord), which is unsuitable for tests.
+     */
+    fun spanishWords(enToSp: Boolean) =
+        RepositoryResult.Success(
+            listOf(spanishApi1, spanishApi2, spanishApi3).map { it.asSpanishWord(enToSp) }
+        )
 }

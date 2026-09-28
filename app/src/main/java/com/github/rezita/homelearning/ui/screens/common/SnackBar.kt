@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 fun SavingErrorSnackbar(
     scope: CoroutineScope, snackbarHostState: SnackbarHostState
 ) {
-    HomeLearningSnackbar(
+    homeLearningSnackbar(
         scope = scope,
         snackbarHostState = snackbarHostState,
         message = stringResource(id = R.string.snackBar_save_error)
@@ -24,7 +24,7 @@ fun SavingErrorSnackbar(
 fun LoadingErrorSnackbar(
     scope: CoroutineScope, snackbarHostState: SnackbarHostState
 ) {
-    HomeLearningSnackbar(
+    homeLearningSnackbar(
         scope = scope,
         snackbarHostState = snackbarHostState,
         message = stringResource(id = R.string.snackBar_error_loading)
@@ -35,15 +35,14 @@ fun LoadingErrorSnackbar(
 fun SavingSuccessSnackbar(
     scope: CoroutineScope, snackbarHostState: SnackbarHostState
 ) {
-    HomeLearningSnackbar(
+    homeLearningSnackbar(
         scope = scope,
         snackbarHostState = snackbarHostState,
         message = stringResource(id = R.string.snackBar_save_success)
     )
 }
 
-@Composable
-private fun HomeLearningSnackbar(
+fun homeLearningSnackbar(
     scope: CoroutineScope, snackbarHostState: SnackbarHostState,
     message: String, duration: SnackbarDuration = SnackbarDuration.Short
 ) {

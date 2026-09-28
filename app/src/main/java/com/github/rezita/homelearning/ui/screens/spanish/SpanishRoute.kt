@@ -5,28 +5,27 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.ui.size.HomeLearningWindowSizeClass
 import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.SpanishViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpanishRoute(
     @StringRes titleId: Int,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     windowSize: HomeLearningWindowSizeClass,
     modifier: Modifier = Modifier,
     viewModel: SpanishViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val action = viewModel.sheetAction
     val spanishUiState by viewModel.uiState.collectAsState()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
     val configuration = LocalConfiguration.current
 
     SpanishScreen(

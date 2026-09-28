@@ -59,6 +59,13 @@ object AppViewModelProvider {
                 homeLearningApplication().container.wordRepository
             )
         }
+
+        // Initializer for HomeViewModel
+        initializer {
+            HomeViewModel(
+                homeLearningApplication().appConfigRepository
+            )
+        }
     }
 }
 

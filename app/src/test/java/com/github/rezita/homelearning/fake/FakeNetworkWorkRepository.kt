@@ -4,6 +4,7 @@ import com.github.rezita.homelearning.data.RepositoryResult
 import com.github.rezita.homelearning.data.WordRepository
 import com.github.rezita.homelearning.model.FillInSentence
 import com.github.rezita.homelearning.model.ReadingWord
+import com.github.rezita.homelearning.model.SpanishWord
 import com.github.rezita.homelearning.model.SpellingWord
 import kotlinx.coroutines.delay
 
@@ -86,5 +87,37 @@ class FakeNetworkWorkRepository : WordRepository {
         wordNew: String
     ): RepositoryResult<String> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getZitaSpanishWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>> {
+        return FakeSpanishDataSource.spanishWords(enToSp = enToSp ?: true)
+    }
+
+    override suspend fun getWeekSpanishWords(): RepositoryResult<List<SpanishWord>> {
+        return FakeSpanishDataSource.spanishWords(enToSp = true)
+    }
+
+    override suspend fun getSpanishReadingWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>> {
+        return FakeSpanishDataSource.spanishWords(enToSp = enToSp ?: true)
+    }
+
+    override suspend fun getSpanishPracticeWords(enToSp: Boolean?): RepositoryResult<List<SpanishWord>> {
+        return FakeSpanishDataSource.spanishWords(enToSp = enToSp ?: true)
+    }
+
+    override suspend fun updateZitaSpanishWords(words: List<SpanishWord>): RepositoryResult<String> {
+        return if (words.isNotEmpty()) {
+            RepositoryResult.Success("Success")
+        } else {
+            RepositoryResult.Error("Empty list")
+        }
+    }
+
+    override suspend fun saveSpanishWords(words: List<SpanishWord>): RepositoryResult<String> {
+        return if (words.isNotEmpty()) {
+            RepositoryResult.Success("Success")
+        } else {
+            RepositoryResult.Error("Empty list")
+        }
     }
 }

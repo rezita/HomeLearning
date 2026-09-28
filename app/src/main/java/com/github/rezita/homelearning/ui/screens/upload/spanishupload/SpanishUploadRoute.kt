@@ -10,17 +10,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.github.rezita.homelearning.ui.viewmodels.AppViewModelProvider
 import com.github.rezita.homelearning.ui.viewmodels.SpanishUploadViewModel
+import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SpanishUploadRoute(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
+    scope: CoroutineScope,
+    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     viewModel: SpanishUploadViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val uploadUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
     SpanishUploadScreen(
         state = uploadUiState,

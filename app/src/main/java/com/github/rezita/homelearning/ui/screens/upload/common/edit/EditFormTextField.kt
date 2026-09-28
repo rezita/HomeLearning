@@ -28,16 +28,20 @@ fun EditFormTextField(
     onValueChange: (String) -> Unit,
     labelId: Int,
     modifier: Modifier = Modifier,
+    containerModifier: Modifier = Modifier,
     readOnly: Boolean = false,
     trailingIcon: @Composable (() -> Unit)? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(),
     error: Int? = null,
-    maxLength: Int? = null
+    maxLength: Int? = null,
+    singleLine: Boolean = true,
+    minLines: Int = 1,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE
 ) {
     val focusManager = LocalFocusManager.current
     Column(
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier
+        modifier = containerModifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.padding_medium)),
     ) {
@@ -56,7 +60,9 @@ fun EditFormTextField(
             label = { Text(stringResource(id = labelId)) },
             trailingIcon = trailingIcon,
             isError = error != null,
-            singleLine = true,
+            singleLine = singleLine,
+            minLines = minLines,
+            maxLines = maxLines,
             colors = colors,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
