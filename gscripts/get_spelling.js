@@ -29,6 +29,7 @@ function getSelectedSpellingWordsByCategory(allWords, rule) {
 
   //When there are more items to be repeated then the max number of reqquested words (it can happen if a lots of words were updated before)
   if (repeatedWordsByCategory.length > rule[1]) {
+    shuffleArray(repeatedWordsByCategory);
     return repeatedWordsByCategory.slice(0, rule[1]);
   } else {
 
